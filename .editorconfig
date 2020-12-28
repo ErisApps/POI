@@ -1,5 +1,5 @@
-# editorconfig.org
 root = true
+# editorconfig.org
 
 [*]
 indent_style = tab
@@ -177,3 +177,5 @@ csharp_preserve_single_line_blocks = true
 ################################
 
 resharper_place_accessorholder_attribute_on_same_line = false
+resharper_max_initializer_elements_on_line = 2
+resharper_wrap_array_initializer_style = chop_if_long
