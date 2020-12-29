@@ -45,7 +45,7 @@ namespace PoiDiscordDotNet
 				.WriteTo.Console(theme: AnsiConsoleTheme.Code)
 				.WriteTo.Conditional(_ => dockerized,
 					(writeTo => writeTo.Async(
-						writeToInternal => writeToInternal.File(Path.Combine(dataPath!, "logs", "log.txt"), rollingInterval: RollingInterval.Day, retainedFileCountLimit: 60)
+						writeToInternal => writeToInternal.File(Path.Combine(dataPath!, "logs", "log.txt"), rollingInterval: RollingInterval.Day, retainedFileCountLimit: 60, buffered: true)
 					)))
 				.CreateLogger();
 
@@ -76,18 +76,23 @@ namespace PoiDiscordDotNet
 				.BuildServiceProvider();
 
 
-			_client
-				.UseCommandsNext(new CommandsNextConfiguration
-				{
-					EnableMentionPrefix = false,
-					EnableDefaultHelp = false,
-					CaseSensitive = false,
-					DmHelp = false,
-					IgnoreExtraArguments = false,
-					StringPrefixes = new[] {configProvider.Discord.Prefix},
-					Services = serviceProvider
-				})
-				.RegisterCommands(Assembly.GetEntryAssembly());
+			var commandsNext = _client.UseCommandsNext(new CommandsNextConfiguration
+			{
+				EnableMentionPrefix = false,
+				EnableDefaultHelp = false,
+				CaseSensitive = false,
+				DmHelp = false,
+				IgnoreExtraArguments = false,
+				StringPrefixes = new[] {configProvider.Discord.Prefix},
+				Services = serviceProvider
+			});
+			commandsNext.CommandExecuted += (sender, eventArgs) =>
+			{
+				logger.Debug("{0} executed command {commandName}", eventArgs.Context.User.Username, eventArgs.Command.Name);
+
+				return Task.CompletedTask;
+			};
+			commandsNext.RegisterCommands(Assembly.GetEntryAssembly());
 
 			await _client.ConnectAsync().ConfigureAwait(false);
 

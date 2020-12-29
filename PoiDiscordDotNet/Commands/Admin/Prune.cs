@@ -3,20 +3,12 @@ using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
-using Microsoft.Extensions.Logging;
 
 namespace PoiDiscordDotNet.Commands.Admin
 {
 	[RequireUserPermissions(Permissions.Administrator)]
 	public class Prune : BaseCommandModule
 	{
-		private readonly ILogger<Prune> _logger;
-
-		public Prune(ILogger<Prune> logger)
-		{
-			_logger = logger;
-		}
-
 		[Command("prune")]
 		public async Task PruneCommand(CommandContext ctx, int messagesPruneCount)
 		{
