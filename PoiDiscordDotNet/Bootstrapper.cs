@@ -23,7 +23,7 @@ namespace PoiDiscordDotNet
 
 		public static async Task Main(string[] args)
 		{
-			string? dataPath = null;
+			string? dataPath;
 			var dockerized = Environment.GetEnvironmentVariable("containerized") == "true";
 			if (dockerized)
 			{
@@ -35,7 +35,7 @@ namespace PoiDiscordDotNet
 			}
 			else
 			{
-				throw new ArgumentNullException(nameof(dataPath));
+				throw new ArgumentException("When running in the non-containerized mode. Please ensure that you're passing a dataPath as a launch argument.", nameof(args));
 			}
 
 			var logger = new LoggerConfiguration()
