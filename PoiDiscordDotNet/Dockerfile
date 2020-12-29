@@ -5,5 +5,7 @@ WORKDIR /app
 
 VOLUME /data
 
+ENV containerized=true
+
 ENTRYPOINT ["dotnet", "PoiDiscordDotNet.dll"]
 
