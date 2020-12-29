@@ -69,6 +69,7 @@ namespace PoiDiscordDotNet
 				.AddLogging(loggingBuilderExtensions => loggingBuilderExtensions.AddSerilog(logger))
 				.AddSingleton(configProvider)
 				.AddSingleton(_client)
+				.AddSingleton<MongoDbService>()
 				.AddSingleton<UptimeManagementService>()
 				.AddSingleton<BeatSaverClientProvider>()
 				.AddSingleton<ScoreSaberService>()
