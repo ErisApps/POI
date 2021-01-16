@@ -10,6 +10,7 @@ using NodaTime;
 using NodaTime.Serialization.SystemTextJson;
 using PoiDiscordDotNet.Models.ScoreSaber.Profile;
 using PoiDiscordDotNet.Models.ScoreSaber.Scores;
+using PoiDiscordDotNet.Models.ScoreSaber.Search;
 using Polly;
 using Polly.Bulkhead;
 using Polly.Retry;
@@ -70,7 +71,7 @@ namespace PoiDiscordDotNet.Services
 				MAX_BULKHEAD_QUEUE_SIZE, // Allow calls to queue indef
 				_ =>
 				{
-					_logger.LogWarning($"Bulkhead policy rejected execution.");
+					_logger.LogWarning("Bulkhead policy rejected execution");
 
 					return Task.CompletedTask;
 				});
@@ -100,6 +101,16 @@ namespace PoiDiscordDotNet.Services
 			return FetchData<ScoresPage?>($"{SCORESABER_BASEURL}player/{scoreSaberId}/scores/top/{page}");
 		}
 
+		internal Task<PlayersPage?> SearchPlayersByName(string name)
+		{
+			if (string.IsNullOrWhiteSpace(name) || name.Length < 4 || name.Length >= 32)
+			{
+				throw new ArgumentException("Please enter a player name between 3 and 32 characters! (bounds not inclusive)");
+			}
+
+			return FetchData<PlayersPage?>($"{SCORESABER_BASEURL}players/by-name/{name}");
+		}
+
 		private async Task<T?> FetchData<T>(string url) where T : class?, new()
 		{
 			using var response = await _scoreSaberApiChainedRateLimitPolicy.ExecuteAsync(() =>
@@ -113,11 +124,11 @@ namespace PoiDiscordDotNet.Services
 				}
 				catch (NotSupportedException) // When content type is not valid
 				{
-					_logger.LogError("The content type is not supported.");
+					_logger.LogError("The content type is not supported");
 				}
 				catch (JsonException) // Invalid JSON
 				{
-					_logger.LogError("Invalid JSON.");
+					_logger.LogError("Invalid JSON");
 				}
 			}
 
