@@ -24,7 +24,7 @@ namespace PoiDiscordDotNet
 		public static async Task Main(string[] args)
 		{
 			string? dataPath;
-			var dockerized = Environment.GetEnvironmentVariable("containerized") == "true";
+			var dockerized = Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true";
 			if (dockerized)
 			{
 				dataPath = "/data";
@@ -61,7 +61,6 @@ namespace PoiDiscordDotNet
 			{
 				Token = configProvider.Discord.Token,
 				TokenType = TokenType.Bot,
-				MinimumLogLevel = LogLevel.Error,
 				LoggerFactory = seriFactory
 			});
 
@@ -75,6 +74,7 @@ namespace PoiDiscordDotNet
 				.AddSingleton<ScoreSaberService>()
 				.BuildServiceProvider();
 
+			serviceProvider.GetService<MongoDbService>();
 
 			var commandsNext = _client.UseCommandsNext(new CommandsNextConfiguration
 			{
