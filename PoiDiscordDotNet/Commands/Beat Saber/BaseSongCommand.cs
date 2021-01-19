@@ -244,7 +244,11 @@ namespace PoiDiscordDotNet.Commands.Beat_Saber
 				}
 			}
 
-			var args = ctx.RawArguments.ToList();
+			var args = ctx.RawArguments
+				.Where(arg => !string.IsNullOrWhiteSpace(arg))
+				.Where(arg => !arg.StartsWith("<@!"))
+				.Where(arg => !arg.EndsWith(">"))
+				.ToList();
 
 			if (args.Any() && args[0].ExtractScoreSaberId(out scoreSaberId))
 			{
