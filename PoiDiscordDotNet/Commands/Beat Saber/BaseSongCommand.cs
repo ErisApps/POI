@@ -254,14 +254,18 @@ namespace PoiDiscordDotNet.Commands.Beat_Saber
 			{
 				args.RemoveAt(0);
 			}
-			else if (ctx.Message.MentionedUsers.Any())
+
+			if (scoreSaberId == null)
 			{
-				var mentionedUser = ctx.Message.MentionedUsers.First();
-				await LookupScoreSaberLink(mentionedUser.Id.ToString()).ConfigureAwait(false);
-			}
-			else
-			{
-				await LookupScoreSaberLink(ctx.User.Id.ToString()).ConfigureAwait(false);
+				if (ctx.Message.MentionedUsers.Any())
+				{
+					var mentionedUser = ctx.Message.MentionedUsers.First();
+					await LookupScoreSaberLink(mentionedUser.Id.ToString()).ConfigureAwait(false);
+				}
+				else
+				{
+					await LookupScoreSaberLink(ctx.User.Id.ToString()).ConfigureAwait(false);
+				}
 			}
 
 			if (scoreSaberId == null)
