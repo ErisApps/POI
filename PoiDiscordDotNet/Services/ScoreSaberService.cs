@@ -84,7 +84,7 @@ namespace PoiDiscordDotNet.Services
 				_scoreSaberApiRateLimitPolicy);
 
 			_scoreSaberCoverImageRetryPolicy = Policy
-				.Handle<HttpRequestException>()
+				.Handle<HttpRequestException>((exception => exception.StatusCode != HttpStatusCode.NotFound))
 				.Or<TaskCanceledException>()
 				.WaitAndRetryAsync(3, _ => TimeSpan.FromSeconds(10));
 		}
@@ -119,9 +119,17 @@ namespace PoiDiscordDotNet.Services
 			return FetchData<PlayersPage?>($"{SCORESABER_BASEURL}players/by-name/{name}");
 		}
 
-		internal Task<byte[]> FetchCoverImageByHash(string songHash)
+		internal async Task<byte[]?> FetchCoverImageByHash(string songHash)
 		{
-			return _scoreSaberCoverImageRetryPolicy.ExecuteAsync(() => _scoreSaberApiClient.GetByteArrayAsync($"{SCORESABER_BASEURL}static/covers/{songHash}.png"));
+			try
+			{
+				return await _scoreSaberCoverImageRetryPolicy.ExecuteAsync(() => _scoreSaberApiClient.GetByteArrayAsync($"{SCORESABER_BASEURL}static/covers/{songHash}.png"));
+			}
+			catch (Exception e)
+			{
+				_logger.LogError("{Exception}", e.ToString());
+				return null;
+			}
 		}
 
 		private async Task<T?> FetchData<T>(string url) where T : class?, new()
