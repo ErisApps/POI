@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using DSharpPlus;
@@ -21,22 +20,10 @@ namespace PoiDiscordDotNet
 		internal static string Name { get; } = "POINext";
 		internal static Version Version => _version ??= Assembly.GetExecutingAssembly().GetName().Version!;
 
-		public static async Task Main(string[] args)
+		public static async Task Main(string[]? args = null)
 		{
-			string? dataPath;
 			var dockerized = Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true";
-			if (dockerized)
-			{
-				dataPath = "/data";
-			}
-			else if (args.Length >= 1 && !string.IsNullOrWhiteSpace(args[0]))
-			{
-				dataPath = args[0];
-			}
-			else
-			{
-				throw new ArgumentException("When running in the non-containerized mode. Please ensure that you're passing a dataPath as a launch argument.", nameof(args));
-			}
+			var pathProvider = new PathProvider(dockerized, args?[0]);
 
 			var logger = new LoggerConfiguration()
 				.MinimumLevel.Verbose()
@@ -45,11 +32,11 @@ namespace PoiDiscordDotNet
 				.WriteTo.Console(theme: AnsiConsoleTheme.Code)
 				.WriteTo.Conditional(_ => dockerized,
 					(writeTo => writeTo.Async(
-						writeToInternal => writeToInternal.File(Path.Combine(dataPath!, "logs", "log.txt"), rollingInterval: RollingInterval.Day, retainedFileCountLimit: 60, buffered: true)
+						writeToInternal => writeToInternal.File(pathProvider.LogsPath, rollingInterval: RollingInterval.Day, retainedFileCountLimit: 60, buffered: true)
 					)))
 				.CreateLogger();
 
-			var configProvider = new ConfigProviderService(logger.ForContext<ConfigProviderService>(), Path.Combine(dataPath, ConfigProviderService.CONFIG_FILE_NAME));
+			var configProvider = new ConfigProviderService(logger.ForContext<ConfigProviderService>(), pathProvider.ConfigPath);
 			if (!await configProvider.LoadConfig())
 			{
 				logger.Fatal("Exiting... Please ensure the config is correct.");
@@ -67,6 +54,7 @@ namespace PoiDiscordDotNet
 			var serviceProvider = new ServiceCollection()
 				.AddLogging(loggingBuilderExtensions => loggingBuilderExtensions.AddSerilog(logger))
 				.AddSingleton(configProvider)
+				.AddSingleton(pathProvider)
 				.AddSingleton(_client)
 				.AddSingleton<MongoDbService>()
 				.AddSingleton<UptimeManagementService>()
