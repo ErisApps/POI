@@ -29,6 +29,7 @@ namespace PoiDiscordDotNet.Services
 		private readonly AsyncPolicyWrap<HttpResponseMessage> _scoreSaberApiChainedRateLimitPolicy;
 		private readonly AsyncBulkheadPolicy<HttpResponseMessage> _scoreSaberApiBulkheadPolicy;
 		private readonly AsyncRetryPolicy<HttpResponseMessage> _scoreSaberApiRateLimitPolicy;
+		private readonly AsyncRetryPolicy _scoreSaberCoverImageRetryPolicy;
 
 		private readonly JsonSerializerOptions _jsonSerializerOptions;
 
@@ -79,6 +80,11 @@ namespace PoiDiscordDotNet.Services
 			_scoreSaberApiChainedRateLimitPolicy = Policy.WrapAsync(
 				_scoreSaberApiBulkheadPolicy,
 				_scoreSaberApiRateLimitPolicy);
+
+			_scoreSaberCoverImageRetryPolicy = Policy
+				.Handle<HttpRequestException>()
+				.Or<TaskCanceledException>()
+				.WaitAndRetryAsync(3, _ => TimeSpan.FromSeconds(10));
 		}
 
 		internal Task<BasicProfile?> FetchBasicPlayerProfile(string scoreSaberId)
@@ -111,10 +117,14 @@ namespace PoiDiscordDotNet.Services
 			return FetchData<PlayersPage?>($"{SCORESABER_BASEURL}players/by-name/{name}");
 		}
 
+		internal Task<byte[]> FetchCoverImageByHash(string songHash)
+		{
+			return _scoreSaberCoverImageRetryPolicy.ExecuteAsync(() => _scoreSaberApiClient.GetByteArrayAsync($"{SCORESABER_BASEURL}static/covers/{songHash}.png"));
+		}
+
 		private async Task<T?> FetchData<T>(string url) where T : class?, new()
 		{
-			using var response = await _scoreSaberApiChainedRateLimitPolicy.ExecuteAsync(() =>
-				_scoreSaberApiClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead));
+			using var response = await _scoreSaberApiChainedRateLimitPolicy.ExecuteAsync(() => _scoreSaberApiClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead));
 
 			if (response.IsSuccessStatusCode)
 			{
