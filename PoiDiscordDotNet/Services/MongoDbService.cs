@@ -10,6 +10,8 @@ namespace PoiDiscordDotNet.Services
 
 		private readonly MongoClient _mongoClient;
 
+		internal IMongoDatabase? MongoDatabase { get; }
+
 		public MongoDbService(ILogger<MongoDbService> logger, ConfigProviderService configProviderService)
 		{
 			_logger = logger;
@@ -22,7 +24,7 @@ namespace PoiDiscordDotNet.Services
 			_mongoClient = new MongoClient(mongoClientSettings);
 			_logger.LogInformation("Connected to MongoDb instance.");
 
-			_mongoClient.GetDatabase("POINext");
+			MongoDatabase = _mongoClient.GetDatabase("POINext");
 		}
 	}
 }
