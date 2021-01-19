@@ -3,7 +3,7 @@ using MongoDB.Driver;
 
 namespace PoiDiscordDotNet.Services
 {
-	internal class MongoDbService
+	public class MongoDbService
 	{
 		private readonly ILogger<MongoDbService> _logger;
 		private readonly ConfigProviderService _configProviderService;

@@ -7,7 +7,7 @@ using Serilog;
 
 namespace PoiDiscordDotNet.Services
 {
-	internal class ConfigProviderService
+	public class ConfigProviderService
 	{
 		internal const string CONFIG_FILE_NAME = "configuration.json";
 
