@@ -3,11 +3,12 @@ using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using NodaTime.Extensions;
+using PoiDiscordDotNet.Commands.Modules;
 using PoiDiscordDotNet.Services;
 
 namespace PoiDiscordDotNet.Commands.Utils
 {
-    public class Uptime : BaseCommandModule
+    public class Uptime : UtilCommandsModule
     {
 	    private readonly UptimeManagementService _uptimeManagementService;
 

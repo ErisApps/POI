@@ -3,11 +3,12 @@ using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using PoiDiscordDotNet.Commands.Modules;
 
 namespace PoiDiscordDotNet.Commands.Admin
 {
 	[RequireUserPermissions(Permissions.Administrator)]
-	public class Prune : BaseCommandModule
+	public class Prune : AdminCommandsModule
 	{
 		[Command("prune")]
 		public async Task PruneCommand(CommandContext ctx, int messagesPruneCount)

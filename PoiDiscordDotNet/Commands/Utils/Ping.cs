@@ -2,10 +2,11 @@
 using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using PoiDiscordDotNet.Commands.Modules;
 
 namespace PoiDiscordDotNet.Commands.Utils
 {
-    public class Ping : BaseCommandModule
+    public class Ping : UtilCommandsModule
     {
 	    [Command("ping")]
         public async Task PingCommand(CommandContext ctx)
