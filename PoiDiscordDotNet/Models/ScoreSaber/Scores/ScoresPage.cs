@@ -6,6 +6,6 @@ namespace PoiDiscordDotNet.Models.ScoreSaber.Scores
 	public class ScoresPage
 	{
 		[JsonPropertyName("scores")]
-		public List<SongScore> Scores { get; init; }
+		public List<SongScore> Scores { get; init; } = null!;
 	}
 }
