@@ -17,5 +17,7 @@ namespace PoiDiscordDotNet.Services
                 HandleRateLimits = true
             });
         }
+
+        public BeatSaver GetClientInstance() => _beatSaverClient;
     }
 }
