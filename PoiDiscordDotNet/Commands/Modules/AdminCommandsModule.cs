@@ -4,6 +4,5 @@ namespace PoiDiscordDotNet.Commands.Modules
 {
 	public class AdminCommandsModule : BaseCommandModule
 	{
-
 	}
 }
