@@ -9,8 +9,7 @@ namespace PoiDiscordDotNet.Services
 		private readonly ConfigProviderService _configProviderService;
 
 		private readonly MongoClient _mongoClient;
-
-		internal IMongoDatabase? MongoDatabase { get; }
+		private readonly IMongoDatabase _mongoDatabase;
 
 		public MongoDbService(ILogger<MongoDbService> logger, ConfigProviderService configProviderService)
 		{
@@ -24,7 +23,10 @@ namespace PoiDiscordDotNet.Services
 			_mongoClient = new MongoClient(mongoClientSettings);
 			_logger.LogInformation("Connected to MongoDb instance.");
 
-			MongoDatabase = _mongoClient.GetDatabase("POINext");
+			_mongoDatabase = _mongoClient.GetDatabase("POINext");
 		}
+
+		internal IMongoCollection<T> GetCollection<T>(string? collectionName = null) where T : class, new()
+			=> _mongoDatabase.GetCollection<T>(collectionName ?? typeof(T).Name);
 	}
 }
