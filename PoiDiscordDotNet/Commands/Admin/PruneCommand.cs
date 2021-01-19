@@ -8,10 +8,10 @@ using PoiDiscordDotNet.Commands.Modules;
 namespace PoiDiscordDotNet.Commands.Admin
 {
 	[RequireUserPermissions(Permissions.Administrator)]
-	public class Prune : AdminCommandsModule
+	public class PruneCommand : AdminCommandsModule
 	{
 		[Command("prune")]
-		public async Task PruneCommand(CommandContext ctx, int messagesPruneCount)
+		public async Task Handle(CommandContext ctx, int messagesPruneCount)
 		{
 			await ctx.Message.DeleteAsync().ConfigureAwait(false);
 

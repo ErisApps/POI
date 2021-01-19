@@ -8,18 +8,18 @@ using PoiDiscordDotNet.Services;
 
 namespace PoiDiscordDotNet.Commands.Utils
 {
-    public class Uptime : UtilCommandsModule
+    public class UptimeCommand : UtilCommandsModule
     {
 	    private readonly UptimeManagementService _uptimeManagementService;
 
-        public Uptime(UptimeManagementService uptimeManagementService)
+        public UptimeCommand(UptimeManagementService uptimeManagementService)
         {
 	        _uptimeManagementService = uptimeManagementService;
         }
 
         [Command("uptime")]
         [Aliases("uppy")]
-        public async Task UptimeCommand(CommandContext ctx)
+        public async Task Handle(CommandContext ctx)
         {
 	        string message;
             var upSince = _uptimeManagementService.UpSince;

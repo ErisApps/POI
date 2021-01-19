@@ -6,10 +6,10 @@ using PoiDiscordDotNet.Commands.Modules;
 
 namespace PoiDiscordDotNet.Commands.Utils
 {
-    public class Ping : UtilCommandsModule
+    public class PingCommand : UtilCommandsModule
     {
 	    [Command("ping")]
-        public async Task PingCommand(CommandContext ctx)
+        public async Task Handle(CommandContext ctx)
         {
             await ctx.Channel
                 .SendMessageAsync("POI!\n" +
