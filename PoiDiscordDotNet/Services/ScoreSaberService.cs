@@ -33,6 +33,8 @@ namespace PoiDiscordDotNet.Services
 
 		private readonly JsonSerializerOptions _jsonSerializerOptions;
 
+		public const int PLAYS_PER_PAGE = 8; // Top / Recent songs
+
 		public ScoreSaberService(ILogger<ScoreSaberService> logger)
 		{
 			_logger = logger;
