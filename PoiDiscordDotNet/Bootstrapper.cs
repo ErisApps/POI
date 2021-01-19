@@ -88,7 +88,7 @@ namespace PoiDiscordDotNet
 			});
 			commandsNext.CommandExecuted += (sender, eventArgs) =>
 			{
-				logger.Debug("{0} executed command {commandName}", eventArgs.Context.User.Username, eventArgs.Command.Name);
+				logger.Debug("{Username} executed command {CommandName}", eventArgs.Context.User.Username, eventArgs.Command.Name);
 
 				return Task.CompletedTask;
 			};
