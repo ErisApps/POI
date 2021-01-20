@@ -261,4 +261,9 @@ __pycache__/
 *.pyc
 
 # Project-specific
-data
+# Exclude everything in the Data folder
+Data/*
+
+# Okay... maybe not everything....
+!Data/Assets
+!Data/Assets/**
