@@ -23,7 +23,7 @@ namespace PoiDiscordDotNet
 		public static async Task Main(string[]? args = null)
 		{
 			var dockerized = Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true";
-			var pathProvider = new PathProvider(dockerized, args?[0]);
+			var pathProvider = new PathProvider(dockerized, args?.Length >= 1 ? args[0] : null);
 
 			var logger = new LoggerConfiguration()
 				.MinimumLevel.Verbose()

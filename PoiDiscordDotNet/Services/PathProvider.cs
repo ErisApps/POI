@@ -13,7 +13,7 @@ namespace PoiDiscordDotNet.Services
 			{
 				_baseDataPath = "/Data";
 			}
-			else if (baseDataPath?.Length >= 1 && !string.IsNullOrWhiteSpace(baseDataPath))
+			else if (!string.IsNullOrWhiteSpace(baseDataPath) && baseDataPath.Length >= 1)
 			{
 				_baseDataPath = baseDataPath;
 			}
