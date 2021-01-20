@@ -12,7 +12,7 @@
         <PackageReference Include="BeatSaverSharp" Version="1.6.0" />
         <PackageReference Include="DSharpPlus" Version="4.0.0-nightly-00783" />
         <PackageReference Include="DSharpPlus.CommandsNext" Version="4.0.0-nightly-00783" />
-        <PackageReference Include="DSharpPlus.Rest" Version="4.0.0-nightly-00783" />
+        <PackageReference Include="DSharpPlus.Rest" Version="4.0.0-rc1" />
         <PackageReference Include="Magick.NET-Q16-x64" Version="7.23.0" />
         <PackageReference Include="Magick.NET.Core" Version="6.0.0" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
