@@ -19,7 +19,7 @@
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
         <PackageReference Include="MongoDb.Bson.NodaTime" Version="2.1.0" />
         <PackageReference Include="MongoDB.Driver" Version="2.12.0-beta1" />
-        <PackageReference Include="NodaTime" Version="3.0.3" />
+        <PackageReference Include="NodaTime" Version="3.0.4" />
         <PackageReference Include="NodaTime.Serialization.SystemTextJson" Version="1.0.0" />
         <PackageReference Include="Polly" Version="7.2.1" />
         <PackageReference Include="Serilog.Extensions.Logging" Version="3.0.2-dev-10284" />
