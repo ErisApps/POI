@@ -9,13 +9,8 @@ namespace PoiDiscordDotNet.Services
 
         public BeatSaverClientProvider()
         {
-            _beatSaverClient = new BeatSaver(new HttpOptions
-            {
-                ApplicationName = Bootstrapper.Name,
-                Version = Bootstrapper.Version,
-                Timeout = TimeSpan.FromSeconds(10),
-                HandleRateLimits = true
-            });
+	        var beatSaverClientOptions = new HttpOptions(Bootstrapper.Name, Bootstrapper.Version, TimeSpan.FromSeconds(10), handleRateLimits: true);
+	        _beatSaverClient = new BeatSaver(beatSaverClientOptions);
         }
 
         public BeatSaver GetClientInstance() => _beatSaverClient;
