@@ -5,7 +5,7 @@ namespace PoiDiscordDotNet.Extensions
 {
 	internal static class BeatmapExtensions
 	{
-		private static readonly Regex ScoreSaberDifficultyRegex = new Regex("_(?<difficulty>\\w+)_(?<characteristic>\\w+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+		private static readonly Regex ScoreSaberDifficultyRegex = new Regex("_(?<difficulty>\\w+)_(?<characteristic>\\w+)", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
 		internal static string MapToDifficulty(this int difficultyNumber)
 		{

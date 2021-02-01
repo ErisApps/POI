@@ -19,6 +19,7 @@ namespace PoiDiscordDotNet.Extensions
 			{
 				return input;
 			}
+
 			return char.ToLower(input[0]) + input.Remove(0, 1);
 		}
 	}
