@@ -20,7 +20,7 @@ namespace PoiDiscordDotNet.Extensions
 			};
 		}
 
-		internal static bool ParsScoreSaberDifficulty(this string difficultyRaw, out string? characteristic, out string? difficulty)
+		internal static bool ParseScoreSaberDifficulty(this string difficultyRaw, out string? characteristic, out string? difficulty)
 		{
 			var matchResult = ScoreSaberDifficultyRegex.Match(difficultyRaw);
 			if (matchResult.Success)

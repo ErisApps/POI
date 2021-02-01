@@ -82,9 +82,9 @@ namespace PoiDiscordDotNet.Commands.Beat_Saber
 				return;
 			}
 
-			if (requestedSong.DifficultyRaw.ParsScoreSaberDifficulty(out var characteristic, out var difficulty))
+			if (!requestedSong.DifficultyRaw.ParseScoreSaberDifficulty(out var characteristic, out var difficulty))
 			{
-				await ctx.Errored("Failed to parse ScoreSaber difficulty").ConfigureAwait(false);
+				await ctx.Errored("Failed to parse ScoreSaber difficulty.").ConfigureAwait(false);
 				return;
 			}
 
