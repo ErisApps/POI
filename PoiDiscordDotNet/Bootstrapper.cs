@@ -62,8 +62,6 @@ namespace PoiDiscordDotNet
 				.AddSingleton<ScoreSaberService>()
 				.BuildServiceProvider();
 
-			serviceProvider.GetService<MongoDbService>();
-
 			var commandsNext = _client.UseCommandsNext(new CommandsNextConfiguration
 			{
 				EnableMentionPrefix = false,
