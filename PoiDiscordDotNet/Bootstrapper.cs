@@ -12,7 +12,7 @@ using Serilog.Sinks.SystemConsole.Themes;
 
 namespace PoiDiscordDotNet
 {
-	class Bootstrapper
+	internal static class Bootstrapper
 	{
 		private static Version? _version;
 		private static DiscordClient _client = null!;
@@ -78,7 +78,7 @@ namespace PoiDiscordDotNet
 				StringPrefixes = new[] {configProvider.Discord.Prefix},
 				Services = serviceProvider
 			});
-			commandsNext.CommandExecuted += (sender, eventArgs) =>
+			commandsNext.CommandExecuted += (_, eventArgs) =>
 			{
 				logger.Debug("{Username} executed command {CommandName}", eventArgs.Context.User.Username, eventArgs.Command.Name);
 
