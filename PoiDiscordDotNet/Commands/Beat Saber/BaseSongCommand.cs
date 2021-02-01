@@ -8,6 +8,7 @@ using DSharpPlus.Entities;
 using ImageMagick;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
+using NodaTime;
 using PoiDiscordDotNet.Commands.Modules;
 using PoiDiscordDotNet.Extensions;
 using PoiDiscordDotNet.Models.Database;
@@ -52,7 +53,7 @@ namespace PoiDiscordDotNet.Commands.Beat_Saber
 				return;
 			}
 
-			(string scoreSaberId, var nthSong) = arguments.Value;
+			var (scoreSaberId, nthSong) = arguments.Value;
 
 			var profile = await ScoreSaberService.FetchBasicPlayerProfile(scoreSaberId).ConfigureAwait(false);
 			if (profile == null)
@@ -81,6 +82,19 @@ namespace PoiDiscordDotNet.Commands.Beat_Saber
 				return;
 			}
 
+			requestedSong.DifficultyRaw.ParsScoreSaberDifficulty(out var characteristic, out var difficulty);
+			var maxScore = requestedSong.MaxScore;
+			if (maxScore <= 0)
+			{
+				var beatmap = await _beatSaverClientProvider.GetClientInstance().Hash(requestedSong.SongHash).ConfigureAwait(false);
+
+				maxScore = beatmap?.Metadata.Characteristics
+					.FirstOrDefault(x => x.Name == characteristic)?.Difficulties
+					.FirstOrDefault(x => x.Key == difficulty!.ToCamelCase())
+					.Value?.Notes.NotesToMaxScore() ?? 0;
+			}
+
+			var accuracy = ((float) (requestedSong.UnmodifiedScore * 100) / maxScore);
 			var coverImageBytes = await ScoreSaberService.FetchCoverImageByHash(requestedSong.SongHash).ConfigureAwait(false);
 
 			await using var memoryStream = new MemoryStream();
@@ -124,7 +138,7 @@ namespace PoiDiscordDotNet.Commands.Beat_Saber
 					FillColor = MagickColors.HotPink
 					//BackgroundColor = MagickColors.Aquamarine
 				};
-				using (var difficultyCaption = new MagickImage($"caption:{requestedSong.DifficultyRaw}", difficultyCaptionSettings))
+				using (var difficultyCaption = new MagickImage($"caption:{difficulty}", difficultyCaptionSettings))
 				{
 					background.Composite(difficultyCaption, 400, 250, CompositeOperator.Over);
 				}
@@ -142,18 +156,17 @@ namespace PoiDiscordDotNet.Commands.Beat_Saber
 					background.Composite(mapperCaption, 50, 375, CompositeOperator.Over);
 				}
 
-				// Accuracy (currently only works when provided by ScoreSaber, BeatSaver fallback not implemented yet)
-				if (requestedSong.MaxScore > 0)
+				// Accuracy
+				var accuracyCaptionSettings = new MagickReadSettings
 				{
-					var accuracyCaptionSettings = new MagickReadSettings
-					{
-						Height = 100,
-						Width = 150,
-						TextGravity = Gravity.Center,
-						FontPointsize = 30
-						//BackgroundColor = MagickColors.Aquamarine
-					};
-					using var accuracyCaption = new MagickImage($"label:Accuracy\n{((float) (requestedSong.UnmodifiedScore * 100) / requestedSong.MaxScore):F2}%", accuracyCaptionSettings);
+					Height = 100,
+					Width = 150,
+					TextGravity = Gravity.Center,
+					FontPointsize = 30
+					//BackgroundColor = MagickColors.Aquamarine
+				};
+				using (var accuracyCaption = new MagickImage($"label:Accuracy\n{(accuracy <= 0.001f ? "n/a" : $"{accuracy:F2}")}%", accuracyCaptionSettings))
+				{
 					background.Composite(accuracyCaption, 400, 375, CompositeOperator.Over);
 				}
 
@@ -209,7 +222,7 @@ namespace PoiDiscordDotNet.Commands.Beat_Saber
 					FontPointsize = 20
 					//BackgroundColor = MagickColors.Aquamarine
 				};
-				using (var timeSetCaption = new MagickImage($"label:{requestedSong.TimeSet.ToString()}", timeSetCaptionSettings))
+				using (var timeSetCaption = new MagickImage($"label:{requestedSong.TimeSet}", timeSetCaptionSettings))
 				{
 					background.Composite(timeSetCaption, 700, 500, CompositeOperator.Over);
 				}
@@ -221,7 +234,8 @@ namespace PoiDiscordDotNet.Commands.Beat_Saber
 
 			var messageBuilder = new DiscordMessageBuilder()
 				.WithContent("Just a proof of concept thingy, please ignore this.")
-				.WithFile("test.jpeg", memoryStream);
+				// TODO: BetterDate
+				.WithFile($"{profile.PlayerInfo.Name}_{SystemClock.Instance.GetCurrentInstant()}.jpeg", memoryStream);
 			await ctx.Message
 				.RespondAsync(messageBuilder)
 				.ConfigureAwait(false);
