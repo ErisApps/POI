@@ -267,3 +267,6 @@ Data/*
 # Okay... maybe not everything....
 !Data/Assets
 !Data/Assets/**
+
+# Visual Studio Code
+**/launchSettings.json*
