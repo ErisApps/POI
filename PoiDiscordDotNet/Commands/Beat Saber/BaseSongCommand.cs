@@ -78,11 +78,16 @@ namespace PoiDiscordDotNet.Commands.Beat_Saber
 			}
 			else
 			{
-				await ctx.Errored("The user doesn't have this many scores just yet.");
+				await ctx.Errored("The user doesn't have this many scores just yet.").ConfigureAwait(false);
 				return;
 			}
 
-			requestedSong.DifficultyRaw.ParsScoreSaberDifficulty(out var characteristic, out var difficulty);
+			if (requestedSong.DifficultyRaw.ParsScoreSaberDifficulty(out var characteristic, out var difficulty))
+			{
+				await ctx.Errored("Failed to parse ScoreSaber difficulty").ConfigureAwait(false);
+				return;
+			}
+
 			var maxScore = requestedSong.MaxScore;
 			if (maxScore <= 0)
 			{
