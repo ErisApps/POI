@@ -1,4 +1,8 @@
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace PoiDiscordDotNet.Services
@@ -21,12 +25,27 @@ namespace PoiDiscordDotNet.Services
 
 			_logger.LogInformation("Connecting to MongoDb instance.");
 			_mongoClient = new MongoClient(mongoClientSettings);
-			_logger.LogInformation("Connected to MongoDb instance.");
 
 			_mongoDatabase = _mongoClient.GetDatabase("POINext");
 		}
 
 		internal IMongoCollection<T> GetCollection<T>(string? collectionName = null) where T : class, new()
 			=> _mongoDatabase.GetCollection<T>(collectionName ?? typeof(T).Name);
+
+		internal async Task<bool> TestConnectivity()
+		{
+			var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+
+			try
+			{
+				await _mongoDatabase.RunCommandAsync((Command<BsonDocument>) "{ping:1}", cancellationToken: cts.Token);
+			}
+			catch (Exception)
+			{
+				return false;
+			}
+
+			return true;
+		}
 	}
 }

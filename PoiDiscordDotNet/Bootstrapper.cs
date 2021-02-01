@@ -62,6 +62,12 @@ namespace PoiDiscordDotNet
 				.AddSingleton<ScoreSaberService>()
 				.BuildServiceProvider();
 
+			// Verify mongoDbConnection
+			if (!await VerifyMongoDbConnection(serviceProvider, logger))
+			{
+				return;
+			}
+
 			var commandsNext = _client.UseCommandsNext(new CommandsNextConfiguration
 			{
 				EnableMentionPrefix = false,
@@ -83,6 +89,20 @@ namespace PoiDiscordDotNet
 			await _client.ConnectAsync().ConfigureAwait(false);
 
 			await Task.Delay(-1).ConfigureAwait(false);
+		}
+
+		private static async Task<bool> VerifyMongoDbConnection(IServiceProvider serviceProvider, Serilog.ILogger logger)
+		{
+			var mongoDbService = serviceProvider.GetService<MongoDbService>()!;
+			if (await mongoDbService.TestConnectivity().ConfigureAwait(false))
+			{
+				logger.Information("Connected to MongoDb instance.");
+
+				return true;
+			}
+
+			logger.Fatal("Couldn't connect to database. Exiting...");
+			return false;
 		}
 	}
 }
