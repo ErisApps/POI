@@ -29,7 +29,7 @@ namespace PoiDiscordDotNet
 				.MinimumLevel.Verbose()
 				.MinimumLevel.Override(nameof(DSharpPlus), LogEventLevel.Information)
 				.Enrich.FromLogContext()
-				.WriteTo.Console(theme: AnsiConsoleTheme.Code)
+				.WriteTo.Console(theme: SystemConsoleTheme.Colored)
 				.WriteTo.Conditional(_ => dockerized,
 					(writeTo => writeTo.Async(
 						writeToInternal => writeToInternal.File(pathProvider.LogsPath, rollingInterval: RollingInterval.Day, retainedFileCountLimit: 60, buffered: true)
