@@ -22,16 +22,20 @@ namespace PoiDiscordDotNet.Commands.Beat_Saber
 		private readonly DiscordClient _client;
 		private readonly string _backgroundImagePath;
 		private readonly MongoDbService _mongoDbService;
+		private readonly BeatSaverClientProvider _beatSaverClientProvider;
 
 		protected readonly ScoreSaberService ScoreSaberService;
 
-		protected BaseSongCommand(ILogger<BaseSongCommand> logger, DiscordClient client, ScoreSaberService scoreSaberService, MongoDbService mongoDbService, string backgroundImagePath)
+
+		protected BaseSongCommand(ILogger<BaseSongCommand> logger, DiscordClient client, ScoreSaberService scoreSaberService, MongoDbService mongoDbService,
+			BeatSaverClientProvider beatSaverClientProvider, string backgroundImagePath)
 		{
 			_logger = logger;
 			_client = client;
 
 			ScoreSaberService = scoreSaberService;
 			_mongoDbService = mongoDbService;
+			_beatSaverClientProvider = beatSaverClientProvider;
 			_backgroundImagePath = backgroundImagePath;
 		}
 
