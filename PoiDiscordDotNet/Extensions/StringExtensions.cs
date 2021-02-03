@@ -4,7 +4,7 @@ namespace PoiDiscordDotNet.Extensions
 {
 	internal static class StringExtensions
 	{
-		private static readonly Regex ScoreSaberIdRegex = new Regex("(?:http(?:s)?://)?(?:new\\.)?(?:scoresaber\\.com/u/)?(\\d{16,})(?:/.*)?", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+		private static readonly Regex ScoreSaberIdRegex = new Regex("(?:http(?:s)?://)?(?:new\\.)?(?:scoresaber\\.com/u/)?(?<scoreSaberId>\\d{16,})(?:/.*)?", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
 		internal static bool ExtractScoreSaberId(this string input, out string? scoreSaberId)
 		{
