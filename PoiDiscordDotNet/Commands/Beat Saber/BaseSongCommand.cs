@@ -267,7 +267,8 @@ namespace PoiDiscordDotNet.Commands.Beat_Saber
 				}
 			}
 
-			var args = ctx.RawArguments
+			var args = ctx.RawArgumentString
+				.Split(" ", StringSplitOptions.TrimEntries)
 				.Where(arg => !string.IsNullOrWhiteSpace(arg))
 				.Where(arg => !arg.StartsWith("<@!"))
 				.Where(arg => !arg.EndsWith(">"))
