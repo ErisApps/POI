@@ -11,8 +11,10 @@ namespace PoiDiscordDotNet.Commands.Beat_Saber
 {
 	public class TopSongCommand : BaseSongCommand
 	{
-		public TopSongCommand(ILogger<TopSongCommand> logger, DiscordClient client, PathProvider pathProvider, ScoreSaberService scoreSaberService, MongoDbService mongoDbService, BeatSaverClientProvider beatSaverClientProvider)
-			: base(logger, client, scoreSaberService, mongoDbService, beatSaverClientProvider, Path.Combine(pathProvider.AssetsPath, "poinextbg.png"))
+		public TopSongCommand(ILogger<TopSongCommand> logger, DiscordClient client, PathProvider pathProvider, ScoreSaberService scoreSaberService, MongoDbService mongoDbService,
+			BeatSaverClientProvider beatSaverClientProvider)
+			: base(logger, client, scoreSaberService, mongoDbService, beatSaverClientProvider, Path.Combine(pathProvider.AssetsPath, "poinext1.png"),
+				Path.Combine(pathProvider.AssetsPath, "Signature-Eris.png"))
 		{
 		}
 

@@ -22,6 +22,7 @@ namespace PoiDiscordDotNet.Commands.Beat_Saber
 		private readonly ILogger<BaseSongCommand> _logger;
 		private readonly DiscordClient _client;
 		private readonly string _backgroundImagePath;
+		private readonly string _erisSignaturePath;
 		private readonly MongoDbService _mongoDbService;
 		private readonly BeatSaverClientProvider _beatSaverClientProvider;
 
@@ -29,7 +30,7 @@ namespace PoiDiscordDotNet.Commands.Beat_Saber
 
 
 		protected BaseSongCommand(ILogger<BaseSongCommand> logger, DiscordClient client, ScoreSaberService scoreSaberService, MongoDbService mongoDbService,
-			BeatSaverClientProvider beatSaverClientProvider, string backgroundImagePath)
+			BeatSaverClientProvider beatSaverClientProvider, string backgroundImagePath, string erisSignaturePath)
 		{
 			_logger = logger;
 			_client = client;
@@ -38,6 +39,7 @@ namespace PoiDiscordDotNet.Commands.Beat_Saber
 			_mongoDbService = mongoDbService;
 			_beatSaverClientProvider = beatSaverClientProvider;
 			_backgroundImagePath = backgroundImagePath;
+			_erisSignaturePath = erisSignaturePath;
 		}
 
 		protected abstract Task<ScoresPage?> FetchScorePage(string playerId, int page);
@@ -111,6 +113,13 @@ namespace PoiDiscordDotNet.Commands.Beat_Saber
 					using var coverImage = new MagickImage(coverImageBytes);
 					coverImage.Resize(195, 195);
 					background.Composite(coverImage, 50, 50, CompositeOperator.Over);
+				}
+
+				//Eris signature
+				using (var erisSignature = new MagickImage(_erisSignaturePath))
+				{
+					erisSignature.Resize(100, 46);
+					background.Composite(erisSignature, 900, 385, CompositeOperator.Over);
 				}
 
 				// Song title
