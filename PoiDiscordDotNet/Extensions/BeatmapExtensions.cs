@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Text.RegularExpressions;
+using ImageMagick;
 
 namespace PoiDiscordDotNet.Extensions
 {
 	internal static class BeatmapExtensions
 	{
-		private static readonly Regex ScoreSaberDifficultyRegex = new Regex("_(?<difficulty>\\w+)_(?<characteristic>\\w+)", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
+		private static readonly Regex ScoreSaberDifficultyRegex = new("_(?<difficulty>\\w+)_(?<characteristic>\\w+)", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
 		internal static string MapToDifficulty(this int difficultyNumber)
 		{
@@ -17,6 +18,19 @@ namespace PoiDiscordDotNet.Extensions
 				7 => "Expert",
 				9 => "ExpertPlus",
 				_ => throw new NotImplementedException()
+			};
+		}
+
+		internal static MagickColor ReturnDifficultyColor(this int difficultyNumber)
+		{
+			return difficultyNumber switch
+			{
+				1 => Constants.DifficultyColors.Easy,
+				3 => Constants.DifficultyColors.Normal,
+				5 => Constants.DifficultyColors.Hard,
+				7 => Constants.DifficultyColors.Expert,
+				9 => Constants.DifficultyColors.ExpertPlus,
+				_ => MagickColors.Gray
 			};
 		}
 
