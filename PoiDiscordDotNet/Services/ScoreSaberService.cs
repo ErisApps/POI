@@ -20,7 +20,8 @@ namespace PoiDiscordDotNet.Services
 {
 	public class ScoreSaberService
 	{
-		private const string SCORESABER_BASEURL = "https://new.scoresaber.com/api/";
+		private const string SCORESABER_BASEURL = "https://new.scoresaber.com";
+		private const string SCORESABER_API_BASEURL = SCORESABER_BASEURL + "/api/";
 		private const int MAX_BULKHEAD_QUEUE_SIZE = 1000;
 
 		private readonly ILogger<ScoreSaberService> _logger;
@@ -29,7 +30,7 @@ namespace PoiDiscordDotNet.Services
 		private readonly AsyncPolicyWrap<HttpResponseMessage> _scoreSaberApiChainedRateLimitPolicy;
 		private readonly AsyncBulkheadPolicy<HttpResponseMessage> _scoreSaberApiBulkheadPolicy;
 		private readonly AsyncRetryPolicy<HttpResponseMessage> _scoreSaberApiRateLimitPolicy;
-		private readonly AsyncRetryPolicy _scoreSaberCoverImageRetryPolicy;
+		private readonly AsyncRetryPolicy _scoreSaberImageRetryPolicy;
 
 		private readonly JsonSerializerOptions _jsonSerializerOptions;
 
@@ -40,7 +41,7 @@ namespace PoiDiscordDotNet.Services
 			_logger = logger;
 			_scoreSaberApiClient = new HttpClient
 			{
-				BaseAddress = new Uri(SCORESABER_BASEURL, UriKind.Absolute),
+				BaseAddress = new Uri(SCORESABER_API_BASEURL, UriKind.Absolute),
 				Timeout = TimeSpan.FromSeconds(30),
 				DefaultRequestVersion = HttpVersion.Version20,
 				DefaultRequestHeaders = {{"User-Agent", $"{Bootstrapper.Name}/{Bootstrapper.Version.ToString(3)}"}}
@@ -83,7 +84,7 @@ namespace PoiDiscordDotNet.Services
 				_scoreSaberApiBulkheadPolicy,
 				_scoreSaberApiRateLimitPolicy);
 
-			_scoreSaberCoverImageRetryPolicy = Policy
+			_scoreSaberImageRetryPolicy = Policy
 				.Handle<HttpRequestException>((exception => exception.StatusCode != HttpStatusCode.NotFound))
 				.Or<TaskCanceledException>()
 				.WaitAndRetryAsync(3, _ => TimeSpan.FromSeconds(10));
@@ -91,22 +92,22 @@ namespace PoiDiscordDotNet.Services
 
 		internal Task<BasicProfile?> FetchBasicPlayerProfile(string scoreSaberId)
 		{
-			return FetchData<BasicProfile?>($"{SCORESABER_BASEURL}player/{scoreSaberId}/basic");
+			return FetchData<BasicProfile?>($"{SCORESABER_API_BASEURL}player/{scoreSaberId}/basic");
 		}
 
 		internal Task<FullProfile?> FetchFullPlayerProfile(string scoreSaberId)
 		{
-			return FetchData<FullProfile?>($"{SCORESABER_BASEURL}player/{scoreSaberId}/full");
+			return FetchData<FullProfile?>($"{SCORESABER_API_BASEURL}player/{scoreSaberId}/full");
 		}
 
 		internal Task<ScoresPage?> FetchRecentSongsScorePage(string scoreSaberId, int page)
 		{
-			return FetchData<ScoresPage?>($"{SCORESABER_BASEURL}player/{scoreSaberId}/scores/recent/{page}");
+			return FetchData<ScoresPage?>($"{SCORESABER_API_BASEURL}player/{scoreSaberId}/scores/recent/{page}");
 		}
 
 		internal Task<ScoresPage?> FetchTopSongsScorePage(string scoreSaberId, int page)
 		{
-			return FetchData<ScoresPage?>($"{SCORESABER_BASEURL}player/{scoreSaberId}/scores/top/{page}");
+			return FetchData<ScoresPage?>($"{SCORESABER_API_BASEURL}player/{scoreSaberId}/scores/top/{page}");
 		}
 
 		internal Task<PlayersPage?> SearchPlayersByName(string name)
@@ -116,20 +117,17 @@ namespace PoiDiscordDotNet.Services
 				throw new ArgumentException("Please enter a player name between 3 and 32 characters! (bounds not inclusive)");
 			}
 
-			return FetchData<PlayersPage?>($"{SCORESABER_BASEURL}players/by-name/{name}");
+			return FetchData<PlayersPage?>($"{SCORESABER_API_BASEURL}players/by-name/{name}");
 		}
 
-		internal async Task<byte[]?> FetchCoverImageByHash(string songHash)
+		internal Task<byte[]?> FetchCoverImageByHash(string songHash)
 		{
-			try
-			{
-				return await _scoreSaberCoverImageRetryPolicy.ExecuteAsync(() => _scoreSaberApiClient.GetByteArrayAsync($"{SCORESABER_BASEURL}static/covers/{songHash}.png"));
-			}
-			catch (Exception e)
-			{
-				_logger.LogError("{Exception}", e.ToString());
-				return null;
-			}
+			return FetchImageInternal($"{SCORESABER_API_BASEURL}static/covers/{songHash}.png");
+		}
+
+		internal Task<byte[]?> FetchPlayerAvatarByProfile(string avatarPath)
+		{
+			return FetchImageInternal($"{SCORESABER_BASEURL}{avatarPath}");
 		}
 
 		private async Task<T?> FetchData<T>(string url) where T : class?, new()
@@ -153,6 +151,19 @@ namespace PoiDiscordDotNet.Services
 			}
 
 			return null;
+		}
+
+		private async Task<byte[]?> FetchImageInternal(string imageUrl)
+		{
+			try
+			{
+				return await _scoreSaberImageRetryPolicy.ExecuteAsync(() => _scoreSaberApiClient.GetByteArrayAsync(imageUrl));
+			}
+			catch (Exception e)
+			{
+				_logger.LogError("{Exception}", e.ToString());
+				return null;
+			}
 		}
 
 		/*private void TestRateLimitPolicy()
