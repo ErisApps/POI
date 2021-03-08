@@ -103,6 +103,7 @@ namespace PoiDiscordDotNet.Commands.Beat_Saber
 
 			var accuracy = ((float) (requestedSong.UnmodifiedScore * 100) / maxScore);
 			var coverImageBytes = await ScoreSaberService.FetchCoverImageByHash(requestedSong.SongHash).ConfigureAwait(false);
+			var playerImageBytes = await ScoreSaberService.FetchPlayerAvatarByProfile(profile.PlayerInfo.Avatar).ConfigureAwait(false);
 
 			await using var memoryStream = new MemoryStream();
 			using (var background = new MagickImage(_backgroundImagePath))
@@ -119,7 +120,42 @@ namespace PoiDiscordDotNet.Commands.Beat_Saber
 				using (var erisSignature = new MagickImage(_erisSignaturePath))
 				{
 					erisSignature.Resize(100, 46);
-					background.Composite(erisSignature, 900, 385, CompositeOperator.Over);
+					erisSignature.Blur(0,0.5);
+					background.Composite(erisSignature, 860, 385, CompositeOperator.Over);
+				}
+
+				//played player signature
+				if (playerImageBytes != null)
+				{
+					using var avatarImage = new MagickImage(playerImageBytes);
+					avatarImage.Resize(new MagickGeometry
+					{
+						Width = 100,
+						Height = 100
+					});
+
+					using var avatarLayer = new MagickImage(MagickColors.Transparent, 100, 100);
+					avatarLayer.Draw(
+						new DrawableFillColor(MagickColors.Black),
+						new DrawableCircle(50, 50, 50, 1)
+					);
+
+					avatarLayer.Composite(avatarImage, CompositeOperator.Atop);
+					background.Draw(new DrawableComposite(850, 180, CompositeOperator.Over, avatarLayer));
+				}
+
+				var playerNameSettings = new MagickReadSettings
+				{
+					Height = 50,
+					Width = 200,
+					TextGravity = Gravity.Center,
+					BackgroundColor = MagickColors.Transparent,
+					FontStyle = FontStyleType.Bold,
+					FillColor = MagickColors.Gray
+				};
+				using (var playerNameCaption = new MagickImage($"label:{profile.PlayerInfo.Name}", playerNameSettings))
+				{
+					background.Composite(playerNameCaption, 800, 280, CompositeOperator.Over);
 				}
 
 				// Song title
@@ -140,7 +176,7 @@ namespace PoiDiscordDotNet.Commands.Beat_Saber
 				var authorCaptionSettings = new MagickReadSettings
 				{
 					Height = 60,
-					Width = 645,
+					Width = 475,
 					FontStyle = FontStyleType.Italic,
 					BackgroundColor = MagickColors.Transparent,
 					FillColor = MagickColors.Gray
@@ -265,15 +301,22 @@ namespace PoiDiscordDotNet.Commands.Beat_Saber
 				var timeSetCaptionSettings = new MagickReadSettings
 				{
 					Height = 50,
-					Width = 225,
-					TextGravity = Gravity.South,
-					FontPointsize = 20,
+					Width = 200,
+					TextGravity = Gravity.Center,
+					FontPointsize = 30,
 					BackgroundColor = MagickColors.Transparent,
-					FillColor = MagickColors.White
+					FillColor = MagickColors.Gray
 				};
-				using (var timeSetCaption = new MagickImage($"label:{requestedSong.TimeSet}", timeSetCaptionSettings))
+				using (var timeSetCaption = new MagickImage($"label:Played", timeSetCaptionSettings))
 				{
-					background.Composite(timeSetCaption, 600, 375, CompositeOperator.Over);
+					background.Composite(timeSetCaption, 575, 350, CompositeOperator.Over);
+				}
+
+				timeSetCaptionSettings.FontPointsize = 35;
+				timeSetCaptionSettings.FillColor = MagickColors.White;
+				using (var timeSetCaption = new MagickImage($"label:{requestedSong.TimeSet.ToDateTimeUtc().ToShortDateString()}", timeSetCaptionSettings))
+				{
+					background.Composite(timeSetCaption, 575, 390, CompositeOperator.Over);
 				}
 
 				await background.WriteAsync(memoryStream).ConfigureAwait(false);
@@ -284,7 +327,7 @@ namespace PoiDiscordDotNet.Commands.Beat_Saber
 			var messageBuilder = new DiscordMessageBuilder()
 				.WithContent($"Just a proof of concept thingy, please ignore this. \nWoah, {profile.PlayerInfo.Name} played: ")
 				// TODO: BetterDate
-				.WithFile($"{profile.PlayerInfo.Name}_{SystemClock.Instance.GetCurrentInstant()}.jpeg", memoryStream);
+				.WithFile($"{profile.PlayerInfo.Name}_{SystemClock.Instance.GetCurrentInstant().ToDateTimeUtc().ToLongDateString()}.jpeg", memoryStream);
 			await ctx.Message
 				.RespondAsync(messageBuilder)
 				.ConfigureAwait(false);
