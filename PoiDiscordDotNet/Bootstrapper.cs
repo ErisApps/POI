@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
+using DSharpPlus.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using PoiDiscordDotNet.Services;
@@ -94,7 +95,7 @@ namespace PoiDiscordDotNet
 			};
 			commandsNext.RegisterCommands(Assembly.GetEntryAssembly());
 
-			await _client.ConnectAsync().ConfigureAwait(false);
+			await _client.ConnectAsync(new DiscordActivity("POI for mod? (pretty please)", ActivityType.Playing)).ConfigureAwait(false);
 
 			await Task.Delay(-1).ConfigureAwait(false);
 		}
