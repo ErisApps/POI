@@ -48,7 +48,9 @@ namespace PoiDiscordDotNet
 			{
 				Token = configProvider.Discord.Token,
 				TokenType = TokenType.Bot,
-				LoggerFactory = seriFactory
+				LoggerFactory = seriFactory,
+				// This is apparently a bad idea according to the documentation... but I'm going to enable it regardless...
+				ReconnectIndefinitely = true
 			});
 
 			var serviceProvider = new ServiceCollection()
