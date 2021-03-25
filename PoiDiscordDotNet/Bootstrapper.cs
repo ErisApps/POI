@@ -78,6 +78,12 @@ namespace PoiDiscordDotNet
 				StringPrefixes = new[] {configProvider.Discord.Prefix},
 				Services = serviceProvider
 			});
+			commandsNext.CommandErrored += (_, eventArgs) =>
+			{
+				logger.Error("{Username} tried to execute command {CommandName}, but it errored with message {ErrorMessage}", eventArgs.Context.User.Username, eventArgs.Command.Name, eventArgs.Exception);
+
+				return Task.CompletedTask;
+			};
 			commandsNext.CommandExecuted += (_, eventArgs) =>
 			{
 				logger.Debug("{Username} executed command {CommandName}", eventArgs.Context.User.Username, eventArgs.Command.Name);
