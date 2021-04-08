@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Reflection;
 using System.Threading.Tasks;
 using DSharpPlus;
@@ -23,6 +24,11 @@ namespace PoiDiscordDotNet
 
 		public static async Task Main(string[]? args = null)
 		{
+			var cultureInfo = new CultureInfo("en-GB");
+
+			CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+			CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
+
 			var dockerized = Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true";
 			var pathProvider = new PathProvider(dockerized, args?.Length >= 1 ? args[0] : null);
 
