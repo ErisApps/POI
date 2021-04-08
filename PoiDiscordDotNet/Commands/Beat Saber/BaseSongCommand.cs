@@ -120,19 +120,15 @@ namespace PoiDiscordDotNet.Commands.Beat_Saber
 				using (var erisSignature = new MagickImage(_erisSignaturePath))
 				{
 					erisSignature.Resize(100, 46);
-					erisSignature.Blur(0,0.5);
-					background.Composite(erisSignature, 860, 385, CompositeOperator.Over);
+					erisSignature.Blur(0, 0.5);
+					background.Composite(erisSignature, 860, 415, CompositeOperator.Over);
 				}
 
 				//played player signature
 				if (playerImageBytes != null)
 				{
 					using var avatarImage = new MagickImage(playerImageBytes);
-					avatarImage.Resize(new MagickGeometry
-					{
-						Width = 100,
-						Height = 100
-					});
+					avatarImage.Resize(new MagickGeometry {Width = 100, Height = 100});
 
 					using var avatarLayer = new MagickImage(MagickColors.Transparent, 100, 100);
 					avatarLayer.Draw(
@@ -144,6 +140,7 @@ namespace PoiDiscordDotNet.Commands.Beat_Saber
 					background.Draw(new DrawableComposite(850, 180, CompositeOperator.Over, avatarLayer));
 				}
 
+				// playerName
 				var playerNameSettings = new MagickReadSettings
 				{
 					Height = 50,
@@ -186,7 +183,23 @@ namespace PoiDiscordDotNet.Commands.Beat_Saber
 					background.Composite(authorCaption, 295, 155, CompositeOperator.Over);
 				}
 
-				using (var difficultyCaption = new MagickImage(requestedSong.Difficulty.ReturnDifficultyColor(), 195, 10))
+				//difficulty color
+				using (var difficultyCaption = new MagickImage(requestedSong.Difficulty.ReturnDifficultyColor(), 195, 40))
+				{
+					background.Composite(difficultyCaption, 50, 245, CompositeOperator.Over);
+				}
+
+				//difficulty Text
+				var difficultyCaptionSettings = new MagickReadSettings
+				{
+					Height = 40,
+					Width = 195,
+					FontStyle = FontStyleType.Italic,
+					BackgroundColor = MagickColors.Transparent,
+					FillColor = MagickColors.White,
+					TextGravity = Gravity.Center
+				};
+				using (var difficultyCaption = new MagickImage($"caption:{difficulty}", difficultyCaptionSettings))
 				{
 					background.Composite(difficultyCaption, 50, 245, CompositeOperator.Over);
 				}
@@ -203,7 +216,7 @@ namespace PoiDiscordDotNet.Commands.Beat_Saber
 				};
 				using (var mapperCaption = new MagickImage($"caption:{requestedSong.LevelAuthorName}", mapperCaptionSettings))
 				{
-					background.Composite(mapperCaption, 50, 250, CompositeOperator.Over);
+					background.Composite(mapperCaption, 50, 280, CompositeOperator.Over);
 				}
 
 				// Accuracy
@@ -218,14 +231,14 @@ namespace PoiDiscordDotNet.Commands.Beat_Saber
 				};
 				using (var accuracyCaption = new MagickImage($"label:Accuracy", accuracyCaptionSettings))
 				{
-					background.Composite(accuracyCaption, 295, 250, CompositeOperator.Over);
+					background.Composite(accuracyCaption, 295, 280, CompositeOperator.Over);
 				}
 
 				accuracyCaptionSettings.FillColor = MagickColors.White;
 				accuracyCaptionSettings.FontPointsize = 40;
 				using (var accuracyCaption = new MagickImage($"label:{(accuracy <= 0.001f ? "n/a" : $"{accuracy:F2}")}%", accuracyCaptionSettings))
 				{
-					background.Composite(accuracyCaption, 295, 290, CompositeOperator.Over);
+					background.Composite(accuracyCaption, 295, 320, CompositeOperator.Over);
 				}
 
 				// Rank
@@ -240,14 +253,14 @@ namespace PoiDiscordDotNet.Commands.Beat_Saber
 				};
 				using (var rankCaption = new MagickImage($"label:Rank", rankCaptionSettings))
 				{
-					background.Composite(rankCaption, 600, 250, CompositeOperator.Over);
+					background.Composite(rankCaption, 600, 280, CompositeOperator.Over);
 				}
 
 				rankCaptionSettings.FillColor = MagickColors.White;
 				rankCaptionSettings.FontPointsize = 40;
 				using (var rankCaption = new MagickImage($"label:{requestedSong.Rank}", rankCaptionSettings))
 				{
-					background.Composite(rankCaption, 600, 290, CompositeOperator.Over);
+					background.Composite(rankCaption, 600, 320, CompositeOperator.Over);
 				}
 
 				if (requestedSong.Weight > 0)
@@ -264,14 +277,14 @@ namespace PoiDiscordDotNet.Commands.Beat_Saber
 					};
 					using (var rawPpCaption = new MagickImage($"label:Raw PP", rawPpCaptionSettings))
 					{
-						background.Composite(rawPpCaption, 50, 350, CompositeOperator.Over);
+						background.Composite(rawPpCaption, 50, 380, CompositeOperator.Over);
 					}
 
 					rawPpCaptionSettings.FillColor = MagickColors.White;
 					rawPpCaptionSettings.FontPointsize = 40;
 					using (var rawPpCaption = new MagickImage($"label:{requestedSong.Pp:F3}", rawPpCaptionSettings))
 					{
-						background.Composite(rawPpCaption, 50, 390, CompositeOperator.Over);
+						background.Composite(rawPpCaption, 50, 420, CompositeOperator.Over);
 					}
 
 					// Weighted PP
@@ -286,18 +299,18 @@ namespace PoiDiscordDotNet.Commands.Beat_Saber
 					};
 					using (var weightedPpCaption = new MagickImage($"label:Weighted PP", weightedPpCaptionSettings))
 					{
-						background.Composite(weightedPpCaption, 295, 350, CompositeOperator.Over);
+						background.Composite(weightedPpCaption, 295, 380, CompositeOperator.Over);
 					}
 
 					weightedPpCaptionSettings.FontPointsize = 40;
 					weightedPpCaptionSettings.FillColor = MagickColors.White;
 					using (var weightedPpCaption = new MagickImage($"label:{(requestedSong.Pp * requestedSong.Weight):F3}", weightedPpCaptionSettings))
 					{
-						background.Composite(weightedPpCaption, 295, 390, CompositeOperator.Over);
+						background.Composite(weightedPpCaption, 295, 420, CompositeOperator.Over);
 					}
 				}
 
-				// Rank
+				// Time
 				var timeSetCaptionSettings = new MagickReadSettings
 				{
 					Height = 50,
@@ -309,14 +322,14 @@ namespace PoiDiscordDotNet.Commands.Beat_Saber
 				};
 				using (var timeSetCaption = new MagickImage($"label:Played", timeSetCaptionSettings))
 				{
-					background.Composite(timeSetCaption, 575, 350, CompositeOperator.Over);
+					background.Composite(timeSetCaption, 575, 380, CompositeOperator.Over);
 				}
 
 				timeSetCaptionSettings.FontPointsize = 35;
 				timeSetCaptionSettings.FillColor = MagickColors.White;
 				using (var timeSetCaption = new MagickImage($"label:{requestedSong.TimeSet.ToDateTimeUtc().ToShortDateString()}", timeSetCaptionSettings))
 				{
-					background.Composite(timeSetCaption, 575, 390, CompositeOperator.Over);
+					background.Composite(timeSetCaption, 575, 420, CompositeOperator.Over);
 				}
 
 				await background.WriteAsync(memoryStream).ConfigureAwait(false);
