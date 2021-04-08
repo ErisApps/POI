@@ -116,7 +116,7 @@ namespace PoiDiscordDotNet.Commands.Beat_Saber
 					background.Composite(coverImage, 50, 50, CompositeOperator.Over);
 				}
 
-				//Eris signature
+				// Eris signature
 				using (var erisSignature = new MagickImage(_erisSignaturePath))
 				{
 					erisSignature.Resize(100, 46);
@@ -124,7 +124,7 @@ namespace PoiDiscordDotNet.Commands.Beat_Saber
 					background.Composite(erisSignature, 860, 415, CompositeOperator.Over);
 				}
 
-				//played player signature
+				// Played player signature
 				if (playerImageBytes != null)
 				{
 					using var avatarImage = new MagickImage(playerImageBytes);
@@ -140,7 +140,7 @@ namespace PoiDiscordDotNet.Commands.Beat_Saber
 					background.Draw(new DrawableComposite(850, 180, CompositeOperator.Over, avatarLayer));
 				}
 
-				// playerName
+				// PlayerName
 				var playerNameSettings = new MagickReadSettings
 				{
 					Height = 50,
@@ -183,13 +183,13 @@ namespace PoiDiscordDotNet.Commands.Beat_Saber
 					background.Composite(authorCaption, 295, 155, CompositeOperator.Over);
 				}
 
-				//difficulty color
+				// Difficulty color
 				using (var difficultyCaption = new MagickImage(requestedSong.Difficulty.ReturnDifficultyColor(), 195, 40))
 				{
 					background.Composite(difficultyCaption, 50, 245, CompositeOperator.Over);
 				}
 
-				//difficulty Text
+				// Difficulty Text
 				var difficultyCaptionSettings = new MagickReadSettings
 				{
 					Height = 40,
@@ -310,7 +310,7 @@ namespace PoiDiscordDotNet.Commands.Beat_Saber
 					}
 				}
 
-				// Time
+				// TimeSet
 				var timeSetCaptionSettings = new MagickReadSettings
 				{
 					Height = 50,
