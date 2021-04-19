@@ -30,6 +30,7 @@ namespace PoiDiscordDotNet.Services
 		private readonly AsyncPolicyWrap<HttpResponseMessage> _scoreSaberApiChainedRateLimitPolicy;
 		private readonly AsyncBulkheadPolicy<HttpResponseMessage> _scoreSaberApiBulkheadPolicy;
 		private readonly AsyncRetryPolicy<HttpResponseMessage> _scoreSaberApiRateLimitPolicy;
+		private readonly AsyncRetryPolicy<HttpResponseMessage> _scoreSaberApiInternalServerErrorRetryPolicy;
 		private readonly AsyncRetryPolicy _scoreSaberImageRetryPolicy;
 
 		private readonly JsonSerializerOptions _jsonSerializerOptions;
@@ -48,6 +49,10 @@ namespace PoiDiscordDotNet.Services
 			};
 
 			_jsonSerializerOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web) {PropertyNameCaseInsensitive = false}.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
+
+			_scoreSaberApiInternalServerErrorRetryPolicy = Policy
+				.HandleResult<HttpResponseMessage>(resp => resp.StatusCode == HttpStatusCode.InternalServerError)
+				.RetryAsync(3, (_, attempt, _) => _logger.LogInformation("Received Internal Server Error, retry attempt {Attempt} / 3", attempt));
 
 			_scoreSaberApiRateLimitPolicy = Policy
 				.HandleResult<HttpResponseMessage>(resp => resp.StatusCode == HttpStatusCode.TooManyRequests)
@@ -82,6 +87,7 @@ namespace PoiDiscordDotNet.Services
 
 			_scoreSaberApiChainedRateLimitPolicy = Policy.WrapAsync(
 				_scoreSaberApiBulkheadPolicy,
+				_scoreSaberApiInternalServerErrorRetryPolicy,
 				_scoreSaberApiRateLimitPolicy);
 
 			_scoreSaberImageRetryPolicy = Policy
