@@ -70,7 +70,7 @@ namespace PoiDiscordDotNet.Services
 					},
 					(_, timespan, _, _) =>
 					{
-						_logger.LogInformation($"Hit ScoreSaber rate limit. Retrying in {timespan:g}");
+						_logger.LogInformation("Hit ScoreSaber rate limit. Retrying in {TimeTillReset}", timespan.ToString("g"));
 
 						return Task.CompletedTask;
 					});
