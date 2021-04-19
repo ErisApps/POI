@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PoiDiscordDotNet", "PoiDiscordDotNet\PoiDiscordDotNet.csproj", "{A1496200-88C5-463B-979F-A4703FB3327F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POI.DiscordDotNet", "POI.DiscordDotNet\POI.DiscordDotNet.csproj", "{A1496200-88C5-463B-979F-A4703FB3327F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POI.Core", "POI.Core\POI.Core.csproj", "{76EFEFFE-C892-4E1C-A232-25EBF41738AA}"
 EndProject
