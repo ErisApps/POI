@@ -15,8 +15,4 @@
       <PackageReference Include="Serilog.Extensions.Logging" Version="3.0.2-dev-10284" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Models" />
-    </ItemGroup>
-
 </Project>
