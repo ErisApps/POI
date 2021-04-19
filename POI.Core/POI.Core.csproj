@@ -5,4 +5,18 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="BeatSaverSharp" Version="2.0.1" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
+      <PackageReference Include="NodaTime" Version="3.0.5" />
+      <PackageReference Include="NodaTime.Serialization.SystemTextJson" Version="1.0.0" />
+      <PackageReference Include="Polly" Version="7.2.2" />
+      <PackageReference Include="Serilog.Extensions.Logging" Version="3.0.2-dev-10284" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Models" />
+    </ItemGroup>
+
 </Project>
