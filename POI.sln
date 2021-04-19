@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PoiDiscordDotNet", "PoiDiscordDotNet\PoiDiscordDotNet.csproj", "{A1496200-88C5-463B-979F-A4703FB3327F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POI.Core", "POI.Core\POI.Core.csproj", "{76EFEFFE-C892-4E1C-A232-25EBF41738AA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{A1496200-88C5-463B-979F-A4703FB3327F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1496200-88C5-463B-979F-A4703FB3327F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1496200-88C5-463B-979F-A4703FB3327F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76EFEFFE-C892-4E1C-A232-25EBF41738AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76EFEFFE-C892-4E1C-A232-25EBF41738AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76EFEFFE-C892-4E1C-A232-25EBF41738AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76EFEFFE-C892-4E1C-A232-25EBF41738AA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
