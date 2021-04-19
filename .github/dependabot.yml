@@ -1,0 +1,17 @@
+﻿version: 2
+registries:
+    nuget-feed-nuget-emzi0767-com-api-v3-index-json:
+        type: nuget-feed
+        url: https://nuget.emzi0767.com/api/v3/index.json
+updates:
+    - package-ecosystem: nuget
+      directory: "/"
+      schedule:
+          interval: daily
+      open-pull-requests-limit: 10
+      reviewers:
+          - ErisApps
+      assignees:
+          - ErisApps
+      registries:
+          - nuget-feed-nuget-emzi0767-com-api-v3-index-json
