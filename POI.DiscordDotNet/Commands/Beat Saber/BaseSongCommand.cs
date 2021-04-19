@@ -52,7 +52,7 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 			var arguments = await ExtractArguments(ctx).ConfigureAwait(false);
 			if (arguments == null)
 			{
-				await ctx.Errored("Something went wrong while trying to parse the arguments").ConfigureAwait(false);
+				await _logger.LogError(ctx, "Something went wrong while trying to parse the arguments").ConfigureAwait(false);
 				return;
 			}
 
@@ -61,7 +61,7 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 			var profile = await ScoreSaberService.FetchBasicPlayerProfile(scoreSaberId).ConfigureAwait(false);
 			if (profile == null)
 			{
-				await ctx.Errored("Couldn't fetch profile.").ConfigureAwait(false);
+				await _logger.LogError(ctx, "Couldn't fetch profile").ConfigureAwait(false);
 				return;
 			}
 
@@ -69,7 +69,7 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 			var songPage = await FetchScorePage(profile.PlayerInfo.PlayerId, songPageNumber).ConfigureAwait(false);
 			if (songPage == null)
 			{
-				await ctx.Errored("Couldn't fetch songPage.").ConfigureAwait(false);
+				await _logger.LogError(ctx, "Couldn't fetch songPage").ConfigureAwait(false);
 				return;
 			}
 
@@ -81,13 +81,13 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 			}
 			else
 			{
-				await ctx.Errored("The user doesn't have this many scores just yet.").ConfigureAwait(false);
+				await _logger.LogError(ctx, "The user doesn't have this many scores just yet").ConfigureAwait(false);
 				return;
 			}
 
 			if (!requestedSong.DifficultyRaw.ParseScoreSaberDifficulty(out var characteristic, out var difficulty))
 			{
-				await ctx.Errored("Failed to parse ScoreSaber difficulty.").ConfigureAwait(false);
+				await _logger.LogError(ctx, "Failed to parse ScoreSaber difficulty").ConfigureAwait(false);
 				return;
 			}
 
