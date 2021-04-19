@@ -23,7 +23,7 @@ namespace PoiDiscordDotNet.Services
 
         private Task ClientOnReady(DiscordClient sender, ReadyEventArgs e)
         {
-            _logger.LogDebug("Client OnReady event received. (Re)setting time since start.");
+            _logger.LogDebug("Client OnReady event received. (Re)setting time since start");
             UpSince = DateTimeOffset.Now.ToInstant();
 
             return Task.CompletedTask;

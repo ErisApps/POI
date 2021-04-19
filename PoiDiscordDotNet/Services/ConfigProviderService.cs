@@ -27,7 +27,7 @@ namespace PoiDiscordDotNet.Services
 
 		internal async Task<bool> LoadConfig()
 		{
-			_logger.Information($"Configuration file path: {_configPath}");
+			_logger.Information("Configuration file path: {ConfigPath}", _configPath);
 
 			if (File.Exists(_configPath))
 			{
@@ -39,16 +39,16 @@ namespace PoiDiscordDotNet.Services
 				}
 				catch (NotSupportedException)
 				{
-					_logger.Fatal("The content type is not supported.");
+					_logger.Fatal("The content type is not supported");
 				}
 				catch (JsonException)
 				{
-					_logger.Fatal("Invalid configuration json file.");
+					_logger.Fatal("Invalid configuration json file");
 				}
 			}
 			else
 			{
-				_logger.Fatal("Configuration json file was not found.");
+				_logger.Fatal("Configuration json file was not found");
 			}
 
 			return false;
@@ -62,19 +62,19 @@ namespace PoiDiscordDotNet.Services
 		{
 			if (_configuration == null)
 			{
-				_logger.Error("Configuration was null. Base validation failed.");
+				_logger.Error("Configuration was null. Base validation failed");
 				return false;
 			}
 
 			if (_configuration.DiscordConfig == null || !ValidateDiscordConfig())
 			{
-				_logger.Error("Discord configuration validation failed.");
+				_logger.Error("Discord configuration validation failed");
 				return false;
 			}
 
 			if (_configuration.MongoDbConfig == null || !ValidateMongoDbConfig())
 			{
-				_logger.Error("MongoDb configuration validation failed.");
+				_logger.Error("MongoDb configuration validation failed");
 				return false;
 			}
 
@@ -85,13 +85,13 @@ namespace PoiDiscordDotNet.Services
 		{
 			if (string.IsNullOrWhiteSpace(Discord.Token))
 			{
-				_logger.Error("Token is null, empty or whitespace. Validation failed.");
+				_logger.Error("Token is null, empty or whitespace. Validation failed");
 				return false;
 			}
 
 			if (Discord.Prefix == null)
 			{
-				_logger.Error("Prefix is null. Validation failed.");
+				_logger.Error("Prefix is null. Validation failed");
 				return false;
 			}
 
@@ -102,7 +102,7 @@ namespace PoiDiscordDotNet.Services
 		{
 			if (string.IsNullOrWhiteSpace(MongoDb.MongoDbConnectionString))
 			{
-				_logger.Error("MongoDbConnectionString is null, empty or whitespace. Validation failed.");
+				_logger.Error("MongoDbConnectionString is null, empty or whitespace. Validation failed");
 				return false;
 			}
 
