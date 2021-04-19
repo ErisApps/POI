@@ -46,7 +46,7 @@ namespace PoiDiscordDotNet
 			var configProvider = new ConfigProviderService(logger.ForContext<ConfigProviderService>(), pathProvider.ConfigPath);
 			if (!await configProvider.LoadConfig())
 			{
-				logger.Fatal("Exiting... Please ensure the config is correct.");
+				logger.Fatal("Exiting... Please ensure the config is correct");
 				return;
 			}
 
@@ -89,7 +89,7 @@ namespace PoiDiscordDotNet
 			});
 			commandsNext.CommandErrored += (_, eventArgs) =>
 			{
-				logger.Error("{Username} tried to execute command {CommandName}, but it errored with message {ErrorMessage}", eventArgs.Context.User.Username, eventArgs.Command.Name, eventArgs.Exception);
+				logger.Error(eventArgs.Exception, "{Username} tried to execute command {CommandName}, but it errored",  eventArgs.Context.User.Username, eventArgs.Command.Name);
 
 				return Task.CompletedTask;
 			};
@@ -111,7 +111,7 @@ namespace PoiDiscordDotNet
 			var mongoDbService = serviceProvider.GetService<MongoDbService>()!;
 			if (await mongoDbService.TestConnectivity().ConfigureAwait(false))
 			{
-				logger.Information("Connected to MongoDb instance.");
+				logger.Information("Connected to MongoDb instance");
 
 				return true;
 			}

@@ -23,7 +23,7 @@ namespace PoiDiscordDotNet.Services
 			var mongoClientSettings = MongoClientSettings.FromConnectionString(_configProviderService.MongoDb.MongoDbConnectionString);
 			mongoClientSettings.ApplicationName = $"{Bootstrapper.Name}/{Bootstrapper.Version.ToString(3)}";
 
-			_logger.LogInformation("Connecting to MongoDb instance.");
+			_logger.LogInformation("Connecting to MongoDb instance");
 			_mongoClient = new MongoClient(mongoClientSettings);
 
 			_mongoDatabase = _mongoClient.GetDatabase("POINext");
