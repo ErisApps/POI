@@ -2,23 +2,23 @@
 
 updates:
   # Enable version updates for Nuget
-  - package-ecosystem: "nuget"
+  - package-ecosystem: nuget
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: daily
     open-pull-requests-limit: 10
     reviewers:
-      - "ErisApps"
+      - ErisApps
     assignees:
-      - "ErisApps"
+      - ErisApps
 
   # Enable version updates for Docker
-  - package-ecosystem:  "docker"
+  - package-ecosystem:  docker
     directory: "/"
     schedule:
-      interval: "daily"
+      interval: daily
     open-pull-requests-limit: 10
     reviewers:
-      - "ErisApps"
+      - ErisApps
     assignees:
-      - "ErisApps"
+      - ErisApps
