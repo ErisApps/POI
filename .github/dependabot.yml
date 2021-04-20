@@ -1,21 +1,24 @@
 ﻿version: 2
-updates:
-    - package-ecosystem: "nuget"
-      directory: "/"
-      schedule:
-          interval: "daily"
-      open-pull-requests-limit: 10
-      reviewers:
-          - "ErisApps"
-      assignees:
-          - "ErisApps"
 
-    - package-ecosystem:  "docker"
-      directory: "/"
-      schedule:
-          interval: "daily"
-      open-pull-requests-limit: 10
-      reviewers:
-          - "ErisApps"
-      assignees:
-          - "ErisApps"
+updates:
+  # Enable version updates for Nuget
+  - package-ecosystem: "nuget"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "ErisApps"
+    assignees:
+      - "ErisApps"
+
+  # Enable version updates for Docker
+  - package-ecosystem:  "docker"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "ErisApps"
+    assignees:
+      - "ErisApps"
