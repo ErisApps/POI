@@ -1,29 +1,33 @@
 <Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
-        <LangVersion>9</LangVersion>
-        <AzureFunctionsVersion>V3</AzureFunctionsVersion>
-        <OutputType>Exe</OutputType>
-        <_FunctionsSkipCleanOutput>true</_FunctionsSkipCleanOutput>
-        <Nullable>enable</Nullable>
-    </PropertyGroup>
-    <ItemGroup>
-        <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Abstractions" Version="1.0.0" />
-        <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http" Version="3.0.13" />
-        <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Timer" Version="4.1.0" />
-        <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.0.2" OutputItemType="Analyzer" />
-        <PackageReference Include="Microsoft.Azure.Functions.Worker" Version="1.2.0" />
-    </ItemGroup>
-    <ItemGroup>
-        <None Update="host.json">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        </None>
-        <None Update="local.settings.json">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <CopyToPublishDirectory>Never</CopyToPublishDirectory>
-        </None>
-    </ItemGroup>
-    <ItemGroup>
-      <ProjectReference Include="..\POI.Core\POI.Core.csproj" />
-    </ItemGroup>
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+		<OutputType>Exe</OutputType>
+		<LangVersion>9</LangVersion>
+		<Nullable>enable</Nullable>
+		<AzureFunctionsVersion>V3</AzureFunctionsVersion>
+		<_FunctionsSkipCleanOutput>true</_FunctionsSkipCleanOutput>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Abstractions" Version="1.0.0"/>
+		<PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http" Version="3.0.13"/>
+		<PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Timer" Version="4.1.0"/>
+		<PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.0.2" OutputItemType="Analyzer"/>
+		<PackageReference Include="Microsoft.Azure.Functions.Worker" Version="1.2.0"/>
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\POI.Core\POI.Core.csproj"/>
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="host.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="local.settings.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<CopyToPublishDirectory>Never</CopyToPublishDirectory>
+		</None>
+	</ItemGroup>
+
 </Project>
