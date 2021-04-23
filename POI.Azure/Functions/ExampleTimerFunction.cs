@@ -8,10 +8,12 @@ namespace POI.Azure.Functions
 	public static class ExampleTimerFunction
 	{
 		[Function(nameof(ExampleTimerFunction))]
-		public static async Task RunAsync([TimerTrigger("0 */5 * * * *", RunOnStartup = true)] TimerInfo myTimer, FunctionContext executionContext)
+		public static Task RunAsync([TimerTrigger("0 */5 * * * *", RunOnStartup = true)] TimerInfo myTimer, FunctionContext executionContext)
 		{
 			var logger = executionContext.GetLogger(nameof(ExampleTimerFunction));
 			logger.LogInformation("C# Timer trigger function executed at: {Time}", DateTime.UtcNow);
+
+			return Task.CompletedTask;
 		}
 	}
 }
