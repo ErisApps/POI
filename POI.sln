@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POI.DiscordDotNet", "POI.Di
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POI.Core", "POI.Core\POI.Core.csproj", "{76EFEFFE-C892-4E1C-A232-25EBF41738AA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POI.Azure", "POI.Azure\POI.Azure.csproj", "{3CA6BF2A-2028-407E-9D0A-2F98713A5DE7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{76EFEFFE-C892-4E1C-A232-25EBF41738AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{76EFEFFE-C892-4E1C-A232-25EBF41738AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{76EFEFFE-C892-4E1C-A232-25EBF41738AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3CA6BF2A-2028-407E-9D0A-2F98713A5DE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3CA6BF2A-2028-407E-9D0A-2F98713A5DE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3CA6BF2A-2028-407E-9D0A-2F98713A5DE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3CA6BF2A-2028-407E-9D0A-2F98713A5DE7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
