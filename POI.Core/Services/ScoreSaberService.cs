@@ -11,6 +11,7 @@ using NodaTime.Serialization.SystemTextJson;
 using POI.Core.Models.ScoreSaber.Profile;
 using POI.Core.Models.ScoreSaber.Scores;
 using POI.Core.Models.ScoreSaber.Search;
+using POI.Core.Services.Interfaces;
 using Polly;
 using Polly.Bulkhead;
 using Polly.Retry;
@@ -37,7 +38,7 @@ namespace POI.Core.Services
 
 		public const int PLAYS_PER_PAGE = 8; // Top / Recent songs
 
-		public ScoreSaberService(ILogger<ScoreSaberService> logger, string name, Version version)
+		public ScoreSaberService(ILogger<ScoreSaberService> logger, IConstantsCore constants)
 		{
 			_logger = logger;
 			_scoreSaberApiClient = new HttpClient
@@ -45,7 +46,7 @@ namespace POI.Core.Services
 				BaseAddress = new Uri(SCORESABER_API_BASEURL, UriKind.Absolute),
 				Timeout = TimeSpan.FromSeconds(30),
 				DefaultRequestVersion = HttpVersion.Version20,
-				DefaultRequestHeaders = {{"User-Agent", $"{name}/{version.ToString(3)}"}}
+				DefaultRequestHeaders = {{"User-Agent", $"{constants.Name}/{constants.Version.ToString(3)}"}}
 			};
 
 			_jsonSerializerOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web) {PropertyNameCaseInsensitive = false}.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using POI.DiscordDotNet.Services.Interfaces;
 
 namespace POI.DiscordDotNet.Services
 {
@@ -15,13 +16,13 @@ namespace POI.DiscordDotNet.Services
 		private readonly MongoClient _mongoClient;
 		private readonly IMongoDatabase _mongoDatabase;
 
-		public MongoDbService(ILogger<MongoDbService> logger, ConfigProviderService configProviderService)
+		public MongoDbService(ILogger<MongoDbService> logger, ConfigProviderService configProviderService, IConstants constants)
 		{
 			_logger = logger;
 			_configProviderService = configProviderService;
 
 			var mongoClientSettings = MongoClientSettings.FromConnectionString(_configProviderService.MongoDb.MongoDbConnectionString);
-			mongoClientSettings.ApplicationName = $"{Bootstrapper.Name}/{Bootstrapper.Version.ToString(3)}";
+			mongoClientSettings.ApplicationName = $"{constants.Name}/{constants.Version.ToString(3)}";
 
 			_logger.LogInformation("Connecting to MongoDb instance");
 			_mongoClient = new MongoClient(mongoClientSettings);

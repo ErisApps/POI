@@ -1,5 +1,7 @@
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using POI.Core.Extensions;
+using POI.Core.Services.Interfaces;
 
 namespace POI.Azure
 {
@@ -11,7 +13,8 @@ namespace POI.Azure
 				.ConfigureFunctionsWorkerDefaults()
 				.ConfigureServices(sc =>
 				{
-					sc.AddCoreServices("POI Online", typeof(Program).Assembly.GetName().Version!);
+					sc.AddSingleton<IConstantsCore, Constants>();
+					sc.AddCoreServices();
 				})
 				.Build();
 
