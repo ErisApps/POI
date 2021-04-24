@@ -13,7 +13,8 @@ namespace POI.Azure
 				.ConfigureFunctionsWorkerDefaults()
 				.ConfigureServices(sc =>
 				{
-					sc.AddSingleton<IConstantsCore, Constants>();
+					sc.AddSingleton<Constants>();
+					sc.AddSingleton<IConstantsCore>(provider => provider.GetRequiredService<Constants>());
 					sc.AddCoreServices();
 				})
 				.Build();
