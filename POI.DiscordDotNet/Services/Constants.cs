@@ -1,9 +1,20 @@
-﻿using ImageMagick;
+﻿using System;
+using ImageMagick;
+using POI.DiscordDotNet.Services.Interfaces;
 
-namespace POI.DiscordDotNet
+namespace POI.DiscordDotNet.Services
 {
-	internal static class Constants
+	internal class Constants : IConstants
 	{
+		public string Name { get; }
+		public Version Version { get; }
+
+		public Constants()
+		{
+			Name = "POINext";
+			Version = typeof(Constants).Assembly.GetName().Version!;
+		}
+
 		public static class DifficultyColors
 		{
 			internal static readonly MagickColor Easy = new("#4caf50");

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text.RegularExpressions;
 using ImageMagick;
+using POI.DiscordDotNet.Services;
 
 namespace POI.DiscordDotNet.Extensions
 {

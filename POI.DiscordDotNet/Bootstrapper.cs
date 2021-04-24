@@ -8,7 +8,9 @@ using DSharpPlus.Entities;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using POI.Core.Extensions;
+using POI.Core.Services.Interfaces;
 using POI.DiscordDotNet.Services;
+using POI.DiscordDotNet.Services.Interfaces;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
@@ -17,11 +19,7 @@ namespace POI.DiscordDotNet
 {
 	internal static class Bootstrapper
 	{
-		private static Version? _version;
 		private static DiscordClient _client = null!;
-
-		internal static string Name { get; } = "POINext";
-		internal static Version Version => _version ??= Assembly.GetExecutingAssembly().GetName().Version!;
 
 		public static async Task Main(string[]? args = null)
 		{
@@ -62,7 +60,9 @@ namespace POI.DiscordDotNet
 			});
 			var serviceProvider = new ServiceCollection()
 				.AddLogging(loggingBuilderExtensions => loggingBuilderExtensions.AddSerilog(logger))
-				.AddCoreServices(Name, Version)
+				.AddSingleton<IConstantsCore, Constants>()
+				.AddSingleton<IConstants, Constants>()
+				.AddCoreServices()
 				.AddSingleton(configProvider)
 				.AddSingleton(pathProvider)
 				.AddSingleton(_client)
@@ -88,7 +88,7 @@ namespace POI.DiscordDotNet
 			});
 			commandsNext.CommandErrored += (_, eventArgs) =>
 			{
-				logger.Error(eventArgs.Exception, "{Username} tried to execute command {CommandName}, but it errored",  eventArgs.Context.User.Username, eventArgs.Command.Name);
+				logger.Error(eventArgs.Exception, "{Username} tried to execute command {CommandName}, but it errored", eventArgs.Context.User.Username, eventArgs.Command.Name);
 
 				return Task.CompletedTask;
 			};
