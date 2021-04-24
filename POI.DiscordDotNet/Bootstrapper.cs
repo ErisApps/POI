@@ -60,8 +60,9 @@ namespace POI.DiscordDotNet
 			});
 			var serviceProvider = new ServiceCollection()
 				.AddLogging(loggingBuilderExtensions => loggingBuilderExtensions.AddSerilog(logger))
-				.AddSingleton<IConstantsCore, Constants>()
-				.AddSingleton<IConstants, Constants>()
+				.AddSingleton<Constants>()
+				.AddSingleton<IConstantsCore>(provider => provider.GetRequiredService<Constants>())
+				.AddSingleton<IConstants>(provider => provider.GetRequiredService<Constants>())
 				.AddCoreServices()
 				.AddSingleton(configProvider)
 				.AddSingleton(pathProvider)
