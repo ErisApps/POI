@@ -1,12 +1,12 @@
 using System;
-using POI.Core.Services.Interfaces;
+using POI.Core.Services;
 
 namespace POI.Azure
 {
-	internal class Constants : IConstantsCore
+	internal class Constants : ConstantsCore
 	{
-		public string Name { get; }
-		public Version Version { get; }
+		public override string Name { get; }
+		public override Version Version { get; }
 
 		public Constants()
 		{
