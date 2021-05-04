@@ -339,8 +339,7 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 			}
 
 			var messageBuilder = new DiscordMessageBuilder()
-				.WithContent($"Just a proof of concept thingy, please ignore this. \nWoah, {profile.PlayerInfo.Name} played: ")
-				// TODO: BetterDate
+				.WithContent($"Woah, {profile.PlayerInfo.Name} played:")
 				.WithFile($"{profile.PlayerInfo.Name}_{SystemClock.Instance.GetCurrentInstant().ToDateTimeUtc().ToLongDateString()}.jpeg", memoryStream);
 			await ctx.Message
 				.RespondAsync(messageBuilder)
