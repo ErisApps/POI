@@ -29,7 +29,6 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 
 		protected readonly ScoreSaberService ScoreSaberService;
 
-
 		protected BaseSongCommand(ILogger<BaseSongCommand> logger, DiscordClient client, ScoreSaberService scoreSaberService, MongoDbService mongoDbService,
 			BeatSaverClientProvider beatSaverClientProvider, string backgroundImagePath, string erisSignaturePath)
 		{
