@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using POI.DiscordDotNet.Api.Middlewares;
 
 namespace POI.DiscordDotNet
 {
@@ -33,6 +34,8 @@ namespace POI.DiscordDotNet
 			app.UseRouting();
 
 			app.UseAuthorization();
+
+			app.UseMiddleware<ApiKeyMiddleware>();
 
 			app.UseEndpoints(endpoints =>
 			{
