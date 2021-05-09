@@ -18,6 +18,7 @@ namespace POI.DiscordDotNet.Services
 
 		internal DiscordConfig Discord => _configuration!.DiscordConfig!;
 		internal MongoDbConfig MongoDb => _configuration!.MongoDbConfig!;
+		internal ApiConfig ApiConfig => _configuration!.ApiConfig!;
 
 		public ConfigProviderService(ILogger logger, string configPath)
 		{
@@ -78,6 +79,12 @@ namespace POI.DiscordDotNet.Services
 				return false;
 			}
 
+			if (_configuration.ApiConfig == null || !ValidateApiConfig())
+			{
+				_logger.Error("Api configuration validation failed");
+				return false;
+			}
+
 			return true;
 		}
 
@@ -103,6 +110,17 @@ namespace POI.DiscordDotNet.Services
 			if (string.IsNullOrWhiteSpace(MongoDb.MongoDbConnectionString))
 			{
 				_logger.Error("MongoDbConnectionString is null, empty or whitespace. Validation failed");
+				return false;
+			}
+
+			return true;
+		}
+
+		private bool ValidateApiConfig()
+		{
+			if (string.IsNullOrWhiteSpace(ApiConfig.ApiKey))
+			{
+				_logger.Error("ApiKey is null, empty or whitespace. Validation failed");
 				return false;
 			}
 
