@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using POI.Core.Extensions;
 using POI.Core.Services.Interfaces;
@@ -34,6 +36,7 @@ namespace POI.DiscordDotNet
 			var logger = new LoggerConfiguration()
 				.MinimumLevel.Verbose()
 				.MinimumLevel.Override(nameof(DSharpPlus), LogEventLevel.Information)
+				.MinimumLevel.Override(nameof(Microsoft), LogEventLevel.Information)
 				.Enrich.FromLogContext()
 				.WriteTo.Console(theme: SystemConsoleTheme.Colored)
 				.WriteTo.Conditional(_ => dockerized,
@@ -58,21 +61,33 @@ namespace POI.DiscordDotNet
 				// This is apparently a bad idea according to the documentation... but I'm going to enable it regardless...
 				ReconnectIndefinitely = true
 			});
-			var serviceProvider = new ServiceCollection()
-				.AddLogging(loggingBuilderExtensions => loggingBuilderExtensions.AddSerilog(logger))
-				.AddSingleton<Constants>()
-				.AddSingleton<IConstantsCore>(provider => provider.GetRequiredService<Constants>())
-				.AddSingleton<IConstants>(provider => provider.GetRequiredService<Constants>())
-				.AddCoreServices()
-				.AddSingleton(configProvider)
-				.AddSingleton(pathProvider)
-				.AddSingleton(_client)
-				.AddSingleton<MongoDbService>()
-				.AddSingleton<UptimeManagementService>()
-				.BuildServiceProvider();
+
+			var hostBuilder = Host.CreateDefaultBuilder(args)
+				.UseSerilog(logger)
+				.ConfigureWebHostDefaults(webBuilder =>
+				{
+					if (!dockerized)
+					{
+						webBuilder.UseUrls("http://0.0.0.0:5000");
+					}
+
+					webBuilder.UseStartup<ApiStartup>();
+				})
+				.ConfigureServices(sc =>
+				{
+					sc.AddSingleton<Constants>();
+					sc.AddSingleton<IConstantsCore>(provider => provider.GetRequiredService<Constants>());
+					sc.AddSingleton<IConstants>(provider => provider.GetRequiredService<Constants>());
+					sc.AddCoreServices();
+					sc.AddSingleton(configProvider);
+					sc.AddSingleton(pathProvider);
+					sc.AddSingleton(_client);
+					sc.AddSingleton<MongoDbService>();
+					sc.AddSingleton<UptimeManagementService>();
+				}).Build();
 
 			// Verify mongoDbConnection
-			if (!await VerifyMongoDbConnection(serviceProvider, logger))
+			if (!await VerifyMongoDbConnection(hostBuilder.Services, logger))
 			{
 				return;
 			}
@@ -85,7 +100,7 @@ namespace POI.DiscordDotNet
 				DmHelp = false,
 				IgnoreExtraArguments = false,
 				StringPrefixes = new[] {configProvider.Discord.Prefix},
-				Services = serviceProvider
+				Services = hostBuilder.Services
 			});
 			commandsNext.CommandErrored += (_, eventArgs) =>
 			{
@@ -103,7 +118,7 @@ namespace POI.DiscordDotNet
 
 			await _client.ConnectAsync(new DiscordActivity("POI for mod? (pretty please)", ActivityType.Playing)).ConfigureAwait(false);
 
-			await Task.Delay(-1).ConfigureAwait(false);
+			await hostBuilder.RunAsync().ConfigureAwait(false);
 		}
 
 		private static async Task<bool> VerifyMongoDbConnection(IServiceProvider serviceProvider, Serilog.ILogger logger)
