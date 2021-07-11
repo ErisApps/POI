@@ -17,7 +17,8 @@ namespace POI.Core.Extensions
 		{
 			serviceCollection
 				.AddSingleton<BeatSaverClientProvider>()
-				.AddSingleton<ScoreSaberApiService>();
+				.AddSingleton<ScoreSaberApiService>()
+				.AddSingleton<ScoreSaberScraperService>();
 
 			return serviceCollection;
 		}
