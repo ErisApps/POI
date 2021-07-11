@@ -6,6 +6,6 @@ namespace POI.Core.Models.ScoreSaber.Search
 	public class PlayersPage
 	{
 		[JsonPropertyName("players")]
-		public List<SearchPlayerInfo> Players { get; init; } = null!;
+		public List<SearchPlayerInfo> Players { get; init; } = new();
 	}
 }
