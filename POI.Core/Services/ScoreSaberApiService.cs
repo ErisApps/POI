@@ -127,6 +127,16 @@ namespace POI.Core.Services
 			return FetchData<PlayersPage?>($"{SCORESABER_API_BASEURL}players/by-name/{name}");
 		}
 
+		public Task<Refresh?> RefreshProfile(string scoreSaberId)
+		{
+			if (scoreSaberId.Length != 17 || scoreSaberId.StartsWith("7"))
+			{
+				throw new ArgumentException("Refreshing only works with for Steam accounts");
+			}
+
+			return FetchData<Refresh?>($"{SCORESABER_API_BASEURL}user/{scoreSaberId}/refresh");
+		}
+
 		public Task<byte[]?> FetchCoverImageByHash(string songHash)
 		{
 			return FetchImageInternal($"{SCORESABER_API_BASEURL}static/covers/{songHash}.png");
