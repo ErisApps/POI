@@ -127,6 +127,11 @@ namespace POI.Core.Services
 			return FetchData<PlayersPage?>($"{SCORESABER_API_BASEURL}players/by-name/{name}");
 		}
 
+		public async Task FetchGlobalLeaderboardsPage(int page)
+		{
+			await FetchData<PlayersPage?>($"{SCORESABER_API_BASEURL}players/{page}");
+		}
+
 		public Task<Refresh?> RefreshProfile(string scoreSaberId)
 		{
 			if (scoreSaberId.Length != 17 || scoreSaberId.StartsWith("7"))
