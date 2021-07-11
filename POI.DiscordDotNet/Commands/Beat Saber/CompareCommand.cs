@@ -10,7 +10,6 @@ using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using NodaTime;
 using POI.Core.Services;
-using POI.DiscordDotNet.Commands.Beat_Saber;
 using POI.DiscordDotNet.Commands.Modules;
 using POI.DiscordDotNet.Extensions;
 using POI.DiscordDotNet.Models.Database;
@@ -18,7 +17,7 @@ using POI.DiscordDotNet.Services;
 
 namespace POI.DiscordDotNet.Commands.Beat_Saber
 {
-	public class CompareCommand : UtilCommandsModule
+	public class CompareCommand : BeatSaberCommandsModule
 	{
 		private const int WIDTH = 1000;
 		private const int MARGIN = 50;
@@ -28,12 +27,12 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 		private const int PFP_HEIGHT = NAME_HEIGHT + 70 + SPACING;
 		private const int RANK_HEIGHT = PFP_HEIGHT + 150 + SPACING;
 
-		private readonly ILogger<BaseSongCommand> _logger;
+		private readonly ILogger<CompareCommand> _logger;
 		private readonly MongoDbService _mongoDbService;
 		private readonly PathProvider _pathProvider;
-		private readonly ScoreSaberService _scoreSaberService;
+		private readonly ScoreSaberApiService _scoreSaberService;
 
-		public CompareCommand(ILogger<BaseSongCommand> logger, ScoreSaberService scoreSaberService, MongoDbService mongoDbService, PathProvider pathProvider)
+		public CompareCommand(ILogger<CompareCommand> logger, ScoreSaberApiService scoreSaberService, MongoDbService mongoDbService, PathProvider pathProvider)
 		{
 			_logger = logger;
 

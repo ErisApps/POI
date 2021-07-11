@@ -12,9 +12,9 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 {
 	public class TopSongCommand : BaseSongCommand
 	{
-		public TopSongCommand(ILogger<TopSongCommand> logger, DiscordClient client, PathProvider pathProvider, ScoreSaberService scoreSaberService, MongoDbService mongoDbService,
+		public TopSongCommand(ILogger<TopSongCommand> logger, DiscordClient client, PathProvider pathProvider, ScoreSaberApiService scoreSaberApiService, MongoDbService mongoDbService,
 			BeatSaverClientProvider beatSaverClientProvider)
-			: base(logger, client, scoreSaberService, mongoDbService, beatSaverClientProvider, Path.Combine(pathProvider.AssetsPath, "poinext1.png"),
+			: base(logger, client, scoreSaberApiService, mongoDbService, beatSaverClientProvider, Path.Combine(pathProvider.AssetsPath, "poinext1.png"),
 				Path.Combine(pathProvider.AssetsPath, "Signature-Eris.png"))
 		{
 		}
@@ -28,7 +28,7 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 
 		protected override Task<ScoresPage?> FetchScorePage(string playerId, int page)
 		{
-			return ScoreSaberService.FetchTopSongsScorePage(playerId, page);
+			return ScoreSaberApiService.FetchTopSongsScorePage(playerId, page);
 		}
 	}
 }

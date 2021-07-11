@@ -28,15 +28,15 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 		private readonly MongoDbService _mongoDbService;
 		private readonly BeatSaverClientProvider _beatSaverClientProvider;
 
-		protected readonly ScoreSaberService ScoreSaberService;
+		protected readonly ScoreSaberApiService ScoreSaberApiService;
 
-		protected BaseSongCommand(ILogger<BaseSongCommand> logger, DiscordClient client, ScoreSaberService scoreSaberService, MongoDbService mongoDbService,
+		protected BaseSongCommand(ILogger<BaseSongCommand> logger, DiscordClient client, ScoreSaberApiService scoreSaberApiService, MongoDbService mongoDbService,
 			BeatSaverClientProvider beatSaverClientProvider, string backgroundImagePath, string erisSignaturePath)
 		{
 			_logger = logger;
 			_client = client;
 
-			ScoreSaberService = scoreSaberService;
+			ScoreSaberApiService = scoreSaberApiService;
 			_mongoDbService = mongoDbService;
 			_beatSaverClientProvider = beatSaverClientProvider;
 			_backgroundImagePath = backgroundImagePath;
@@ -58,14 +58,14 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 
 			var (scoreSaberId, nthSong) = arguments.Value;
 
-			var profile = await ScoreSaberService.FetchBasicPlayerProfile(scoreSaberId).ConfigureAwait(false);
+			var profile = await ScoreSaberApiService.FetchBasicPlayerProfile(scoreSaberId).ConfigureAwait(false);
 			if (profile == null)
 			{
 				await _logger.LogError(ctx, "Couldn't fetch profile").ConfigureAwait(false);
 				return;
 			}
 
-			var songPageNumber = (int) Math.Ceiling((double) nthSong / ScoreSaberService.PLAYS_PER_PAGE);
+			var songPageNumber = (int) Math.Ceiling((double) nthSong / ScoreSaberApiService.PLAYS_PER_PAGE);
 			var songPage = await FetchScorePage(profile.PlayerInfo.PlayerId, songPageNumber).ConfigureAwait(false);
 			if (songPage == null)
 			{
@@ -74,7 +74,7 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 			}
 
 			SongScore requestedSong;
-			var localSongIndex = --nthSong % ScoreSaberService.PLAYS_PER_PAGE;
+			var localSongIndex = --nthSong % ScoreSaberApiService.PLAYS_PER_PAGE;
 			if (songPage.Scores.Count > localSongIndex)
 			{
 				requestedSong = songPage.Scores[localSongIndex];
@@ -106,8 +106,8 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 			}
 
 			var accuracy = ((float) (requestedSong.UnmodifiedScore * 100) / maxScore);
-			var coverImageBytes = await ScoreSaberService.FetchCoverImageByHash(requestedSong.SongHash).ConfigureAwait(false);
-			var playerImageBytes = await ScoreSaberService.FetchPlayerAvatarByProfile(profile.PlayerInfo.Avatar).ConfigureAwait(false);
+			var coverImageBytes = await ScoreSaberApiService.FetchCoverImageByHash(requestedSong.SongHash).ConfigureAwait(false);
+			var playerImageBytes = await ScoreSaberApiService.FetchPlayerAvatarByProfile(profile.PlayerInfo.Avatar).ConfigureAwait(false);
 
 			await using var memoryStream = new MemoryStream();
 			using (var background = new MagickImage(_backgroundImagePath))
