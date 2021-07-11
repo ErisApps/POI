@@ -52,7 +52,7 @@ namespace POI.Core.Services
 					Avatar = playerRow.QuerySelector(".picture img")!.Attributes["src"]!.Value,
 					Pp = double.Parse(playerRow.QuerySelector(".pp .ppValue")!.FirstChild!.TextContent, NumberStyles.Any, _cultureInfo),
 					Country = countryCode.ToUpper(),
-					Difference = int.Parse(playerRow.QuerySelector(".diff span")!.TextContent, NumberStyles.Any, _cultureInfo)
+					Difference = int.Parse(playerRow.QuerySelector(".diff")!.TextContent.Trim(), NumberStyles.Any, _cultureInfo)
 				};
 			}));
 
