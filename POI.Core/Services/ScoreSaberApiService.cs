@@ -19,13 +19,13 @@ using Polly.Wrap;
 
 namespace POI.Core.Services
 {
-	public class ScoreSaberService
+	public class ScoreSaberApiService
 	{
 		private const string SCORESABER_BASEURL = "https://new.scoresaber.com";
 		private const string SCORESABER_API_BASEURL = SCORESABER_BASEURL + "/api/";
 		private const int MAX_BULKHEAD_QUEUE_SIZE = 1000;
 
-		private readonly ILogger<ScoreSaberService> _logger;
+		private readonly ILogger<ScoreSaberApiService> _logger;
 		private readonly HttpClient _scoreSaberApiClient;
 
 		private readonly AsyncPolicyWrap<HttpResponseMessage> _scoreSaberApiChainedRateLimitPolicy;
@@ -38,7 +38,7 @@ namespace POI.Core.Services
 
 		public const int PLAYS_PER_PAGE = 8; // Top / Recent songs
 
-		public ScoreSaberService(ILogger<ScoreSaberService> logger, IConstantsCore constants)
+		public ScoreSaberApiService(ILogger<ScoreSaberApiService> logger, IConstantsCore constants)
 		{
 			_logger = logger;
 			_scoreSaberApiClient = new HttpClient
