@@ -12,7 +12,7 @@
         <PackageReference Include="DSharpPlus" Version="4.1.0-nightly-00919" />
         <PackageReference Include="DSharpPlus.CommandsNext" Version="4.1.0-nightly-00919" />
         <PackageReference Include="DSharpPlus.Interactivity" Version="4.1.0-nightly-00919" />
-        <PackageReference Include="DSharpPlus.Rest" Version="4.1.0-nightly-00918" />
+        <PackageReference Include="DSharpPlus.Rest" Version="4.1.0-nightly-00919" />
         <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="8.0.1" />
         <PackageReference Include="Magick.NET.Core" Version="8.0.1" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.2" />
