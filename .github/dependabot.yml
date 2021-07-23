@@ -13,6 +13,7 @@ updates:
       - "ErisApps"
     assignees:
       - "ErisApps"
+    open-pull-requests-limit: 10
 
   - package-ecosystem: "docker" # See documentation for possible values
     directory: "/" # Location of package manifests
@@ -22,3 +23,4 @@ updates:
       - "ErisApps"
     assignees:
       - "ErisApps"
+    open-pull-requests-limit: 10
