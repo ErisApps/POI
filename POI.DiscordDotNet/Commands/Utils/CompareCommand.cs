@@ -14,7 +14,6 @@ using POI.DiscordDotNet.Models.Database;
 using POI.DiscordDotNet.Services;
 using System.IO;
 using System.Collections.Generic;
-using System.Globalization;
 using DSharpPlus.Entities;
 using ImageMagick;
 using NodaTime;
@@ -73,14 +72,14 @@ namespace POI.DiscordDotNet.Commands.Utils
 				return;
 			}
 
-			var profile1TopPage = await _scoreSaberService.FetchTopSongsScorePage(scoreSaberId).ConfigureAwait(false);
+			var profile1TopPage = await _scoreSaberService.FetchTopSongsScorePage(scoreSaberId, 0).ConfigureAwait(false);
 			if (profile1TopPage == null)
 			{
 				await _logger.LogError(ctx, $"Couldn't fetch profile top scores {scoreSaberId}").ConfigureAwait(false);
 				return;
 			}
 
-			var profile2TopPage = await _scoreSaberService.FetchTopSongsScorePage(compareScoreSaberId).ConfigureAwait(false);
+			var profile2TopPage = await _scoreSaberService.FetchTopSongsScorePage(compareScoreSaberId, 0).ConfigureAwait(false);
 			if (profile2TopPage == null)
 			{
 				await _logger.LogError(ctx, $"Couldn't fetch profile top scores {compareScoreSaberId}").ConfigureAwait(false);
