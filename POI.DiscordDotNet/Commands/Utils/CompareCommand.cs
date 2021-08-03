@@ -22,6 +22,14 @@ namespace POI.DiscordDotNet.Commands.Utils
 {
 	public class CompareCommand : UtilCommandsModule
 	{
+		private const int WIDTH = 1000;
+		private const int MARGIN = 50;
+		private const int HEIGHT = 920;
+		private const int SPACING = 25;
+		private const int NAME_HEIGHT = MARGIN;
+		private const int PFP_HEIGHT = NAME_HEIGHT + 70 + SPACING;
+		private const int RANK_HEIGHT = PFP_HEIGHT + 150 + SPACING;
+
 		private readonly ILogger<BaseSongCommand> _logger;
 		private readonly DiscordClient _client;
 		private readonly MongoDbService _mongoDbService;
@@ -105,15 +113,6 @@ namespace POI.DiscordDotNet.Commands.Utils
 				new[] {$"{profile1TopPage.Scores[0].Pp:N2}", "Top PP Play", $"{profile2TopPage.Scores[0].Pp:N2}"},
 			};
 
-			const int width = 1000,
-				margin = 50,
-				height = 920,
-				spacing = 25,
-				nameHeight = margin,
-				pfpHeight = nameHeight + 70 + spacing,
-				rankHeight = pfpHeight + 150 + spacing;
-
-
 			await using var memoryStream = new MemoryStream();
 			using (var background = new MagickImage(backgroundImagePath))
 			{
@@ -122,15 +121,14 @@ namespace POI.DiscordDotNet.Commands.Utils
 				{
 					erisSignature.Resize(100, 46);
 					erisSignature.Blur(0, 0.5);
-					background.Composite(erisSignature, width - margin - erisSignature.Width, height - margin - erisSignature.Height, CompositeOperator.Over);
+					background.Composite(erisSignature, WIDTH - MARGIN - erisSignature.Width, HEIGHT - MARGIN - erisSignature.Height, CompositeOperator.Over);
 				}
-
 
 				// PlayerNames
 				var playerNameSettings = new MagickReadSettings
 				{
 					Height = 70,
-					Width = width/2-margin,
+					Width = WIDTH / 2 - MARGIN,
 					BackgroundColor = MagickColors.Transparent,
 					FontStyle = FontStyleType.Bold,
 					FillColor = MagickColors.White,
@@ -138,21 +136,20 @@ namespace POI.DiscordDotNet.Commands.Utils
 				};
 				using (var playerNameCaption = new MagickImage($"label:{profile1.PlayerInfo.Name}", playerNameSettings))
 				{
-					background.Composite(playerNameCaption, margin, nameHeight, CompositeOperator.Over);
+					background.Composite(playerNameCaption, MARGIN, NAME_HEIGHT, CompositeOperator.Over);
 				}
 
 				playerNameSettings.TextGravity = Gravity.East;
 				using (var playerNameCaption = new MagickImage($"label:{profile2.PlayerInfo.Name}", playerNameSettings))
 				{
-					background.Composite(playerNameCaption, width - margin - playerNameCaption.Width, nameHeight, CompositeOperator.Over);
+					background.Composite(playerNameCaption, WIDTH - MARGIN - playerNameCaption.Width, NAME_HEIGHT, CompositeOperator.Over);
 				}
-
 
 				// player1 image
 				if (profile1ImageBytes != null)
 				{
 					using var avatarImage = new MagickImage(profile1ImageBytes);
-					avatarImage.Resize(new MagickGeometry {Width = 150, Height = 150});
+					avatarImage.Resize(new MagickGeometry { Width = 150, Height = 150 });
 
 					using var avatarLayer = new MagickImage(MagickColors.Transparent, 150, 150);
 					avatarLayer.Draw(
@@ -161,14 +158,14 @@ namespace POI.DiscordDotNet.Commands.Utils
 					);
 
 					avatarLayer.Composite(avatarImage, CompositeOperator.Atop);
-					background.Draw(new DrawableComposite(margin, pfpHeight, CompositeOperator.Over, avatarLayer));
+					background.Draw(new DrawableComposite(MARGIN, PFP_HEIGHT, CompositeOperator.Over, avatarLayer));
 				}
 
 				// player2 image
 				if (profile2ImageBytes != null)
 				{
 					using var avatarImage = new MagickImage(profile2ImageBytes);
-					avatarImage.Resize(new MagickGeometry {Width = 150, Height = 150});
+					avatarImage.Resize(new MagickGeometry { Width = 150, Height = 150 });
 
 					using var avatarLayer = new MagickImage(MagickColors.Transparent, 150, 150);
 					avatarLayer.Draw(
@@ -177,10 +174,10 @@ namespace POI.DiscordDotNet.Commands.Utils
 					);
 
 					avatarLayer.Composite(avatarImage, CompositeOperator.Atop);
-					background.Draw(new DrawableComposite(width - margin - avatarImage.Width, pfpHeight, CompositeOperator.Over, avatarLayer));
+					background.Draw(new DrawableComposite(WIDTH - MARGIN - avatarImage.Width, PFP_HEIGHT, CompositeOperator.Over, avatarLayer));
 				}
 
-				foreach (var item in args.Select((value, i) => new {i, value}))
+				foreach (var item in args.Select((value, i) => new { i, value }))
 				{
 					var arg = item.value;
 					var index = item.i;
@@ -208,14 +205,14 @@ namespace POI.DiscordDotNet.Commands.Utils
 						val1 > val2 ? MagickColors.LimeGreen : Math.Abs(val1 - val2) < 0.0001 ? MagickColors.White : MagickColors.IndianRed;
 					using (var playerRankCaption = new MagickImage($"label:{arg[0]}", playerRankSettings))
 					{
-						background.Composite(playerRankCaption, margin, rankHeight + index * 50, CompositeOperator.Over);
+						background.Composite(playerRankCaption, MARGIN, RANK_HEIGHT + index * 50, CompositeOperator.Over);
 					}
 
 					playerRankSettings.FillColor = MagickColors.White;
 					playerRankSettings.TextGravity = Gravity.Center;
 					using (var playerRankCaption = new MagickImage($"label:{arg[1]}", playerRankSettings))
 					{
-						background.Composite(playerRankCaption, width / 2 - playerRankCaption.Width / 2, rankHeight + index * 50, CompositeOperator.Over);
+						background.Composite(playerRankCaption, WIDTH / 2 - playerRankCaption.Width / 2, RANK_HEIGHT + index * 50, CompositeOperator.Over);
 					}
 
 					playerRankSettings.FillColor =
@@ -223,10 +220,9 @@ namespace POI.DiscordDotNet.Commands.Utils
 					playerRankSettings.TextGravity = Gravity.East;
 					using (var playerRankCaption = new MagickImage($"label:{arg[2]}", playerRankSettings))
 					{
-						background.Composite(playerRankCaption, width - margin - playerRankCaption.Width, rankHeight + index * 50, CompositeOperator.Over);
+						background.Composite(playerRankCaption, WIDTH - MARGIN - playerRankCaption.Width, RANK_HEIGHT + index * 50, CompositeOperator.Over);
 					}
 				}
-
 
 				//Don't comment this next time...
 				await background.WriteAsync(memoryStream).ConfigureAwait(false);
@@ -247,7 +243,7 @@ namespace POI.DiscordDotNet.Commands.Utils
 			string? scoreSaberId = null;
 			string? compareScoreSaberId = null;
 
-//lookup sender scoresaber in mongoDB via discord
+			//lookup sender ScoreSaber in mongoDB via discord
 			async Task LookupScoreSaberLink(string discordId)
 			{
 				try
@@ -265,7 +261,7 @@ namespace POI.DiscordDotNet.Commands.Utils
 				}
 			}
 
-//get arguments
+			//get arguments
 			var args = ctx.RawArgumentString
 				.Split(" ", StringSplitOptions.TrimEntries)
 				.Where(arg => !string.IsNullOrWhiteSpace(arg))
@@ -273,7 +269,7 @@ namespace POI.DiscordDotNet.Commands.Utils
 				.Where(arg => !arg.EndsWith(">"))
 				.ToList();
 
-//only 1 scoresaberID
+			//only 1 ScoreSaber id
 			if (args.Count == 1 && args[0].ExtractScoreSaberId(out compareScoreSaberId))
 			{
 				args.RemoveAt(0);
@@ -292,7 +288,7 @@ namespace POI.DiscordDotNet.Commands.Utils
 				}
 			}
 
-//2 scoresabers
+			//2 ScoreSaber ids
 			if (args.Count == 2 && args[0].ExtractScoreSaberId(out scoreSaberId) && args[1].ExtractScoreSaberId(out compareScoreSaberId))
 			{
 				args.RemoveAt(1);
