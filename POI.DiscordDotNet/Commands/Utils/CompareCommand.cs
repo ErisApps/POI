@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
@@ -31,23 +30,16 @@ namespace POI.DiscordDotNet.Commands.Utils
 		private const int RANK_HEIGHT = PFP_HEIGHT + 150 + SPACING;
 
 		private readonly ILogger<BaseSongCommand> _logger;
-		private readonly DiscordClient _client;
 		private readonly MongoDbService _mongoDbService;
-		private readonly BeatSaverClientProvider _beatSaverClientProvider;
-		private readonly Constants _constants;
 		private readonly PathProvider _pathProvider;
 		private readonly ScoreSaberService _scoreSaberService;
 
-		public CompareCommand(ILogger<BaseSongCommand> logger, DiscordClient client, ScoreSaberService scoreSaberService, MongoDbService mongoDbService,
-			BeatSaverClientProvider beatSaverClientProvider, Constants constants, PathProvider pathProvider)
+		public CompareCommand(ILogger<BaseSongCommand> logger, ScoreSaberService scoreSaberService, MongoDbService mongoDbService, PathProvider pathProvider)
 		{
 			_logger = logger;
-			_client = client;
 
 			_scoreSaberService = scoreSaberService;
 			_mongoDbService = mongoDbService;
-			_beatSaverClientProvider = beatSaverClientProvider;
-			_constants = constants;
 			_pathProvider = pathProvider;
 		}
 
