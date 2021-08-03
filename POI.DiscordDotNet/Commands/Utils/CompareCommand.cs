@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -92,17 +91,17 @@ namespace POI.DiscordDotNet.Commands.Utils
 			var backgroundImagePath = Path.Combine(_pathProvider.AssetsPath, "poinextCompareBG.png");
 			var erisSignaturePath = Path.Combine(_pathProvider.AssetsPath, "Signature-Eris.png");
 
-			var args = new List<string[]>
+			var args = new[]
 			{
-				new[] {$"{profile1.PlayerInfo.Rank:N0}", "Global Rank", $"{profile2.PlayerInfo.Rank:N0}"},
-				new[] {$"{profile1.PlayerInfo.CountryRank:N0}", "Global Rank", $"{profile2.PlayerInfo.CountryRank:N0}"},
-				new[] {$"{profile1.PlayerInfo.Pp:N1}", "PP", $"{profile2.PlayerInfo.Pp:N1}"},
-				new[] {$"{Math.Floor(profile1.ScoreStats.AverageRankedAccuracy*1000)/1000}%", "AVG ACC", $"{Math.Floor(profile2.ScoreStats.AverageRankedAccuracy*1000)/1000}%"},
-				new[] {$"{profile1.ScoreStats.TotalPlayCount:N0}", "Play Count", $"{profile2.ScoreStats.TotalPlayCount:N0}"},
-				new[] {$"{profile1.ScoreStats.TotalRankedCount:N0}", "Ranked Play Count", $"{profile2.ScoreStats.TotalRankedCount:N0}"},
-				new[] {$"{profile1.ScoreStats.TotalScore:N0}", "Score", $"{profile2.ScoreStats.TotalScore:N0}"},
-				new[] {$"{profile1.ScoreStats.TotalRankedScore:N0}", "Ranked Score", $"{profile2.ScoreStats.TotalRankedScore:N0}"},
-				new[] {$"{profile1TopPage.Scores[0].Pp:N2}", "Top PP Play", $"{profile2TopPage.Scores[0].Pp:N2}"},
+				new[] { profile1.PlayerInfo.Rank.ToString("NO"), "Global Rank", profile2.PlayerInfo.Rank.ToString("NO") },
+				new[] { profile1.PlayerInfo.CountryRank.ToString("NO"), "Global Rank", profile2.PlayerInfo.CountryRank.ToString("NO") },
+				new[] { profile1.PlayerInfo.Pp.ToString("N1"), "PP", profile2.PlayerInfo.Pp.ToString("N1") },
+				new[] { $"{(Math.Floor(profile1.ScoreStats.AverageRankedAccuracy * 1000) / 1000):F2}%", "AVG ACC", $"{(Math.Floor(profile2.ScoreStats.AverageRankedAccuracy * 1000) / 1000):F2}%" },
+				new[] { profile1.ScoreStats.TotalPlayCount.ToString("NO"), "Play Count", profile2.ScoreStats.TotalPlayCount.ToString("NO") },
+				new[] { profile1.ScoreStats.TotalRankedCount.ToString("NO"), "Ranked Play Count", profile2.ScoreStats.TotalRankedCount.ToString("NO") },
+				new[] { profile1.ScoreStats.TotalScore.ToString("NO"), "Score", profile2.ScoreStats.TotalScore.ToString("NO") },
+				new[] { profile1.ScoreStats.TotalRankedScore.ToString("NO"), "Ranked Score", profile2.ScoreStats.TotalRankedScore.ToString("NO") },
+				new[] { profile1TopPage.Scores[0].Pp.ToString("N2"), "Top PP Play", profile2TopPage.Scores[0].Pp.ToString("N2") }
 			};
 
 			await using var memoryStream = new MemoryStream();
@@ -193,8 +192,7 @@ namespace POI.DiscordDotNet.Commands.Utils
 						TextGravity = Gravity.West
 					};
 
-					playerRankSettings.FillColor =
-						val1 > val2 ? MagickColors.LimeGreen : Math.Abs(val1 - val2) < 0.0001 ? MagickColors.White : MagickColors.IndianRed;
+					playerRankSettings.FillColor = val1 > val2 ? MagickColors.LimeGreen : Math.Abs(val1 - val2) < 0.0001 ? MagickColors.White : MagickColors.IndianRed;
 					using (var playerRankCaption = new MagickImage($"label:{arg[0]}", playerRankSettings))
 					{
 						background.Composite(playerRankCaption, MARGIN, RANK_HEIGHT + index * 50, CompositeOperator.Over);
@@ -207,8 +205,7 @@ namespace POI.DiscordDotNet.Commands.Utils
 						background.Composite(playerRankCaption, WIDTH / 2 - playerRankCaption.Width / 2, RANK_HEIGHT + index * 50, CompositeOperator.Over);
 					}
 
-					playerRankSettings.FillColor =
-						val1 < val2 ? MagickColors.LimeGreen : Math.Abs(val1 - val2) < 0.0001 ? MagickColors.White : MagickColors.IndianRed;
+					playerRankSettings.FillColor = val1 < val2 ? MagickColors.LimeGreen : Math.Abs(val1 - val2) < 0.0001 ? MagickColors.White : MagickColors.IndianRed;
 					playerRankSettings.TextGravity = Gravity.East;
 					using (var playerRankCaption = new MagickImage($"label:{arg[2]}", playerRankSettings))
 					{
@@ -265,7 +262,7 @@ namespace POI.DiscordDotNet.Commands.Utils
 			if (args.Count == 1 && args[0].ExtractScoreSaberId(out compareScoreSaberId))
 			{
 				args.RemoveAt(0);
-				//if scoresaber id is not in arguments check mongo db for discord linked with ss
+				//if ScoreSaber id is not in arguments check mongo db for discord linked with ss
 				if (scoreSaberId == null)
 				{
 					if (ctx.Message.MentionedUsers.Any())
