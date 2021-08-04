@@ -5,10 +5,10 @@ namespace POI.Core.Models.ScoreSaber.Profile
 	public class ScoreStats
 	{
 		[JsonPropertyName("totalScore")]
-		public int TotalScore { get; init; }
+		public ulong TotalScore { get; init; }
 
 		[JsonPropertyName("totalRankedScore")]
-		public int TotalRankedScore { get; init; }
+		public ulong TotalRankedScore { get; init; }
 
 		[JsonPropertyName("averageRankedAccuracy")]
 		public double AverageRankedAccuracy { get; init; }
