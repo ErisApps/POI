@@ -93,14 +93,14 @@ namespace POI.DiscordDotNet.Commands.Utils
 
 			var args = new[]
 			{
-				new[] { profile1.PlayerInfo.Rank.ToString("NO"), "Global Rank", profile2.PlayerInfo.Rank.ToString("NO") },
-				new[] { profile1.PlayerInfo.CountryRank.ToString("NO"), "Global Rank", profile2.PlayerInfo.CountryRank.ToString("NO") },
+				new[] { profile1.PlayerInfo.Rank.ToString("N0"), "Global Rank", profile2.PlayerInfo.Rank.ToString("N0") },
+				new[] { profile1.PlayerInfo.CountryRank.ToString("N0"), "Country Rank", profile2.PlayerInfo.CountryRank.ToString("N0") },
 				new[] { profile1.PlayerInfo.Pp.ToString("N1"), "PP", profile2.PlayerInfo.Pp.ToString("N1") },
 				new[] { $"{(Math.Floor(profile1.ScoreStats.AverageRankedAccuracy * 1000) / 1000):F2}%", "AVG ACC", $"{(Math.Floor(profile2.ScoreStats.AverageRankedAccuracy * 1000) / 1000):F2}%" },
-				new[] { profile1.ScoreStats.TotalPlayCount.ToString("NO"), "Play Count", profile2.ScoreStats.TotalPlayCount.ToString("NO") },
-				new[] { profile1.ScoreStats.TotalRankedCount.ToString("NO"), "Ranked Play Count", profile2.ScoreStats.TotalRankedCount.ToString("NO") },
-				new[] { profile1.ScoreStats.TotalScore.ToString("NO"), "Score", profile2.ScoreStats.TotalScore.ToString("NO") },
-				new[] { profile1.ScoreStats.TotalRankedScore.ToString("NO"), "Ranked Score", profile2.ScoreStats.TotalRankedScore.ToString("NO") },
+				new[] { profile1.ScoreStats.TotalPlayCount.ToString("N0"), "Play Count", profile2.ScoreStats.TotalPlayCount.ToString("N0") },
+				new[] { profile1.ScoreStats.TotalRankedCount.ToString("N0"), "Ranked Play Count", profile2.ScoreStats.TotalRankedCount.ToString("N0") },
+				new[] { profile1.ScoreStats.TotalScore.ToString("N0"), "Score", profile2.ScoreStats.TotalScore.ToString("N0") },
+				new[] { profile1.ScoreStats.TotalRankedScore.ToString("N0"), "Ranked Score", profile2.ScoreStats.TotalRankedScore.ToString("N0") },
 				new[] { profile1TopPage.Scores[0].Pp.ToString("N2"), "Top PP Play", profile2TopPage.Scores[0].Pp.ToString("N2") }
 			};
 
