@@ -233,7 +233,7 @@ namespace POI.DiscordDotNet.Commands.Utils
 			string? compareScoreSaberId = null;
 
 			//lookup sender ScoreSaber in mongoDB via discord
-			async Task LookupScoreSaberLink(string discordId)
+			async Task<string?> LookupScoreSaberLink(string discordId)
 			{
 				try
 				{
@@ -241,12 +241,12 @@ namespace POI.DiscordDotNet.Commands.Utils
 						.GetCollection<ScoreSaberLink>()
 						.FindAsync(new ExpressionFilterDefinition<ScoreSaberLink>(link => link.DiscordId == discordId))
 						.ConfigureAwait(false);
-					scoreSaberId = userScoreLinks.FirstOrDefault()?.ScoreSaberId;
+					return userScoreLinks.FirstOrDefault()?.ScoreSaberId;
 				}
 				catch (Exception)
 				{
 					_logger.LogWarning("Couldn't find scoreLink for user {Username}", ctx.Message.Author.Username);
-					scoreSaberId = null;
+					return null;
 				}
 			}
 
@@ -258,32 +258,41 @@ namespace POI.DiscordDotNet.Commands.Utils
 				.Where(arg => !arg.EndsWith(">"))
 				.ToList();
 
-			//only 1 ScoreSaber id
-			if (args.Count == 1 && args[0].ExtractScoreSaberId(out compareScoreSaberId))
+			switch (ctx.Message.MentionedUsers.Count)
 			{
-				args.RemoveAt(0);
-				//if ScoreSaber id is not in arguments check mongo db for discord linked with ss
-				if (scoreSaberId == null)
-				{
-					if (ctx.Message.MentionedUsers.Any())
+				case 0:
+					switch (args.Count)
 					{
-						var mentionedUser = ctx.Message.MentionedUsers.First();
-						await LookupScoreSaberLink(mentionedUser.Id.ToString()).ConfigureAwait(false);
+						case 1 when args[0].ExtractScoreSaberId(out compareScoreSaberId):
+							scoreSaberId = await LookupScoreSaberLink(ctx.Message.Author.Id.ToString()).ConfigureAwait(false);
+							break;
+						case 2:
+							args[0].ExtractScoreSaberId(out scoreSaberId);
+							args[1].ExtractScoreSaberId(out compareScoreSaberId);
+							break;
+						default:
+							return null;
 					}
-					else
+					break;
+				case 1:
+					switch (args.Count)
 					{
-						await LookupScoreSaberLink(ctx.User.Id.ToString()).ConfigureAwait(false);
+						case 0:
+							scoreSaberId = await LookupScoreSaberLink(ctx.Message.Author.Id.ToString()).ConfigureAwait(false);
+							compareScoreSaberId = await LookupScoreSaberLink(ctx.Message.MentionedUsers[0].Id.ToString()).ConfigureAwait(false);
+							break;
+						case 1 when args[0].ExtractScoreSaberId(out compareScoreSaberId):
+							scoreSaberId = await LookupScoreSaberLink(ctx.Message.MentionedUsers[0].Id.ToString()).ConfigureAwait(false);
+							break;
 					}
-				}
+					break;
+				case 2:
+					scoreSaberId = await LookupScoreSaberLink(ctx.Message.MentionedUsers[0].Id.ToString()).ConfigureAwait(false);
+					compareScoreSaberId = await LookupScoreSaberLink(ctx.Message.MentionedUsers[1].Id.ToString()).ConfigureAwait(false);
+					break;
+				default:
+					return null;
 			}
-
-			//2 ScoreSaber ids
-			if (args.Count == 2 && args[0].ExtractScoreSaberId(out scoreSaberId) && args[1].ExtractScoreSaberId(out compareScoreSaberId))
-			{
-				args.RemoveAt(1);
-				args.RemoveAt(0);
-			}
-
 
 			if (scoreSaberId == null || compareScoreSaberId == null)
 			{
