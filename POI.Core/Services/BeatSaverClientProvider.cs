@@ -10,7 +10,11 @@ namespace POI.Core.Services
 
 		public BeatSaverClientProvider(IConstantsCore constants)
 		{
-			var beatSaverClientOptions = new HttpOptions(constants.Name, constants.Version, TimeSpan.FromSeconds(10), handleRateLimits: true);
+			var beatSaverClientOptions = new BeatSaverOptions(constants.Name, constants.Version)
+			{
+				Cache = false,
+				Timeout = TimeSpan.FromSeconds(10)
+			};
 			_beatSaverClient = new BeatSaver(beatSaverClientOptions);
 		}
 

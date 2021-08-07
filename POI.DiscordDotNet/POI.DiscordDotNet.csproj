@@ -33,4 +33,10 @@
       <ProjectReference Include="..\POI.Core\POI.Core.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Reference Include="BeatSaverSharp">
+        <HintPath>..\POI.Core\Libs\BeatSaverSharp\BeatSaverSharp.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
 </Project>

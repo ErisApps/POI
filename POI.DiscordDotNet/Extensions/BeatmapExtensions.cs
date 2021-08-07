@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text.RegularExpressions;
+using BeatSaverSharp.Models;
 using ImageMagick;
 using POI.DiscordDotNet.Services;
 
@@ -8,6 +9,34 @@ namespace POI.DiscordDotNet.Extensions
 	internal static class BeatmapExtensions
 	{
 		private static readonly Regex ScoreSaberDifficultyRegex = new("_(?<difficulty>\\w+)_(?<characteristic>\\w+)", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
+
+		internal static BeatmapDifficulty.BeatmapCharacteristic MapToBeatmapCharacteristic(string characteristicString)
+		{
+			return characteristicString switch
+			{
+				"Standard" => BeatmapDifficulty.BeatmapCharacteristic.Standard,
+				"OneSaber" => BeatmapDifficulty.BeatmapCharacteristic.OneSaber,
+				"NoArrows" => BeatmapDifficulty.BeatmapCharacteristic.NoArrows,
+				"90Degree" => BeatmapDifficulty.BeatmapCharacteristic._90Degree,
+				"360Degree" => BeatmapDifficulty.BeatmapCharacteristic._360Degree,
+				"Lawless" => BeatmapDifficulty.BeatmapCharacteristic.Lawless,
+				"Lightshow" => BeatmapDifficulty.BeatmapCharacteristic.Lightshow,
+				_ => throw new NotImplementedException()
+			};
+		}
+
+		internal static BeatmapDifficulty.BeatSaverBeatmapDifficulty MapToBeatSaverBeatmapDifficulty(string difficultyString)
+		{
+			return difficultyString switch
+			{
+				"Easy" => BeatmapDifficulty.BeatSaverBeatmapDifficulty.Easy,
+				"Normal" => BeatmapDifficulty.BeatSaverBeatmapDifficulty.Normal,
+				"Hard" => BeatmapDifficulty.BeatSaverBeatmapDifficulty.Hard,
+				"Expert" => BeatmapDifficulty.BeatSaverBeatmapDifficulty.Expert,
+				"ExpertPlus" => BeatmapDifficulty.BeatSaverBeatmapDifficulty.ExpertPlus,
+				_ => throw new NotImplementedException()
+			};
+		}
 
 		internal static string MapToDifficulty(this int difficultyNumber)
 		{
