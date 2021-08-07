@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using BeatSaverSharp.Models;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
@@ -93,12 +94,15 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 			var maxScore = requestedSong.MaxScore;
 			if (maxScore <= 0)
 			{
-				var beatmap = await _beatSaverClientProvider.GetClientInstance().Hash(requestedSong.SongHash).ConfigureAwait(false);
+				var beatmap = await _beatSaverClientProvider.GetClientInstance().BeatmapByHash(requestedSong.SongHash, skipCacheCheck: true).ConfigureAwait(false);
 
-				maxScore = beatmap?.Metadata.Characteristics
-					.FirstOrDefault(x => x.Name == characteristic)?.Difficulties
-					.FirstOrDefault(x => x.Key == difficulty!.ToCamelCase())
-					.Value?.Notes.NotesToMaxScore() ?? 0;
+				var mappedCharacteristic = BeatmapExtensions.MapToBeatmapCharacteristic(characteristic!);
+				var mappedDifficulty = BeatmapExtensions.MapToBeatSaverBeatmapDifficulty(difficulty!);
+
+				maxScore = beatmap?.Versions
+					.FirstOrDefault(x => x.Hash == requestedSong.SongHash.ToLower())?.Difficulties
+					.FirstOrDefault(x => x.Characteristic == mappedCharacteristic && x.Difficulty == mappedDifficulty)
+					?.Notes.NotesToMaxScore() ?? 0;
 			}
 
 			var accuracy = ((float) (requestedSong.UnmodifiedScore * 100) / maxScore);
