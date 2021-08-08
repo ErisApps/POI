@@ -51,7 +51,13 @@ namespace POI.DiscordDotNet.Commands.Utils
 			var arguments = await ExtractArguments(ctx).ConfigureAwait(false);
 			if (arguments == null)
 			{
-				await _logger.LogError(ctx, "Something went wrong while trying to parse the arguments").ConfigureAwait(false);
+				var errorMessage = await ctx.RespondAsync("Try using the correct arguments, something like this: ```poinext cp <Player 1 (scoresaberId or mention)> <Player 2 (scoresaberId or mention, optional if you are linked)>```");
+
+				_logger.LogError("{ErrorMessage}", errorMessage);
+
+				await Task.Delay(TimeSpan.FromSeconds(10));
+				await errorMessage.DeleteAsync().ConfigureAwait(false);
+
 				return;
 			}
 
@@ -293,6 +299,8 @@ namespace POI.DiscordDotNet.Commands.Utils
 				default:
 					return null;
 			}
+
+			_logger.LogDebug(scoreSaberId, compareScoreSaberId);
 
 			if (scoreSaberId == null || compareScoreSaberId == null)
 			{
