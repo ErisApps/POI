@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
+using DSharpPlus.EventArgs;
+using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Extensions;
 using Microsoft.Extensions.Logging;
 using POI.Core.Services;
@@ -29,25 +32,39 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 				return;
 			}
 
-			messageBuilder.AddComponents(
+			var buttons = new[]
+			{
 				new DiscordButtonComponent(ButtonStyle.Success, "approve", "✅"),
 				new DiscordButtonComponent(ButtonStyle.Danger, "deny", "🚫")
-			);
+			};
+			messageBuilder.AddComponents(buttons.Cast<DiscordComponent>());
 
 			var discordMessage = await ctx.Message.RespondAsync(messageBuilder).ConfigureAwait(false);
 
-			var hasResponded = false;
+			var itv = ctx.Client.GetInteractivity();
 
+			var hasResponded = false;
+			InteractivityResult<ComponentInteractionCreateEventArgs>? task = null;
 			while (!hasResponded)
 			{
-				var waitForButtonAsync = await discordMessage.WaitForButtonAsync().ConfigureAwait(false);
+				task = await itv.WaitForButtonAsync(discordMessage, buttons, null);
 
-				// await waitForButtonAsync.Result.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate);
+				if (task.Value.TimedOut)
+				{
+					await ctx.RespondAsync("Mea culpa, I timed out :c").ConfigureAwait(false);
+					break;
+				}
 
-				hasResponded = waitForButtonAsync.Result.User.Id is 148824637004840961 or 261830384663134209;
+				await task.Value.Result.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate);
+				hasResponded = task.Value.Result.User.Id is 148824637004840961 or 261830384663134209;
 			}
 
-			await ctx.RespondAsync("has responded").ConfigureAwait(false);
+
+
+			if (hasResponded && task != null)
+			{
+				await ctx.RespondAsync($"{task.Value.Result.User.Username} has responded with actionId: {task.Value.Result.Id}").ConfigureAwait(false);
+			}
 		}
 
 		protected override void Test(CommandContext ctx, DiscordEmbedBuilder embedBuilder)
