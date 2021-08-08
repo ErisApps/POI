@@ -12,7 +12,7 @@ namespace POI.DiscordDotNet.Commands.Utils
         public async Task Handle(CommandContext ctx)
         {
             await ctx.Channel
-                .SendMessageAsync("POI!\n" +
+                .SendMessageAsync("Eris is cute!\n" +
                                   $"WS latency: {ctx.Client.Ping} ms\n" +
                                   $"Message latency: {(DateTimeOffset.Now - ctx.Message.Timestamp):g}")
                 .ConfigureAwait(false);
