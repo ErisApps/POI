@@ -95,7 +95,7 @@ namespace POI.DiscordDotNet.Commands.Utils
 			{
 				new[] { profile1.PlayerInfo.Rank.ToString("N0"), "Global Rank", profile2.PlayerInfo.Rank.ToString("N0") },
 				new[] { profile1.PlayerInfo.CountryRank.ToString("N0"), "Country Rank", profile2.PlayerInfo.CountryRank.ToString("N0") },
-				new[] { profile1.PlayerInfo.Pp.ToString("N1"), "PP", profile2.PlayerInfo.Pp.ToString("N1") },
+				new[] { profile1.PlayerInfo.Pp.ToString("N2"), "PP", profile2.PlayerInfo.Pp.ToString("N2") },
 				new[] { $"{(Math.Floor(profile1.ScoreStats.AverageRankedAccuracy * 1000) / 1000):F2}%", "AVG ACC", $"{(Math.Floor(profile2.ScoreStats.AverageRankedAccuracy * 1000) / 1000):F2}%" },
 				new[] { profile1.ScoreStats.TotalPlayCount.ToString("N0"), "Play Count", profile2.ScoreStats.TotalPlayCount.ToString("N0") },
 				new[] { profile1.ScoreStats.TotalRankedCount.ToString("N0"), "Ranked Play Count", profile2.ScoreStats.TotalRankedCount.ToString("N0") },
