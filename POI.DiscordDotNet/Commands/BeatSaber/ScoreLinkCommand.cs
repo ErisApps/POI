@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 using POI.Core.Services;
 using POI.DiscordDotNet.Services;
 
-namespace POI.DiscordDotNet.Commands.Beat_Saber
+namespace POI.DiscordDotNet.Commands.BeatSaber
 {
 	public class ScoreLinkCommand : BaseLinkCommand
 	{
@@ -42,7 +42,7 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 			{
 				var waitForButtonAsync = await discordMessage.WaitForButtonAsync().ConfigureAwait(false);
 
-				// await waitForButtonAsync.Result.Interaction.CreateResponseAsync(InteractionResponseType.UpdateMessage);
+				// await waitForButtonAsync.Result.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate);
 
 				hasResponded = waitForButtonAsync.Result.User.Id is 148824637004840961 or 261830384663134209;
 			}

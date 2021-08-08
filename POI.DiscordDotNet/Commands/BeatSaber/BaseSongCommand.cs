@@ -14,11 +14,11 @@ using POI.Core.Models.ScoreSaber.Profile;
 using POI.Core.Models.ScoreSaber.Scores;
 using POI.Core.Services;
 using POI.DiscordDotNet.Commands.Modules;
+using POI.DiscordDotNet.Extensions;
 using POI.DiscordDotNet.Models.Database;
 using POI.DiscordDotNet.Services;
-using POI.DiscordDotNet.Extensions;
 
-namespace POI.DiscordDotNet.Commands.Beat_Saber
+namespace POI.DiscordDotNet.Commands.BeatSaber
 {
 	public abstract class BaseSongCommand : BeatSaberCommandsModule
 	{

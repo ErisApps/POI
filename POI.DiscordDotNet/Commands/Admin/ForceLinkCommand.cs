@@ -4,7 +4,7 @@ using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using Microsoft.Extensions.Logging;
 using POI.Core.Services;
-using POI.DiscordDotNet.Commands.Beat_Saber;
+using POI.DiscordDotNet.Commands.BeatSaber;
 using POI.DiscordDotNet.Services;
 
 namespace POI.DiscordDotNet.Commands.Admin
