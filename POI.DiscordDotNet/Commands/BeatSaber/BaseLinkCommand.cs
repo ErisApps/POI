@@ -10,7 +10,7 @@ using POI.DiscordDotNet.Commands.Modules;
 using POI.DiscordDotNet.Extensions;
 using POI.DiscordDotNet.Services;
 
-namespace POI.DiscordDotNet.Commands.Beat_Saber
+namespace POI.DiscordDotNet.Commands.BeatSaber
 {
 	public abstract class BaseLinkCommand : BeatSaberCommandsModule
 	{

@@ -9,7 +9,7 @@ using POI.Core.Models.ScoreSaber.Scores;
 using POI.Core.Services;
 using POI.DiscordDotNet.Services;
 
-namespace POI.DiscordDotNet.Commands.Beat_Saber
+namespace POI.DiscordDotNet.Commands.BeatSaber
 {
 	public class RecentSongCommand : BaseSongCommand
 	{
