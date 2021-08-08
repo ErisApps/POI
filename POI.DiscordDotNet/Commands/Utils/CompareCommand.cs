@@ -300,8 +300,6 @@ namespace POI.DiscordDotNet.Commands.Utils
 					return null;
 			}
 
-			_logger.LogDebug(scoreSaberId, compareScoreSaberId);
-
 			if (scoreSaberId == null || compareScoreSaberId == null)
 			{
 				return null;
