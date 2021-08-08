@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
+using DSharpPlus.Interactivity;
+using DSharpPlus.Interactivity.Extensions;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -84,6 +86,7 @@ namespace POI.DiscordDotNet
 					sc.AddSingleton(_client);
 					sc.AddSingleton<MongoDbService>();
 					sc.AddSingleton<UptimeManagementService>();
+					sc.AddSingleton<ScoreSaberLinkService>();
 				}).Build();
 
 			// Verify mongoDbConnection
@@ -115,6 +118,8 @@ namespace POI.DiscordDotNet
 				return Task.CompletedTask;
 			};
 			commandsNext.RegisterCommands(Assembly.GetEntryAssembly());
+
+			_client.UseInteractivity();
 
 			await _client.ConnectAsync(new DiscordActivity("POI for mod? (pretty please)", ActivityType.Playing)).ConfigureAwait(false);
 
