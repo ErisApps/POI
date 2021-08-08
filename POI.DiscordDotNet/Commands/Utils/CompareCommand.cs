@@ -53,7 +53,7 @@ namespace POI.DiscordDotNet.Commands.Utils
 			{
 				var errorMessage = await ctx.RespondAsync("Try using the correct arguments, something like this: ```poinext cp <Player 1 (scoresaberId or mention)> <Player 2 (scoresaberId or mention, optional if you are linked)>```");
 
-				_logger.LogError("{ErrorMessage}", errorMessage);
+				_logger.LogError("{ErrorMessage}", $"{ctx.User.Username} issued the compare command but failed to enter the correct arguments!");
 
 				await Task.Delay(TimeSpan.FromSeconds(10));
 				await errorMessage.DeleteAsync().ConfigureAwait(false);
