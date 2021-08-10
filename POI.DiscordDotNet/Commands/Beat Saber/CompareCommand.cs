@@ -16,7 +16,7 @@ using POI.DiscordDotNet.Extensions;
 using POI.DiscordDotNet.Models.Database;
 using POI.DiscordDotNet.Services;
 
-namespace POI.DiscordDotNet.Commands.Utils
+namespace POI.DiscordDotNet.Commands.Beat_Saber
 {
 	public class CompareCommand : UtilCommandsModule
 	{
