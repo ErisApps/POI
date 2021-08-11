@@ -51,11 +51,14 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 			var arguments = await ExtractArguments(ctx).ConfigureAwait(false);
 			if (arguments == null)
 			{
-				var errorMessage = await ctx.RespondAsync("Try using the correct arguments, something like this: ```poinext cp <Player 1 (scoresaberId or mention)> <Player 2 (scoresaberId or mention, optional if you are linked)>```");
+				var errorMessage = await ctx
+					.RespondAsync(
+						"Try using the correct arguments, something like this: ```poinext cp <Player 1 (scoresaberId or mention)> <Player 2 (scoresaberId or mention, optional if you are linked)>```")
+					.ConfigureAwait(false);
 
 				_logger.LogError("{ErrorMessage}", $"{ctx.User.Username} issued the compare command but failed to enter the correct arguments!");
 
-				await Task.Delay(TimeSpan.FromSeconds(10));
+				await Task.Delay(TimeSpan.FromSeconds(10)).ConfigureAwait(false);
 				await errorMessage.DeleteAsync().ConfigureAwait(false);
 
 				return;
@@ -99,15 +102,15 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 
 			var args = new[]
 			{
-				new[] { profile1.PlayerInfo.Rank.ToString("N0"), "Global Rank", profile2.PlayerInfo.Rank.ToString("N0") },
-				new[] { profile1.PlayerInfo.CountryRank.ToString("N0"), "Country Rank", profile2.PlayerInfo.CountryRank.ToString("N0") },
-				new[] { profile1.PlayerInfo.Pp.ToString("N2"), "PP", profile2.PlayerInfo.Pp.ToString("N2") },
-				new[] { $"{(Math.Floor(profile1.ScoreStats.AverageRankedAccuracy * 1000) / 1000):F2}%", "AVG ACC", $"{(Math.Floor(profile2.ScoreStats.AverageRankedAccuracy * 1000) / 1000):F2}%" },
-				new[] { profile1.ScoreStats.TotalPlayCount.ToString("N0"), "Play Count", profile2.ScoreStats.TotalPlayCount.ToString("N0") },
-				new[] { profile1.ScoreStats.TotalRankedCount.ToString("N0"), "Ranked Play Count", profile2.ScoreStats.TotalRankedCount.ToString("N0") },
-				new[] { profile1.ScoreStats.TotalScore.ToString("N0"), "Score", profile2.ScoreStats.TotalScore.ToString("N0") },
-				new[] { profile1.ScoreStats.TotalRankedScore.ToString("N0"), "Ranked Score", profile2.ScoreStats.TotalRankedScore.ToString("N0") },
-				new[] { profile1TopPage.Scores[0].Pp.ToString("N2"), "Top PP Play", profile2TopPage.Scores[0].Pp.ToString("N2") }
+				new[] {profile1.PlayerInfo.Rank.ToString("N0"), "Global Rank", profile2.PlayerInfo.Rank.ToString("N0")},
+				new[] {profile1.PlayerInfo.CountryRank.ToString("N0"), "Country Rank", profile2.PlayerInfo.CountryRank.ToString("N0")},
+				new[] {profile1.PlayerInfo.Pp.ToString("N2"), "PP", profile2.PlayerInfo.Pp.ToString("N2")},
+				new[] {$"{(Math.Floor(profile1.ScoreStats.AverageRankedAccuracy * 1000) / 1000):F2}%", "AVG ACC", $"{(Math.Floor(profile2.ScoreStats.AverageRankedAccuracy * 1000) / 1000):F2}%"},
+				new[] {profile1.ScoreStats.TotalPlayCount.ToString("N0"), "Play Count", profile2.ScoreStats.TotalPlayCount.ToString("N0")},
+				new[] {profile1.ScoreStats.TotalRankedCount.ToString("N0"), "Ranked Play Count", profile2.ScoreStats.TotalRankedCount.ToString("N0")},
+				new[] {profile1.ScoreStats.TotalScore.ToString("N0"), "Score", profile2.ScoreStats.TotalScore.ToString("N0")},
+				new[] {profile1.ScoreStats.TotalRankedScore.ToString("N0"), "Ranked Score", profile2.ScoreStats.TotalRankedScore.ToString("N0")},
+				new[] {profile1TopPage.Scores[0].Pp.ToString("N2"), "Top PP Play", profile2TopPage.Scores[0].Pp.ToString("N2")}
 			};
 
 			await using var memoryStream = new MemoryStream();
@@ -146,7 +149,7 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 				if (profile1ImageBytes != null)
 				{
 					using var avatarImage = new MagickImage(profile1ImageBytes);
-					avatarImage.Resize(new MagickGeometry { Width = 150, Height = 150 });
+					avatarImage.Resize(new MagickGeometry {Width = 150, Height = 150});
 
 					using var avatarLayer = new MagickImage(MagickColors.Transparent, 150, 150);
 					avatarLayer.Draw(
@@ -162,7 +165,7 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 				if (profile2ImageBytes != null)
 				{
 					using var avatarImage = new MagickImage(profile2ImageBytes);
-					avatarImage.Resize(new MagickGeometry { Width = 150, Height = 150 });
+					avatarImage.Resize(new MagickGeometry {Width = 150, Height = 150});
 
 					using var avatarLayer = new MagickImage(MagickColors.Transparent, 150, 150);
 					avatarLayer.Draw(
@@ -174,7 +177,7 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 					background.Draw(new DrawableComposite(WIDTH - MARGIN - avatarImage.Width, PFP_HEIGHT, CompositeOperator.Over, avatarLayer));
 				}
 
-				foreach (var item in args.Select((value, i) => new { i, value }))
+				foreach (var item in args.Select((value, i) => new {i, value}))
 				{
 					var arg = item.value;
 					var index = item.i;
@@ -279,6 +282,7 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 						default:
 							return null;
 					}
+
 					break;
 				case 1:
 					switch (args.Count)
@@ -291,6 +295,7 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 							scoreSaberId = await LookupScoreSaberLink(ctx.Message.MentionedUsers[0].Id.ToString()).ConfigureAwait(false);
 							break;
 					}
+
 					break;
 				case 2:
 					scoreSaberId = await LookupScoreSaberLink(ctx.Message.MentionedUsers[0].Id.ToString()).ConfigureAwait(false);
