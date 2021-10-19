@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -37,6 +36,8 @@ namespace POI.Azure.Functions.RankUpFeed
 			await Task.WhenAll(
 				FetchPlayers(logger, scoreSaberApiService, scoreSaberScraperService),
 				FetchRankThresholds(logger, scoreSaberApiService));
+
+			// TODO: Post data to webhook in bot
 
 #if DEBUG
 			var response = req.CreateResponse(HttpStatusCode.OK);
