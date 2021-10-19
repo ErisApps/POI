@@ -6,7 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="AngleSharp" Version="0.16.1-alpha-99" />
+      <PackageReference Include="AngleSharp" Version="0.16.1" />
       <PackageReference Include="BeatSaverSharper" Version="3.0.2" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.2" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
