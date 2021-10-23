@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
 using NodaTime;
 
-namespace POI.Core.Models.BeatSavior.Scores
+namespace POI.Core.Models.BeatSavior
 {
 	public class SongData
 	{

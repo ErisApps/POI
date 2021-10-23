@@ -133,6 +133,7 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 					FillColor = MagickColors.White,
 					TextGravity = Gravity.West
 				};
+
 				using (var playerNameCaption = new MagickImage($"label:{profile1.PlayerInfo.Name}", playerNameSettings))
 				{
 					background.Composite(playerNameCaption, MARGIN, NAME_HEIGHT, CompositeOperator.Over);

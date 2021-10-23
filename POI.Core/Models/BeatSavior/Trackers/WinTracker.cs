@@ -1,7 +1,6 @@
-using System;
 using System.Text.Json.Serialization;
 
-namespace POI.Core.Models.BeatSavior.Scores.Trackers
+namespace POI.Core.Models.BeatSavior.Trackers
 {
 	public class WinTracker
 	{

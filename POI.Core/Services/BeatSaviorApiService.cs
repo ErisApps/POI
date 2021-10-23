@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -8,7 +9,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using NodaTime;
 using NodaTime.Serialization.SystemTextJson;
-using POI.Core.Models.BeatSavior.Scores;
+using POI.Core.Models.BeatSavior;
 using POI.Core.Models.ScoreSaber.Profile;
 using POI.Core.Services.Interfaces;
 using Polly;
@@ -120,9 +121,9 @@ namespace POI.Core.Services
 			return null;
 		}
 
-		public Task<SongData?> FetchBeatSaviorPlayerData(string scoreSaberId)
+		public Task<List<SongData>?> FetchBeatSaviorPlayerData(string scoreSaberId)
 		{
-			return FetchData<SongData?>($"{BEATSAVIOR_API_BASEURL}livescores/player/{scoreSaberId}");
+			return FetchData<List<SongData>?>($"{BEATSAVIOR_API_BASEURL}livescores/player/{scoreSaberId}");
 		}
 	}
 }

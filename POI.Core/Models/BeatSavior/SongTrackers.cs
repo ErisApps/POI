@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
-using POI.Core.Models.BeatSavior.Scores.Trackers;
+using POI.Core.Models.BeatSavior.Trackers;
 
-namespace POI.Core.Models.BeatSavior.Scores
+namespace POI.Core.Models.BeatSavior
 {
 	public class SongTrackers
 	{

@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Threading.Tasks.Dataflow;
 using BeatSaverSharp.Models;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
@@ -10,6 +11,9 @@ using ImageMagick;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using NodaTime;
+using POI.Core.Models.BeatSavior;
+using POI.Core.Models.BeatSavior.Trackers;
+using POI.Core.Models.ScoreSaber.Profile;
 using POI.Core.Models.ScoreSaber.Scores;
 using POI.Core.Services;
 using POI.DiscordDotNet.Commands.Modules;
@@ -29,14 +33,22 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 		private readonly BeatSaverClientProvider _beatSaverClientProvider;
 
 		protected readonly ScoreSaberApiService ScoreSaberApiService;
+		protected readonly BeatSaviorApiService BeatSaviorApiService;
+
+		private const int WIDTH = 1024;
+		private const int MARGIN = 25;
+		private const int HEIGHT = 512;
+		private const int SPACING = 25;
 
 		protected BaseSongCommand(ILogger<BaseSongCommand> logger, DiscordClient client, ScoreSaberApiService scoreSaberApiService, MongoDbService mongoDbService,
-			BeatSaverClientProvider beatSaverClientProvider, string backgroundImagePath, string erisSignaturePath)
+			BeatSaverClientProvider beatSaverClientProvider, string backgroundImagePath, string erisSignaturePath, BeatSaviorApiService beatSaviorApiService)
 		{
 			_logger = logger;
 			_client = client;
 
 			ScoreSaberApiService = scoreSaberApiService;
+			BeatSaviorApiService = beatSaviorApiService;
+
 			_mongoDbService = mongoDbService;
 			_beatSaverClientProvider = beatSaverClientProvider;
 			_backgroundImagePath = backgroundImagePath;
@@ -108,6 +120,11 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 			var accuracy = ((float) (requestedSong.UnmodifiedScore * 100) / maxScore);
 			var coverImageBytes = await ScoreSaberApiService.FetchCoverImageByHash(requestedSong.SongHash).ConfigureAwait(false);
 			var playerImageBytes = await ScoreSaberApiService.FetchPlayerAvatarByProfile(profile.PlayerInfo.Avatar).ConfigureAwait(false);
+
+			var beatSaviorProfileData = await BeatSaviorApiService.FetchBeatSaviorPlayerData(scoreSaberId).ConfigureAwait(false);
+			var beatSaviorSongData = beatSaviorProfileData?.Find(song => requestedSong.SongHash.Equals(song.SongId)
+			                                                             && requestedSong.Difficulty == song.SongDifficultyRank
+			                                                             && requestedSong.DifficultyRaw.Contains(song.GameMode));
 
 			await using var memoryStream = new MemoryStream();
 			using (var background = new MagickImage(_backgroundImagePath))
@@ -346,6 +363,123 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 				.WithFile($"{profile.PlayerInfo.Name}_{SystemClock.Instance.GetCurrentInstant().ToDateTimeUtc().ToLongDateString()}.jpeg", memoryStream);
 			await ctx.Message
 				.RespondAsync(messageBuilder)
+				.ConfigureAwait(false);
+
+			//BeatSavior data found! (Making the second image)
+			if (beatSaviorSongData != null)
+			{
+				await SendBeatSaviorMemoryStream(ctx, profile, beatSaviorSongData).ConfigureAwait(false);
+			}
+		}
+
+		private async Task SendBeatSaviorMemoryStream(CommandContext ctx, BasicProfile profile, SongData beatSaviorSongData)
+		{
+			await using var memoryStream = new MemoryStream();
+
+			using (var background = new MagickImage(_backgroundImagePath))
+			{
+				var hitTracker = beatSaviorSongData.Trackers.HitTracker;
+				var accuracyTracker = beatSaviorSongData.Trackers.AccuracyTracker;
+				var scoreTracker = beatSaviorSongData.Trackers.ScoreTracker;
+				var winTracker = beatSaviorSongData.Trackers.WinTracker;
+
+				// Run Stats
+				var runStatsSettings = new MagickReadSettings
+				{
+					Height = 70,
+					Width = WIDTH / 5 - MARGIN,
+					BackgroundColor = MagickColors.Transparent,
+					FontStyle = FontStyleType.Bold,
+					FillColor = MagickColors.White,
+					TextGravity = Gravity.Center,
+					FontPointsize = 40
+				};
+
+				var runStatsTitleSettings = new MagickReadSettings
+				{
+					Height = 70,
+					Width = WIDTH / 5 - MARGIN,
+					BackgroundColor = MagickColors.Transparent,
+					FillColor = MagickColors.Gray,
+					TextGravity = Gravity.Center,
+					FontPointsize = 30
+				};
+
+				//Rating
+				using (var playerRankCaption = new MagickImage($"label:Rating", runStatsTitleSettings))
+				{
+					background.Composite(playerRankCaption, 0, 370, CompositeOperator.Over);
+				}
+
+				using (var playerRankCaption = new MagickImage($"label:{winTracker.Rank}", runStatsSettings))
+				{
+					background.Composite(playerRankCaption, 0, 415, CompositeOperator.Over);
+				}
+
+				//TODO change score to something else
+				//Score
+				using (var playerRankCaption = new MagickImage($"label:Score", runStatsTitleSettings))
+				{
+					background.Composite(playerRankCaption, WIDTH/5, 370, CompositeOperator.Over);
+				}
+
+				using (var playerRankCaption = new MagickImage($"label:{scoreTracker.Score}", runStatsSettings))
+				{
+					background.Composite(playerRankCaption, WIDTH/5, 415, CompositeOperator.Over);
+				}
+
+				//Combo
+				using (var playerRankCaption = new MagickImage($"label:Combo", runStatsTitleSettings))
+				{
+					background.Composite(playerRankCaption, WIDTH/5*2, 370, CompositeOperator.Over);
+				}
+
+				using (var playerRankCaption = new MagickImage($"label:{hitTracker.MaxCombo}", runStatsSettings))
+				{
+					background.Composite(playerRankCaption, WIDTH/5*2, 415, CompositeOperator.Over);
+				}
+
+				//Misses
+				var missTitleSettings = runStatsTitleSettings;
+				var missSettings = runStatsSettings;
+				var fc = hitTracker.MissedNotes == 0 && hitTracker.BombHit == 0 && hitTracker.NbOfWallHit == 0;
+				if (fc)
+				{
+					missTitleSettings.FillColor = MagickColors.Gold;
+					missSettings.FillColor = MagickColors.Gold;
+				}
+				using (var playerRankCaption = new MagickImage($"label:Misses", missTitleSettings))
+				{
+					background.Composite(playerRankCaption, WIDTH/5*3, 370, CompositeOperator.Over);
+				}
+
+				using (var playerRankCaption = new MagickImage($"label:{(fc ? "FC" : hitTracker.MissedNotes)}", missSettings))
+				{
+					background.Composite(playerRankCaption, WIDTH/5*3, 415, CompositeOperator.Over);
+				}
+
+				//Pauses
+				using (var playerRankCaption = new MagickImage($"label:Pauses", runStatsTitleSettings))
+				{
+					background.Composite(playerRankCaption, WIDTH/5*4, 370, CompositeOperator.Over);
+				}
+
+				using (var playerRankCaption = new MagickImage($"label:{winTracker.NbOfPause}", runStatsSettings))
+				{
+					background.Composite(playerRankCaption, WIDTH/5*4, 415, CompositeOperator.Over);
+				}
+
+
+				await background.WriteAsync(memoryStream).ConfigureAwait(false);
+				await memoryStream.FlushAsync().ConfigureAwait(false);
+				memoryStream.Seek(0, SeekOrigin.Begin);
+			}
+
+			var messageBuilder = new DiscordMessageBuilder()
+				.WithFile($"{profile.PlayerInfo.Name}_BeatSavior_{SystemClock.Instance.GetCurrentInstant().ToDateTimeUtc().ToLongDateString()}.jpeg", memoryStream);
+
+			await ctx.Message
+				.Channel.SendMessageAsync(messageBuilder)
 				.ConfigureAwait(false);
 		}
 
