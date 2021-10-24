@@ -2,8 +2,6 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Threading.Tasks.Dataflow;
-using BeatSaverSharp.Models;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
@@ -12,7 +10,6 @@ using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using NodaTime;
 using POI.Core.Models.BeatSavior;
-using POI.Core.Models.BeatSavior.Trackers;
 using POI.Core.Models.ScoreSaber.Profile;
 using POI.Core.Models.ScoreSaber.Scores;
 using POI.Core.Services;
@@ -36,9 +33,7 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 		protected readonly BeatSaviorApiService BeatSaviorApiService;
 
 		private const int WIDTH = 1024;
-		private const int MARGIN = 25;
-		private const int HEIGHT = 512;
-		private const int SPACING = 25;
+		private const int MARGIN = 35;
 
 		protected BaseSongCommand(ILogger<BaseSongCommand> logger, DiscordClient client, ScoreSaberApiService scoreSaberApiService, MongoDbService mongoDbService,
 			BeatSaverClientProvider beatSaverClientProvider, string backgroundImagePath, string erisSignaturePath, BeatSaviorApiService beatSaviorApiService)
@@ -380,7 +375,6 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 			{
 				var hitTracker = beatSaviorSongData.Trackers.HitTracker;
 				var accuracyTracker = beatSaviorSongData.Trackers.AccuracyTracker;
-				var scoreTracker = beatSaviorSongData.Trackers.ScoreTracker;
 				var winTracker = beatSaviorSongData.Trackers.WinTracker;
 
 				// Run Stats
@@ -405,38 +399,188 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 					FontPointsize = 30
 				};
 
+
+				//LeftHand
+				using (var leftHandCircle = new MagickImage(new MagickColor(0, 0, 0, 0), 512, 512))
+				{
+					new Drawables()
+						// Add an ellipse
+						.StrokeColor(new MagickColor("#a82020"))
+						.StrokeWidth(12)
+						.FillColor(new MagickColor(0, 0, 0, 0))
+						.Ellipse(120, 120, 100, 100, -90, accuracyTracker.AccLeft / 115 * 360 - 90)
+						.Draw(leftHandCircle);
+					background.Composite(leftHandCircle, WIDTH / 4 - 15, 135, CompositeOperator.Over);
+				}
+
+				//Cut
+				using (var caption = new MagickImage("label:Cut", runStatsTitleSettings))
+				{
+					background.Composite(caption, MARGIN + WIDTH / 4 - 15, 190, CompositeOperator.Over);
+				}
+
+				using (var caption = new MagickImage($"label:{accuracyTracker.AccLeft:f2}", runStatsSettings))
+				{
+					background.Composite(caption, MARGIN + WIDTH / 4 - 15, 230, CompositeOperator.Over);
+				}
+
+				//Pre cut
+				using (var caption = new MagickImage("label:Pre Cut", runStatsTitleSettings))
+				{
+					background.Composite(caption, MARGIN + 0, 110, CompositeOperator.Over);
+				}
+
+				using (var caption = new MagickImage($"label:{accuracyTracker.LeftAverageCut[0]:f2}", runStatsSettings))
+				{
+					background.Composite(caption, MARGIN + 0, 155, CompositeOperator.Over);
+				}
+
+				//Post cut
+				using (var caption = new MagickImage("label:Post Cut", runStatsTitleSettings))
+				{
+					background.Composite(caption, MARGIN + 0, 200, CompositeOperator.Over);
+				}
+
+				using (var caption = new MagickImage($"label:{accuracyTracker.LeftAverageCut[2]:f2}", runStatsSettings))
+				{
+					background.Composite(caption, MARGIN + 0, 245, CompositeOperator.Over);
+				}
+
+				//Acc cut
+				using (var caption = new MagickImage("label:Acc Cut", runStatsTitleSettings))
+				{
+					background.Composite(caption, MARGIN + 0, 290, CompositeOperator.Over);
+				}
+
+				using (var caption = new MagickImage($"label:{accuracyTracker.LeftAverageCut[1]:f2}", runStatsSettings))
+				{
+					background.Composite(caption, MARGIN + 0, 335, CompositeOperator.Over);
+				}
+
+				//Pre swing
+				using (var caption = new MagickImage("label:Pre Swing", runStatsTitleSettings))
+				{
+					background.Composite(caption, MARGIN + 0, 380, CompositeOperator.Over);
+				}
+
+				using (var caption = new MagickImage($"label:{(accuracyTracker.LeftPreswing * 100):f2}%", runStatsSettings))
+				{
+					background.Composite(caption, MARGIN + 0, 425, CompositeOperator.Over);
+				}
+
+				//Post swing
+				using (var caption = new MagickImage("label:Post Swing", runStatsTitleSettings))
+				{
+					background.Composite(caption, MARGIN + WIDTH / 4, 380, CompositeOperator.Over);
+				}
+
+				using (var caption = new MagickImage($"label:{(accuracyTracker.LeftPostswing * 100):f2}%", runStatsSettings))
+				{
+					background.Composite(caption, MARGIN + WIDTH / 4, 425, CompositeOperator.Over);
+				}
+
+
+				//RightHand
+				using (var rightHandCircle = new MagickImage(new MagickColor(0, 0, 0, 0), 512, 512))
+				{
+					new Drawables()
+						// Add an ellipse
+						.StrokeColor(new MagickColor("#2064a8"))
+						.StrokeWidth(12)
+						.FillColor(new MagickColor(0, 0, 0, 0))
+						.Ellipse(120, 120, 100, 100, -90, accuracyTracker.AccRight / 115 * 360 - 90)
+						.Draw(rightHandCircle);
+					background.Composite(rightHandCircle, WIDTH / 4 * 2 + 15, 135, CompositeOperator.Over);
+				}
+
+				//Cut
+				using (var caption = new MagickImage("label:Cut", runStatsTitleSettings))
+				{
+					background.Composite(caption, MARGIN + WIDTH / 4 * 2 + 15, 190, CompositeOperator.Over);
+				}
+
+				using (var caption = new MagickImage($"label:{accuracyTracker.AccRight:f2}", runStatsSettings))
+				{
+					background.Composite(caption, MARGIN + WIDTH / 4 * 2 + 15, 230, CompositeOperator.Over);
+				}
+
+				//Pre cut
+				using (var caption = new MagickImage("label:Pre Cut", runStatsTitleSettings))
+				{
+					background.Composite(caption, MARGIN + WIDTH / 4 * 3, 100, CompositeOperator.Over);
+				}
+
+				using (var caption = new MagickImage($"label:{accuracyTracker.RightAverageCut[0]:f2}", runStatsSettings))
+				{
+					background.Composite(caption, MARGIN + WIDTH / 4 * 3, 155, CompositeOperator.Over);
+				}
+
+				//Post cut
+				using (var caption = new MagickImage("label:Post Cut", runStatsTitleSettings))
+				{
+					background.Composite(caption, MARGIN + WIDTH / 4 * 3, 200, CompositeOperator.Over);
+				}
+
+				using (var caption = new MagickImage($"label:{accuracyTracker.RightAverageCut[2]:f2}", runStatsSettings))
+				{
+					background.Composite(caption, MARGIN + WIDTH / 4 * 3, 245, CompositeOperator.Over);
+				}
+
+				//Acc cut
+				using (var caption = new MagickImage("label:Acc Cut", runStatsTitleSettings))
+				{
+					background.Composite(caption, MARGIN + WIDTH / 4 * 3, 290, CompositeOperator.Over);
+				}
+
+				using (var caption = new MagickImage($"label:{accuracyTracker.RightAverageCut[1]:f2}", runStatsSettings))
+				{
+					background.Composite(caption, MARGIN + WIDTH / 4 * 3, 335, CompositeOperator.Over);
+				}
+
+				//Pre swing
+				using (var caption = new MagickImage("label:Pre Swing", runStatsTitleSettings))
+				{
+					background.Composite(caption, MARGIN + WIDTH / 4 * 3, 380, CompositeOperator.Over);
+				}
+
+				using (var caption = new MagickImage($"label:{(accuracyTracker.RightPreswing * 100):f2}%", runStatsSettings))
+				{
+					background.Composite(caption, MARGIN + WIDTH / 4 * 3, 425, CompositeOperator.Over);
+				}
+
+				//Post swing
+				using (var caption = new MagickImage("label:Post Swing", runStatsTitleSettings))
+				{
+					background.Composite(caption, MARGIN + WIDTH / 4 * 2, 380, CompositeOperator.Over);
+				}
+
+				using (var caption = new MagickImage($"label:{(accuracyTracker.RightPostswing * 100):f2}%", runStatsSettings))
+				{
+					background.Composite(caption, MARGIN + WIDTH / 4 * 2, 425, CompositeOperator.Over);
+				}
+
+
+				//--------------------------------------------------------------------------------
 				//Rating
-				using (var playerRankCaption = new MagickImage($"label:Rating", runStatsTitleSettings))
+				using (var caption = new MagickImage("label:Rating", runStatsTitleSettings))
 				{
-					background.Composite(playerRankCaption, 0, 370, CompositeOperator.Over);
+					background.Composite(caption, MARGIN + 0, 0, CompositeOperator.Over);
 				}
 
-				using (var playerRankCaption = new MagickImage($"label:{winTracker.Rank}", runStatsSettings))
+				using (var caption = new MagickImage($"label:{winTracker.Rank}", runStatsSettings))
 				{
-					background.Composite(playerRankCaption, 0, 415, CompositeOperator.Over);
-				}
-
-				//TODO change score to something else
-				//Score
-				using (var playerRankCaption = new MagickImage($"label:Score", runStatsTitleSettings))
-				{
-					background.Composite(playerRankCaption, WIDTH/5, 370, CompositeOperator.Over);
-				}
-
-				using (var playerRankCaption = new MagickImage($"label:{scoreTracker.Score}", runStatsSettings))
-				{
-					background.Composite(playerRankCaption, WIDTH/5, 415, CompositeOperator.Over);
+					background.Composite(caption, MARGIN + 0, 45, CompositeOperator.Over);
 				}
 
 				//Combo
-				using (var playerRankCaption = new MagickImage($"label:Combo", runStatsTitleSettings))
+				using (var caption = new MagickImage("label:Combo", runStatsTitleSettings))
 				{
-					background.Composite(playerRankCaption, WIDTH/5*2, 370, CompositeOperator.Over);
+					background.Composite(caption, MARGIN + WIDTH / 4, 0, CompositeOperator.Over);
 				}
 
-				using (var playerRankCaption = new MagickImage($"label:{hitTracker.MaxCombo}", runStatsSettings))
+				using (var caption = new MagickImage($"label:{hitTracker.MaxCombo}", runStatsSettings))
 				{
-					background.Composite(playerRankCaption, WIDTH/5*2, 415, CompositeOperator.Over);
+					background.Composite(caption, MARGIN + WIDTH / 4, 45, CompositeOperator.Over);
 				}
 
 				//Misses
@@ -445,28 +589,30 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 				var fc = hitTracker.MissedNotes == 0 && hitTracker.BombHit == 0 && hitTracker.NbOfWallHit == 0;
 				if (fc)
 				{
-					missTitleSettings.FillColor = MagickColors.Gold;
 					missSettings.FillColor = MagickColors.Gold;
 				}
-				using (var playerRankCaption = new MagickImage($"label:Misses", missTitleSettings))
+
+				using (var playerRankCaption = new MagickImage("label:Misses", missTitleSettings))
 				{
-					background.Composite(playerRankCaption, WIDTH/5*3, 370, CompositeOperator.Over);
+					background.Composite(playerRankCaption, MARGIN + WIDTH / 4 * 2, 0, CompositeOperator.Over);
 				}
 
 				using (var playerRankCaption = new MagickImage($"label:{(fc ? "FC" : hitTracker.MissedNotes)}", missSettings))
 				{
-					background.Composite(playerRankCaption, WIDTH/5*3, 415, CompositeOperator.Over);
+					background.Composite(playerRankCaption, MARGIN + WIDTH / 4 * 2, 45, CompositeOperator.Over);
 				}
 
 				//Pauses
-				using (var playerRankCaption = new MagickImage($"label:Pauses", runStatsTitleSettings))
+
+				missSettings.FillColor = MagickColors.White;
+				using (var playerRankCaption = new MagickImage("label:Pauses", runStatsTitleSettings))
 				{
-					background.Composite(playerRankCaption, WIDTH/5*4, 370, CompositeOperator.Over);
+					background.Composite(playerRankCaption, MARGIN + WIDTH / 4 * 3, 0, CompositeOperator.Over);
 				}
 
 				using (var playerRankCaption = new MagickImage($"label:{winTracker.NbOfPause}", runStatsSettings))
 				{
-					background.Composite(playerRankCaption, WIDTH/5*4, 415, CompositeOperator.Over);
+					background.Composite(playerRankCaption, MARGIN + WIDTH / 4 * 3, 45, CompositeOperator.Over);
 				}
 
 
