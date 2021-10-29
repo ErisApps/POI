@@ -89,11 +89,6 @@ namespace POI.Core.Services
 				_beatSaviorApiBulkheadPolicy,
 				_beatSaviorApiInternalServerErrorRetryPolicy,
 				_beatSaviorApiRateLimitPolicy);
-
-			_beatSaviorImageRetryPolicy = Policy
-				.Handle<HttpRequestException>((exception => exception.StatusCode != HttpStatusCode.NotFound))
-				.Or<TaskCanceledException>()
-				.WaitAndRetryAsync(3, _ => TimeSpan.FromSeconds(10));
 		}
 
 		private async Task<T?> FetchData<T>(string url) where T : class?, new()

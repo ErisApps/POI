@@ -116,11 +116,6 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 			var coverImageBytes = await ScoreSaberApiService.FetchCoverImageByHash(requestedSong.SongHash).ConfigureAwait(false);
 			var playerImageBytes = await ScoreSaberApiService.FetchPlayerAvatarByProfile(profile.PlayerInfo.Avatar).ConfigureAwait(false);
 
-			var beatSaviorProfileData = await BeatSaviorApiService.FetchBeatSaviorPlayerData(scoreSaberId).ConfigureAwait(false);
-			var beatSaviorSongData = beatSaviorProfileData?.Find(song => requestedSong.SongHash.Equals(song.SongId)
-			                                                             && requestedSong.Difficulty == song.SongDifficultyRank
-			                                                             && requestedSong.DifficultyRaw.Contains(song.GameMode));
-
 			await using var memoryStream = new MemoryStream();
 			using (var background = new MagickImage(_backgroundImagePath))
 			{
@@ -360,6 +355,13 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 				.RespondAsync(messageBuilder)
 				.ConfigureAwait(false);
 
+
+			// Getting data for the second image
+			var beatSaviorProfileData = await BeatSaviorApiService.FetchBeatSaviorPlayerData(scoreSaberId).ConfigureAwait(false);
+			var beatSaviorSongData = beatSaviorProfileData?.Find(song => requestedSong.SongHash.Equals(song.SongId)
+			                                                             && requestedSong.Difficulty == song.SongDifficultyRank
+			                                                             && requestedSong.DifficultyRaw.Contains(song.GameMode));
+
 			//BeatSavior data found! (Making the second image)
 			if (beatSaviorSongData != null)
 			{
@@ -401,7 +403,7 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 
 
 				//LeftHand
-				using (var leftHandCircle = new MagickImage(new MagickColor(0, 0, 0, 0), 512, 512))
+				using (var leftHandCircle = new MagickImage(MagickColors.Transparent, 512, 512))
 				{
 					new Drawables()
 						// Add an ellipse
@@ -586,8 +588,8 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 				//Misses
 				var missTitleSettings = runStatsTitleSettings;
 				var missSettings = runStatsSettings;
-				var fc = hitTracker.MissedNotes == 0 && hitTracker.BombHit == 0 && hitTracker.NbOfWallHit == 0;
-				if (fc)
+				var isFullCombo = hitTracker.MissedNotes == 0 && hitTracker.BombHit == 0 && hitTracker.NbOfWallHit == 0;
+				if (isFullCombo)
 				{
 					missSettings.FillColor = MagickColors.Gold;
 				}
@@ -597,7 +599,7 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 					background.Composite(playerRankCaption, MARGIN + WIDTH / 4 * 2, 0, CompositeOperator.Over);
 				}
 
-				using (var playerRankCaption = new MagickImage($"label:{(fc ? "FC" : hitTracker.MissedNotes)}", missSettings))
+				using (var playerRankCaption = new MagickImage($"label:{(isFullCombo ? "FC" : hitTracker.MissedNotes)}", missSettings))
 				{
 					background.Composite(playerRankCaption, MARGIN + WIDTH / 4 * 2, 45, CompositeOperator.Over);
 				}
@@ -610,7 +612,7 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 					background.Composite(playerRankCaption, MARGIN + WIDTH / 4 * 3, 0, CompositeOperator.Over);
 				}
 
-				using (var playerRankCaption = new MagickImage($"label:{winTracker.NbOfPause}", runStatsSettings))
+				using (var playerRankCaption = new MagickImage($"label:{winTracker.NumberOfPause}", runStatsSettings))
 				{
 					background.Composite(playerRankCaption, MARGIN + WIDTH / 4 * 3, 45, CompositeOperator.Over);
 				}
