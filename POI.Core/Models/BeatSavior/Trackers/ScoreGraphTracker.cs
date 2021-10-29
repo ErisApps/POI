@@ -6,6 +6,6 @@ namespace POI.Core.Models.BeatSavior.Trackers
 	public class ScoreGraphTracker
 	{
 		[JsonPropertyName("graph")]
-		public Dictionary<int, double> Graph { get; init; }
+		public Dictionary<int, double> Graph { get; init; } = null!;
 	}
 }

@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using NodaTime;
+using POI.Core.Models.BeatSavior.Trackers;
 
 namespace POI.Core.Models.BeatSavior
 {
@@ -48,7 +50,7 @@ namespace POI.Core.Models.BeatSavior
 		public SongTrackers Trackers { get; init; } = null!;
 
 		[JsonPropertyName("deepTrackers")]
-		public string DeepTrackers { get; init; } = string.Empty!;
+		public DeepTrackers DeepTrackers { get; set; } = null!;
 
 		[JsonPropertyName("timeSet")]
 		public Instant TimeSet { get; init; }

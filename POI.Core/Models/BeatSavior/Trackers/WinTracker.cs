@@ -14,6 +14,6 @@ namespace POI.Core.Models.BeatSavior.Trackers
 		public double EndTime { get; init; }
 
 		[JsonPropertyName("nbOfPause")]
-		public int NbOfPause { get; init; }
+		public int NumberOfPause { get; init; }
 	}
 }
