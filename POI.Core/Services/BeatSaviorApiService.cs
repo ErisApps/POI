@@ -10,7 +10,6 @@ using Microsoft.Extensions.Logging;
 using NodaTime;
 using NodaTime.Serialization.SystemTextJson;
 using POI.Core.Models.BeatSavior;
-using POI.Core.Models.ScoreSaber.Profile;
 using POI.Core.Services.Interfaces;
 using Polly;
 using Polly.Bulkhead;
@@ -33,7 +32,6 @@ namespace POI.Core.Services
 		private readonly AsyncBulkheadPolicy<HttpResponseMessage> _beatSaviorApiBulkheadPolicy;
 		private readonly AsyncRetryPolicy<HttpResponseMessage> _beatSaviorApiRateLimitPolicy;
 		private readonly AsyncRetryPolicy<HttpResponseMessage> _beatSaviorApiInternalServerErrorRetryPolicy;
-		private readonly AsyncRetryPolicy _beatSaviorImageRetryPolicy;
 
 		private readonly JsonSerializerOptions _jsonSerializerOptions;
 
