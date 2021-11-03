@@ -50,7 +50,7 @@ namespace POI.Core.Models.BeatSavior
 		public SongTrackers Trackers { get; init; } = null!;
 
 		[JsonPropertyName("deepTrackers")]
-		public DeepTrackers DeepTrackers { get; set; } = null!;
+		public DeepTrackers? DeepTrackers { get; init; }
 
 		[JsonPropertyName("timeSet")]
 		public Instant TimeSet { get; init; }
