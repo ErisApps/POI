@@ -409,7 +409,7 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 						// Add an ellipse
 						.StrokeColor(new MagickColor("#a82020"))
 						.StrokeWidth(12)
-						.FillColor(new MagickColor(0, 0, 0, 0))
+						.FillColor(MagickColors.Transparent)
 						.Ellipse(120, 120, 100, 100, -90, accuracyTracker.AccLeft / 115 * 360 - 90)
 						.Draw(leftHandCircle);
 					background.Composite(leftHandCircle, WIDTH / 4 - 15, 135, CompositeOperator.Over);
@@ -483,13 +483,13 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 
 
 				//RightHand
-				using (var rightHandCircle = new MagickImage(new MagickColor(0, 0, 0, 0), 512, 512))
+				using (var rightHandCircle = new MagickImage(MagickColors.Transparent, 512, 512))
 				{
 					new Drawables()
 						// Add an ellipse
 						.StrokeColor(new MagickColor("#2064a8"))
 						.StrokeWidth(12)
-						.FillColor(new MagickColor(0, 0, 0, 0))
+						.FillColor(MagickColors.Transparent)
 						.Ellipse(120, 120, 100, 100, -90, accuracyTracker.AccRight / 115 * 360 - 90)
 						.Draw(rightHandCircle);
 					background.Composite(rightHandCircle, WIDTH / 4 * 2 + 15, 135, CompositeOperator.Over);
@@ -612,7 +612,7 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 					background.Composite(playerRankCaption, MARGIN + WIDTH / 4 * 3, 0, CompositeOperator.Over);
 				}
 
-				using (var playerRankCaption = new MagickImage($"label:{winTracker.NumberOfPause}", runStatsSettings))
+				using (var playerRankCaption = new MagickImage($"label:{winTracker.NumberOfPauses}", runStatsSettings))
 				{
 					background.Composite(playerRankCaption, MARGIN + WIDTH / 4 * 3, 45, CompositeOperator.Over);
 				}
