@@ -360,7 +360,8 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 			var beatSaviorProfileData = await BeatSaviorApiService.FetchBeatSaviorPlayerData(scoreSaberId).ConfigureAwait(false);
 			var beatSaviorSongData = beatSaviorProfileData?.Find(song => requestedSong.SongHash.Equals(song.SongId)
 			                                                             && requestedSong.Difficulty == song.SongDifficultyRank
-			                                                             && requestedSong.DifficultyRaw.Contains(song.GameMode));
+			                                                             && requestedSong.DifficultyRaw.Contains(song.GameMode)
+			                                                             && requestedSong.Score == song.Trackers.ScoreTracker.Score);
 
 			//BeatSavior data found! (Making the second image)
 			if (beatSaviorSongData != null)
