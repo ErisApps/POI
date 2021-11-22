@@ -3,33 +3,48 @@ using System.Text.Json.Serialization;
 
 namespace POI.Core.Models.BeatSavior.Trackers
 {
-	public class ScoreTracker
+	public readonly struct ScoreTracker
 	{
 		[JsonPropertyName("rawScore")]
-		public int RawScore { get; init; }
+		public int RawScore { get; }
 
 		[JsonPropertyName("score")]
-		public uint Score { get; init; }
+		public uint Score { get; }
 
 		[JsonPropertyName("personalBest")]
-		public int PersonalBest { get; init; }
+		public int PersonalBest { get; }
 
 		[JsonPropertyName("rawRatio")]
-		public double RawRatio { get; init; }
+		public double RawRatio { get; }
 
 		[JsonPropertyName("modifiedRatio")]
-		public double ModifiedRatio { get; init; }
+		public double ModifiedRatio { get; }
 
 		[JsonPropertyName("personalBestRawRatio")]
-		public double PersonalBestRawRatio { get; init; }
+		public double PersonalBestRawRatio { get; }
 
 		[JsonPropertyName("personalBestModifiedRatio")]
-		public double PersonalBestModifiedRatio { get; init; }
+		public double PersonalBestModifiedRatio { get; }
 
 		[JsonPropertyName("modifiersMultiplier")]
-		public double ModifiersMultiplier { get; init; }
+		public double ModifiersMultiplier { get; }
 
 		[JsonPropertyName("modifiers")]
-		public List<string?> Modifiers { get; init; } = null!;
+		public List<string?> Modifiers { get; }
+
+		[JsonConstructor]
+		public ScoreTracker(int rawScore, uint score, int personalBest, double rawRatio, double modifiedRatio, double personalBestRawRatio, double personalBestModifiedRatio,
+			double modifiersMultiplier, List<string?> modifiers)
+		{
+			RawScore = rawScore;
+			Score = score;
+			PersonalBest = personalBest;
+			RawRatio = rawRatio;
+			ModifiedRatio = modifiedRatio;
+			PersonalBestRawRatio = personalBestRawRatio;
+			PersonalBestModifiedRatio = personalBestModifiedRatio;
+			ModifiersMultiplier = modifiersMultiplier;
+			Modifiers = modifiers;
+		}
 	}
 }

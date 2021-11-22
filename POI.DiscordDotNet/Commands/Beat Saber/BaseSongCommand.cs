@@ -367,7 +367,7 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 			//BeatSavior data found! (Making the second image)
 			if (beatSaviorSongData != null)
 			{
-				await SendBeatSaviorMemoryStream(ctx, profile, beatSaviorSongData).ConfigureAwait(false);
+				await SendBeatSaviorMemoryStream(ctx, profile, beatSaviorSongData.Value).ConfigureAwait(false);
 			}
 		}
 

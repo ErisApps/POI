@@ -2,18 +2,27 @@ using System.Text.Json.Serialization;
 
 namespace POI.Core.Models.BeatSavior.Trackers
 {
-	public class DistanceTracker
+	public readonly struct DistanceTracker
 	{
 		[JsonPropertyName("rightSaber")]
-		public double RightSaber { get; init; }
+		public double RightSaber { get; }
 
 		[JsonPropertyName("leftSaber")]
-		public double LeftSaber { get; init; }
+		public double LeftSaber { get; }
 
 		[JsonPropertyName("rightHand")]
-		public double RightHand { get; init; }
+		public double RightHand { get; }
 
 		[JsonPropertyName("leftHand")]
-		public double LeftHand { get; init; }
+		public double LeftHand { get; }
+
+		[JsonConstructor]
+		public DistanceTracker(double rightSaber, double leftSaber, double rightHand, double leftHand)
+		{
+			RightSaber = rightSaber;
+			LeftSaber = leftSaber;
+			RightHand = rightHand;
+			LeftHand = leftHand;
+		}
 	}
 }
