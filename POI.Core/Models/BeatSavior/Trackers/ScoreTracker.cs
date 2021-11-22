@@ -30,11 +30,11 @@ namespace POI.Core.Models.BeatSavior.Trackers
 		public double ModifiersMultiplier { get; }
 
 		[JsonPropertyName("modifiers")]
-		public List<string?> Modifiers { get; }
+		public List<string>? Modifiers { get; }
 
 		[JsonConstructor]
 		public ScoreTracker(int rawScore, uint score, int personalBest, double rawRatio, double modifiedRatio, double personalBestRawRatio, double personalBestModifiedRatio,
-			double modifiersMultiplier, List<string?> modifiers)
+			double modifiersMultiplier, List<string>? modifiers)
 		{
 			RawScore = rawScore;
 			Score = score;
