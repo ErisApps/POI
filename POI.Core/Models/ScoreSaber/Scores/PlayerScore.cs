@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace POI.Core.Models.ScoreSaber.New.Scores
+namespace POI.Core.Models.ScoreSaber.Scores
 {
 	public readonly struct PlayerScore
 	{

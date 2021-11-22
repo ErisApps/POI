@@ -6,7 +6,7 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using POI.Core.Models.ScoreSaber.New.Profile;
+using POI.Core.Models.ScoreSaber.Profile;
 using POI.Core.Services;
 
 namespace POI.Azure.Functions.RankUpFeed

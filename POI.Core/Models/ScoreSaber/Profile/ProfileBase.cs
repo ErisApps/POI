@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
-using POI.Core.Models.ScoreSaber.New.Shared;
+using POI.Core.Models.ScoreSaber.Shared;
 
-namespace POI.Core.Models.ScoreSaber.New.Profile
+namespace POI.Core.Models.ScoreSaber.Profile
 {
 	public class ProfileBase : PlayerInfoBase
 	{

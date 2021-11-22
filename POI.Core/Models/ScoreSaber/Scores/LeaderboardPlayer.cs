@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
-using POI.Core.Models.ScoreSaber.New.Shared;
+using POI.Core.Models.ScoreSaber.Shared;
 
-namespace POI.Core.Models.ScoreSaber.New.Scores
+namespace POI.Core.Models.ScoreSaber.Scores
 {
 	public class LeaderboardPlayer : PlayerInfoBase
 	{
