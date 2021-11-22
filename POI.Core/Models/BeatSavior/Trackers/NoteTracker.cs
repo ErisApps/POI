@@ -3,63 +3,88 @@ using System.Text.Json.Serialization;
 
 namespace POI.Core.Models.BeatSavior.Trackers
 {
-	public class NoteTracker
+	public readonly struct NoteTracker
 	{
 		[JsonPropertyName("noteType")]
-		public int NoteType { get; set; }
+		public int NoteType { get; }
 
 		[JsonPropertyName("noteDirection")]
-		public int NoteDirection{ get; set; }
+		public int NoteDirection { get; }
 
 		[JsonPropertyName("index")]
-		public int Index{ get; set; }
+		public int Index { get; }
 
 		[JsonPropertyName("id")]
-		public int Id{ get; set; }
+		public int Id { get; }
 
 		[JsonPropertyName("time")]
-		public float Time{ get; set; }
+		public float Time { get; }
 
 		[JsonPropertyName("cutType")]
-		public int CutType{ get; set; }
+		public int CutType { get; }
 
 		[JsonPropertyName("multiplier")]
-		public int Multiplier{ get; set; }
+		public int Multiplier { get; }
 
 		[JsonPropertyName("score")]
-		public List<int> Score { get; set; } = null!;
+		public List<int> Score { get; }
 
 		[JsonPropertyName("noteCenter")]
-		public List<float> NoteCenter{ get; set; }= null!;
+		public List<float> NoteCenter { get; }
 
 		[JsonPropertyName("noteRotation")]
-		public List<float> NoteRotation{ get; set; }= null!;
+		public List<float> NoteRotation { get; }
 
 		[JsonPropertyName("timeDeviation")]
-		public float TimeDeviation{ get; set; }
+		public float TimeDeviation { get; }
 
 		[JsonPropertyName("speed")]
-		public float Speed{ get; set; }
+		public float Speed { get; }
 
 		[JsonPropertyName("preswing")]
-		public float Preswing{ get; set; }
+		public float Preswing { get; }
 
 		[JsonPropertyName("postswing")]
-		public float Postswing{ get; set; }
+		public float Postswing { get; }
 
 		[JsonPropertyName("distanceToCenter")]
-		public float DistanceToCenter{ get; set; }
+		public float DistanceToCenter { get; }
 
 		[JsonPropertyName("cutPoint")]
-		public List<float> CutPoint{ get; set; }= null!;
+		public List<float> CutPoint { get; }
 
 		[JsonPropertyName("saberDir")]
-		public List<float> SaberDir{ get; set; }= null!;
+		public List<float> SaberDir { get; }
 
 		[JsonPropertyName("cutNormal")]
-		public List<float> CutNormal{ get; set; }= null!;
+		public List<float> CutNormal { get; }
 
 		[JsonPropertyName("timeDependence")]
-		public float TimeDependence{ get; set; }
+		public float TimeDependence { get; }
+
+		[JsonConstructor]
+		public NoteTracker(int noteType, int noteDirection, int index, int id, float time, int cutType, int multiplier, List<int> score, List<float> noteCenter, List<float> noteRotation,
+			float timeDeviation, float speed, float preswing, float postswing, float distanceToCenter, List<float> cutPoint, List<float> saberDir, List<float> cutNormal, float timeDependence)
+		{
+			NoteType = noteType;
+			NoteDirection = noteDirection;
+			Index = index;
+			Id = id;
+			Time = time;
+			CutType = cutType;
+			Multiplier = multiplier;
+			Score = score;
+			NoteCenter = noteCenter;
+			NoteRotation = noteRotation;
+			TimeDeviation = timeDeviation;
+			Speed = speed;
+			Preswing = preswing;
+			Postswing = postswing;
+			DistanceToCenter = distanceToCenter;
+			CutPoint = cutPoint;
+			SaberDir = saberDir;
+			CutNormal = cutNormal;
+			TimeDependence = timeDependence;
+		}
 	}
 }

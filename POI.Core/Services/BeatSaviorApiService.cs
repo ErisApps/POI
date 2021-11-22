@@ -5,10 +5,12 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
+using System.Text.Json.Serialization.Metadata;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using NodaTime;
 using NodaTime.Serialization.SystemTextJson;
+using POI.Core.Helpers.JSON;
 using POI.Core.Models.BeatSavior;
 using POI.Core.Services.Interfaces;
 using Polly;
@@ -20,7 +22,6 @@ namespace POI.Core.Services
 {
 	public class BeatSaviorApiService
 	{
-
 		private const string BEATSAVIOR_BASEURL = "https://www.beatsavior.io";
 		private const string BEATSAVIOR_API_BASEURL = BEATSAVIOR_BASEURL + "/api/";
 		private const int MAX_BULKHEAD_QUEUE_SIZE = 1000;
@@ -34,6 +35,7 @@ namespace POI.Core.Services
 		private readonly AsyncRetryPolicy<HttpResponseMessage> _beatSaviorApiInternalServerErrorRetryPolicy;
 
 		private readonly JsonSerializerOptions _jsonSerializerOptions;
+		private readonly BeatSaviorSerializerContext _beatSaviorSerializerContext;
 
 		public BeatSaviorApiService(ILogger<BeatSaviorApiService> logger, IConstantsCore constants)
 		{
@@ -43,10 +45,11 @@ namespace POI.Core.Services
 				BaseAddress = new Uri(BEATSAVIOR_API_BASEURL, UriKind.Absolute),
 				Timeout = TimeSpan.FromSeconds(30),
 				DefaultRequestVersion = HttpVersion.Version20,
-				DefaultRequestHeaders = {{"User-Agent", $"{constants.Name}/{constants.Version.ToString(3)}"}}
+				DefaultRequestHeaders = { { "User-Agent", $"{constants.Name}/{constants.Version.ToString(3)}" } }
 			};
 
-			_jsonSerializerOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web) {PropertyNameCaseInsensitive = false}.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
+			_jsonSerializerOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web) { PropertyNameCaseInsensitive = false }.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
+			_beatSaviorSerializerContext = new BeatSaviorSerializerContext(_jsonSerializerOptions);
 
 			_beatSaviorApiInternalServerErrorRetryPolicy = Policy
 				.HandleResult<HttpResponseMessage>(resp => resp.StatusCode == HttpStatusCode.InternalServerError)
@@ -89,7 +92,12 @@ namespace POI.Core.Services
 				_beatSaviorApiRateLimitPolicy);
 		}
 
-		private async Task<T?> FetchData<T>(string url) where T : class?, new()
+		public Task<List<SongData>?> FetchBeatSaviorPlayerData(string scoreSaberId)
+		{
+			return FetchData($"{BEATSAVIOR_API_BASEURL}livescores/player/{scoreSaberId}", _beatSaviorSerializerContext.ListSongData);
+		}
+
+		private async Task<TResponse?> FetchData<TResponse>(string url, JsonTypeInfo<TResponse> jsonResponseTypeInfo) where TResponse : class
 		{
 			using var response = await _beatSaviorApiChainedRateLimitPolicy.ExecuteAsync(() => _beatSaviorApiClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead));
 
@@ -100,7 +108,7 @@ namespace POI.Core.Services
 
 			try
 			{
-				return await response.Content.ReadFromJsonAsync<T>(_jsonSerializerOptions);
+				return await response.Content.ReadFromJsonAsync(jsonResponseTypeInfo);
 			}
 			catch (NotSupportedException) // When content type is not valid
 			{
@@ -112,11 +120,6 @@ namespace POI.Core.Services
 			}
 
 			return null;
-		}
-
-		public Task<List<SongData>?> FetchBeatSaviorPlayerData(string scoreSaberId)
-		{
-			return FetchData<List<SongData>?>($"{BEATSAVIOR_API_BASEURL}livescores/player/{scoreSaberId}");
 		}
 	}
 }
