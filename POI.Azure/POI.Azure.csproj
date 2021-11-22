@@ -4,7 +4,7 @@
 		<OutputType>Exe</OutputType>
 		<LangVersion>9</LangVersion>
 		<Nullable>enable</Nullable>
-		<AzureFunctionsVersion>V3</AzureFunctionsVersion>
+		<AzureFunctionsVersion>v4</AzureFunctionsVersion>
 		<_FunctionsSkipCleanOutput>true</_FunctionsSkipCleanOutput>
 	</PropertyGroup>
 
