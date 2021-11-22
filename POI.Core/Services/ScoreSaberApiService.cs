@@ -1,15 +1,18 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using NodaTime;
 using NodaTime.Serialization.SystemTextJson;
-using POI.Core.Models.ScoreSaber.Profile;
-using POI.Core.Models.ScoreSaber.Scores;
+using POI.Core.Exceptions;
+using POI.Core.Models.ScoreSaber.New.Profile;
+using POI.Core.Models.ScoreSaber.New.Scores;
 using POI.Core.Models.ScoreSaber.Search;
 using POI.Core.Services.Interfaces;
 using Polly;
@@ -21,7 +24,7 @@ namespace POI.Core.Services
 {
 	public class ScoreSaberApiService
 	{
-		private const string SCORESABER_BASEURL = "https://new.scoresaber.com";
+		private const string SCORESABER_BASEURL = "https://scoresaber.com";
 		private const string SCORESABER_API_BASEURL = SCORESABER_BASEURL + "/api/";
 		private const int MAX_BULKHEAD_QUEUE_SIZE = 1000;
 
@@ -46,10 +49,10 @@ namespace POI.Core.Services
 				BaseAddress = new Uri(SCORESABER_API_BASEURL, UriKind.Absolute),
 				Timeout = TimeSpan.FromSeconds(30),
 				DefaultRequestVersion = HttpVersion.Version20,
-				DefaultRequestHeaders = {{"User-Agent", $"{constants.Name}/{constants.Version.ToString(3)}"}}
+				DefaultRequestHeaders = { { "User-Agent", $"{constants.Name}/{constants.Version.ToString(3)}" } }
 			};
 
-			_jsonSerializerOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web) {PropertyNameCaseInsensitive = false}.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
+			_jsonSerializerOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web) { PropertyNameCaseInsensitive = false }.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
 
 			_scoreSaberApiInternalServerErrorRetryPolicy = Policy
 				.HandleResult<HttpResponseMessage>(resp => resp.StatusCode == HttpStatusCode.InternalServerError)
@@ -99,37 +102,51 @@ namespace POI.Core.Services
 
 		public Task<BasicProfile?> FetchBasicPlayerProfile(string scoreSaberId)
 		{
-			return FetchData<BasicProfile?>($"{SCORESABER_API_BASEURL}player/{scoreSaberId}/basic");
+			return FetchDataClass<BasicProfile>($"{SCORESABER_API_BASEURL}player/{scoreSaberId}/basic");
 		}
 
 		public Task<FullProfile?> FetchFullPlayerProfile(string scoreSaberId)
 		{
-			return FetchData<FullProfile?>($"{SCORESABER_API_BASEURL}player/{scoreSaberId}/full");
+			return FetchDataClass<FullProfile>($"{SCORESABER_API_BASEURL}player/{scoreSaberId}/full");
 		}
 
-		public Task<ScoresPage?> FetchRecentSongsScorePage(string scoreSaberId, int page)
+		public Task<List<PlayerScore>?> FetchRecentSongsScorePage(string scoreSaberId, uint page, uint? limit = null)
 		{
-			return FetchData<ScoresPage?>($"{SCORESABER_API_BASEURL}player/{scoreSaberId}/scores/recent/{page}");
+			return FetchPlayerScores(scoreSaberId, page, SortType.Recent, limit);
 		}
 
-		public Task<ScoresPage?> FetchTopSongsScorePage(string scoreSaberId, int page)
+		public Task<List<PlayerScore>?> FetchTopSongsScorePage(string scoreSaberId, uint page, uint? limit = null)
 		{
-			return FetchData<ScoresPage?>($"{SCORESABER_API_BASEURL}player/{scoreSaberId}/scores/top/{page}");
+			return FetchPlayerScores(scoreSaberId, page, SortType.Top, limit);
 		}
 
-		public Task<PlayersPage?> SearchPlayersByName(string name)
+		public Task<List<PlayerScore>?> FetchPlayerScores(string scoreSaberId, uint page, SortType sortType, uint? limit = null)
 		{
-			if (string.IsNullOrWhiteSpace(name) || name.Length < 4 || name.Length >= 32)
+			var urlBuilder = new StringBuilder(SCORESABER_API_BASEURL + "player/" + scoreSaberId + "/scores?page=" + page + "&sort=" + sortType);
+			if (limit != null)
 			{
-				throw new ArgumentException("Please enter a player name between 3 and 32 characters! (bounds not inclusive)");
+				if (limit > 100)
+				{
+					throw new QueryParameterValidationException(nameof(limit));
+				}
+
+				urlBuilder.Append("&limit=").Append(limit);
 			}
 
-			return FetchData<PlayersPage?>($"{SCORESABER_API_BASEURL}players/by-name/{name}");
+			return FetchDataClass<List<PlayerScore>>(urlBuilder.ToString());
 		}
 
+		[Obsolete("Will be replaced later one")]
+		public Task<PlayersPage?> SearchPlayersByName(string name)
+		{
+			VerifySearchQueryParamWithinBounds(name);
+			return FetchDataClass<PlayersPage>($"{SCORESABER_API_BASEURL}players/by-name/{name}");
+		}
+
+		[Obsolete("Will be replaced later on")]
 		public Task<PlayersPage?> FetchGlobalLeaderboardsPage(int page)
 		{
-			return FetchData<PlayersPage?>($"{SCORESABER_API_BASEURL}players/{page}");
+			return Task.FromResult<PlayersPage?>(null);
 		}
 
 		public Task<Refresh?> RefreshProfile(string scoreSaberId)
@@ -139,20 +156,29 @@ namespace POI.Core.Services
 				throw new ArgumentException("Refreshing only works with for Steam accounts");
 			}
 
-			return FetchData<Refresh?>($"{SCORESABER_API_BASEURL}user/{scoreSaberId}/refresh");
+			return FetchDataStruct<Refresh>($"{SCORESABER_API_BASEURL}user/{scoreSaberId}/refresh");
 		}
 
-		public Task<byte[]?> FetchCoverImageByHash(string songHash)
+		private void VerifySearchQueryParamWithinBounds(string query)
 		{
-			return FetchImageInternal($"{SCORESABER_API_BASEURL}static/covers/{songHash}.png");
+			if (string.IsNullOrWhiteSpace(query) || query.Length is < 4 or >= 32)
+			{
+				throw new ArgumentException("Please enter a player name between 3 and 32 characters! (bounds not inclusive)");
+			}
 		}
 
-		public Task<byte[]?> FetchPlayerAvatarByProfile(string avatarPath)
+		private async Task<T?> FetchDataClass<T>(string url) where T : class
 		{
-			return FetchImageInternal($"{SCORESABER_BASEURL}{avatarPath}");
+			return (await FetchData<T>(url).ConfigureAwait(false)).response;
 		}
 
-		private async Task<T?> FetchData<T>(string url) where T : class?, new()
+		private async Task<T?> FetchDataStruct<T>(string url) where T : struct
+		{
+			var (success, response) = await FetchData<T>(url).ConfigureAwait(false);
+			return success ? response : null;
+		}
+
+		private async Task<(bool success, T? response)> FetchData<T>(string url)
 		{
 			using var response = await _scoreSaberApiChainedRateLimitPolicy.ExecuteAsync(() => _scoreSaberApiClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead));
 
@@ -160,7 +186,7 @@ namespace POI.Core.Services
 			{
 				try
 				{
-					return await response.Content.ReadFromJsonAsync<T>(_jsonSerializerOptions);
+					return (true, await response.Content.ReadFromJsonAsync<T>(_jsonSerializerOptions).ConfigureAwait(false));
 				}
 				catch (NotSupportedException) // When content type is not valid
 				{
@@ -172,14 +198,14 @@ namespace POI.Core.Services
 				}
 			}
 
-			return null;
+			return (false, default);
 		}
 
-		private async Task<byte[]?> FetchImageInternal(string imageUrl)
+		public async Task<byte[]?> FetchImageFromCdn(string url)
 		{
 			try
 			{
-				return await _scoreSaberImageRetryPolicy.ExecuteAsync(() => _scoreSaberApiClient.GetByteArrayAsync(imageUrl));
+				return await _scoreSaberImageRetryPolicy.ExecuteAsync(() => _scoreSaberApiClient.GetByteArrayAsync(url));
 			}
 			catch (Exception e)
 			{

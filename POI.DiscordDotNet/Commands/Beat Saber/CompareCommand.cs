@@ -93,23 +93,23 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 				return;
 			}
 
-			var profile1ImageBytes = await _scoreSaberService.FetchPlayerAvatarByProfile(profile1.PlayerInfo.Avatar).ConfigureAwait(false);
-			var profile2ImageBytes = await _scoreSaberService.FetchPlayerAvatarByProfile(profile2.PlayerInfo.Avatar).ConfigureAwait(false);
+			var profile1ImageBytes = await _scoreSaberService.FetchImageFromCdn(profile1.ProfilePicture).ConfigureAwait(false);
+			var profile2ImageBytes = await _scoreSaberService.FetchImageFromCdn(profile2.ProfilePicture).ConfigureAwait(false);
 
 			var backgroundImagePath = Path.Combine(_pathProvider.AssetsPath, "poinextCompareBG.png");
 			var erisSignaturePath = Path.Combine(_pathProvider.AssetsPath, "Signature-Eris.png");
 
 			var args = new[]
 			{
-				new[] {profile1.PlayerInfo.Rank.ToString("N0"), "Global Rank", profile2.PlayerInfo.Rank.ToString("N0")},
-				new[] {profile1.PlayerInfo.CountryRank.ToString("N0"), "Country Rank", profile2.PlayerInfo.CountryRank.ToString("N0")},
-				new[] {profile1.PlayerInfo.Pp.ToString("N2"), "PP", profile2.PlayerInfo.Pp.ToString("N2")},
+				new[] {profile1.Rank.ToString("N0"), "Global Rank", profile2.Rank.ToString("N0")},
+				new[] {profile1.CountryRank.ToString("N0"), "Country Rank", profile2.CountryRank.ToString("N0")},
+				new[] {profile1.Pp.ToString("N2"), "PP", profile2.Pp.ToString("N2")},
 				new[] {$"{(Math.Floor(profile1.ScoreStats.AverageRankedAccuracy * 1000) / 1000):F2}%", "AVG ACC", $"{(Math.Floor(profile2.ScoreStats.AverageRankedAccuracy * 1000) / 1000):F2}%"},
 				new[] {profile1.ScoreStats.TotalPlayCount.ToString("N0"), "Play Count", profile2.ScoreStats.TotalPlayCount.ToString("N0")},
 				new[] {profile1.ScoreStats.TotalRankedCount.ToString("N0"), "Ranked Play Count", profile2.ScoreStats.TotalRankedCount.ToString("N0")},
 				new[] {profile1.ScoreStats.TotalScore.ToString("N0"), "Score", profile2.ScoreStats.TotalScore.ToString("N0")},
 				new[] {profile1.ScoreStats.TotalRankedScore.ToString("N0"), "Ranked Score", profile2.ScoreStats.TotalRankedScore.ToString("N0")},
-				new[] {profile1TopPage.Scores[0].Pp.ToString("N2"), "Top PP Play", profile2TopPage.Scores[0].Pp.ToString("N2")}
+				new[] {profile1TopPage[0].Score.Pp.ToString("N2"), "Top PP Play", profile2TopPage[0].Score.Pp.ToString("N2")}
 			};
 
 			await using var memoryStream = new MemoryStream();
@@ -134,13 +134,13 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 					TextGravity = Gravity.West
 				};
 
-				using (var playerNameCaption = new MagickImage($"label:{profile1.PlayerInfo.Name}", playerNameSettings))
+				using (var playerNameCaption = new MagickImage($"label:{profile1.Name}", playerNameSettings))
 				{
 					background.Composite(playerNameCaption, MARGIN, NAME_HEIGHT, CompositeOperator.Over);
 				}
 
 				playerNameSettings.TextGravity = Gravity.East;
-				using (var playerNameCaption = new MagickImage($"label:{profile2.PlayerInfo.Name}", playerNameSettings))
+				using (var playerNameCaption = new MagickImage($"label:{profile2.Name}", playerNameSettings))
 				{
 					background.Composite(playerNameCaption, WIDTH - MARGIN - playerNameCaption.Width, NAME_HEIGHT, CompositeOperator.Over);
 				}
@@ -229,7 +229,7 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 			}
 
 			var messageBuilder = new DiscordMessageBuilder()
-				.WithContent($"Comparing {profile1.PlayerInfo.Name} & {profile2.PlayerInfo.Name}")
+				.WithContent($"Comparing {profile1.Name} & {profile2.Name}")
 				.WithFile($"{SystemClock.Instance.GetCurrentInstant().ToDateTimeUtc().ToLongDateString()}.jpeg", memoryStream);
 			await ctx.Message
 				.RespondAsync(messageBuilder)

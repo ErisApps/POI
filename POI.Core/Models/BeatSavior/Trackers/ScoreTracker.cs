@@ -9,7 +9,7 @@ namespace POI.Core.Models.BeatSavior.Trackers
 		public int RawScore { get; init; }
 
 		[JsonPropertyName("score")]
-		public int Score { get; init; }
+		public uint Score { get; init; }
 
 		[JsonPropertyName("personalBest")]
 		public int PersonalBest { get; init; }
