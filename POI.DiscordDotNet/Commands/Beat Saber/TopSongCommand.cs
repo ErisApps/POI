@@ -1,10 +1,11 @@
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using Microsoft.Extensions.Logging;
-using POI.Core.Models.ScoreSaber.Scores;
+using POI.Core.Models.ScoreSaber.New.Scores;
 using POI.Core.Services;
 using POI.DiscordDotNet.Services;
 
@@ -26,7 +27,7 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 			await GenerateScoreImageAndSendInternal(ctx).ConfigureAwait(false);
 		}
 
-		protected override Task<ScoresPage?> FetchScorePage(string playerId, int page)
+		protected override Task<List<PlayerScore>?> FetchScorePage(string playerId, uint page)
 		{
 			return ScoreSaberApiService.FetchTopSongsScorePage(playerId, page);
 		}
