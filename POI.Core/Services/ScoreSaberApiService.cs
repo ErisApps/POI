@@ -6,11 +6,13 @@ using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization.Metadata;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using NodaTime;
 using NodaTime.Serialization.SystemTextJson;
 using POI.Core.Exceptions;
+using POI.Core.Helpers.JSON;
 using POI.Core.Models.ScoreSaber.Profile;
 using POI.Core.Models.ScoreSaber.Scores;
 using POI.Core.Services.Interfaces;
@@ -37,6 +39,7 @@ namespace POI.Core.Services
 		private readonly AsyncRetryPolicy _scoreSaberImageRetryPolicy;
 
 		private readonly JsonSerializerOptions _jsonSerializerOptions;
+		private readonly ScoreSaberSerializerContext _scoreSaberSerializerContext;
 
 		public const int PLAYS_PER_PAGE = 8; // Top / Recent songs
 
@@ -52,6 +55,7 @@ namespace POI.Core.Services
 			};
 
 			_jsonSerializerOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web) { PropertyNameCaseInsensitive = false }.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
+			_scoreSaberSerializerContext = new ScoreSaberSerializerContext(_jsonSerializerOptions);
 
 			_scoreSaberApiInternalServerErrorRetryPolicy = Policy
 				.HandleResult<HttpResponseMessage>(resp => resp.StatusCode == HttpStatusCode.InternalServerError)
@@ -101,12 +105,12 @@ namespace POI.Core.Services
 
 		public Task<BasicProfile?> FetchBasicPlayerProfile(string scoreSaberId)
 		{
-			return FetchDataClass<BasicProfile>($"{SCORESABER_API_BASEURL}player/{scoreSaberId}/basic");
+			return FetchDataClass($"{SCORESABER_API_BASEURL}player/{scoreSaberId}/basic", _scoreSaberSerializerContext.BasicProfile);
 		}
 
 		public Task<FullProfile?> FetchFullPlayerProfile(string scoreSaberId)
 		{
-			return FetchDataClass<FullProfile>($"{SCORESABER_API_BASEURL}player/{scoreSaberId}/full");
+			return FetchDataClass($"{SCORESABER_API_BASEURL}player/{scoreSaberId}/full", _scoreSaberSerializerContext.FullProfile);
 		}
 
 		public Task<List<PlayerScore>?> FetchRecentSongsScorePage(string scoreSaberId, uint page, uint? limit = null)
@@ -132,7 +136,7 @@ namespace POI.Core.Services
 				urlBuilder.Append("&limit=").Append(limit);
 			}
 
-			return FetchDataClass<List<PlayerScore>>(urlBuilder.ToString());
+			return FetchDataClass(urlBuilder.ToString(), _scoreSaberSerializerContext.ListPlayerScore);
 		}
 
 		// TODO: Add intermediate model inheriting from BasicProfile that contains ScoreStats but doesn't have badges
@@ -151,7 +155,7 @@ namespace POI.Core.Services
 				urlBuilder.Append("?countries=").Append(string.Join(',', countries));
 			}
 
-			return FetchDataClass<List<BasicProfile>>(urlBuilder.ToString());
+			return FetchDataClass(urlBuilder.ToString(), _scoreSaberSerializerContext.ListBasicProfile);
 		}
 
 		public Task<Refresh?> RefreshProfile(string scoreSaberId)
@@ -161,7 +165,7 @@ namespace POI.Core.Services
 				throw new ArgumentException("Refreshing only works with for Steam accounts");
 			}
 
-			return FetchDataStruct<Refresh>($"{SCORESABER_API_BASEURL}user/{scoreSaberId}/refresh");
+			return FetchDataStruct($"{SCORESABER_API_BASEURL}user/{scoreSaberId}/refresh", _scoreSaberSerializerContext.Refresh);
 		}
 
 		private void VerifySearchQueryParamWithinBounds(string query)
@@ -172,18 +176,18 @@ namespace POI.Core.Services
 			}
 		}
 
-		private async Task<T?> FetchDataClass<T>(string url) where T : class
+		private async Task<TResponse?> FetchDataClass<TResponse>(string url, JsonTypeInfo<TResponse> jsonResponseTypeInfo) where TResponse : class
 		{
-			return (await FetchData<T>(url).ConfigureAwait(false)).response;
+			return (await FetchData(url, jsonResponseTypeInfo).ConfigureAwait(false)).response;
 		}
 
-		private async Task<T?> FetchDataStruct<T>(string url) where T : struct
+		private async Task<TResponse?> FetchDataStruct<TResponse>(string url, JsonTypeInfo<TResponse> jsonResponseTypeInfo) where TResponse : struct
 		{
-			var (success, response) = await FetchData<T>(url).ConfigureAwait(false);
+			var (success, response) = await FetchData(url, jsonResponseTypeInfo).ConfigureAwait(false);
 			return success ? response : null;
 		}
 
-		private async Task<(bool success, T? response)> FetchData<T>(string url)
+		private async Task<(bool success, TResponse? response)> FetchData<TResponse>(string url, JsonTypeInfo<TResponse> jsonResponseTypeInfo)
 		{
 			using var response = await _scoreSaberApiChainedRateLimitPolicy.ExecuteAsync(() => _scoreSaberApiClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead));
 
@@ -191,7 +195,7 @@ namespace POI.Core.Services
 			{
 				try
 				{
-					return (true, await response.Content.ReadFromJsonAsync<T>(_jsonSerializerOptions).ConfigureAwait(false));
+					return (true, await response.Content.ReadFromJsonAsync(jsonResponseTypeInfo).ConfigureAwait(false));
 				}
 				catch (NotSupportedException) // When content type is not valid
 				{
