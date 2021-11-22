@@ -31,10 +31,9 @@ namespace POI.Azure.Functions.RankUpFeed
 			var logger = context.GetLogger(nameof(RankUpFeedFunction));
 
 			var scoreSaberApiService = context.InstanceServices.GetService<ScoreSaberApiService>()!;
-			var scoreSaberScraperService = context.InstanceServices.GetService<ScoreSaberScraperService>()!;
 
 			await Task.WhenAll(
-				FetchPlayers(logger, scoreSaberApiService, scoreSaberScraperService),
+				FetchPlayers(logger, scoreSaberApiService),
 				FetchRankThresholds(logger, scoreSaberApiService));
 
 			// TODO: Post data to webhook in bot
@@ -46,7 +45,7 @@ namespace POI.Azure.Functions.RankUpFeed
 #endif
 		}
 
-		private static async Task FetchPlayers(ILogger logger, ScoreSaberApiService scoreSaberApiService, ScoreSaberScraperService scoreSaberScraperService)
+		private static async Task FetchPlayers(ILogger logger, ScoreSaberApiService scoreSaberApiService)
 		{
 			var players = new List<SearchPlayerInfo>();
 			for (var i = 0; i < 4; i++)
@@ -55,7 +54,7 @@ namespace POI.Azure.Functions.RankUpFeed
 
 				logger.LogInformation("Fetching page {PageNumber} for players", internalPage);
 
-				await InvokeWithFixedMinimumRunDuration(Task.Run(async () =>
+				/*await InvokeWithFixedMinimumRunDuration(Task.Run(async () =>
 				{
 					var playersPage = await scoreSaberScraperService.FetchCountryLeaderboard("BE", internalPage).ConfigureAwait(false);
 					if (playersPage == null)
@@ -64,7 +63,7 @@ namespace POI.Azure.Functions.RankUpFeed
 					}
 
 					players.AddRange(playersPage.Players);
-				}), 500);
+				}), 500);*/
 			}
 
 			// TODO: Fetch linked non-BE peeps
@@ -96,11 +95,6 @@ namespace POI.Azure.Functions.RankUpFeed
 					rankThresholds[rank] = player.Pp;
 				}
 			}
-		}
-
-		private static Task InvokeWithFixedMinimumRunDuration(Task invokedTask, int minimumRunDurationMillis)
-		{
-			return Task.WhenAll(invokedTask, Task.Delay(minimumRunDurationMillis));
 		}
 	}
 }
