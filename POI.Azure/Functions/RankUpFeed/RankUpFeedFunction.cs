@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using POI.Core.Models.ScoreSaber.Search;
+using POI.Core.Models.ScoreSaber.New.Profile;
 using POI.Core.Services;
 
 namespace POI.Azure.Functions.RankUpFeed
@@ -32,9 +31,7 @@ namespace POI.Azure.Functions.RankUpFeed
 
 			var scoreSaberApiService = context.InstanceServices.GetService<ScoreSaberApiService>()!;
 
-			await Task.WhenAll(
-				FetchPlayers(logger, scoreSaberApiService),
-				FetchRankThresholds(logger, scoreSaberApiService));
+			await FetchPlayers(logger, scoreSaberApiService).ConfigureAwait(false);
 
 			// TODO: Post data to webhook in bot
 
@@ -47,54 +44,24 @@ namespace POI.Azure.Functions.RankUpFeed
 
 		private static async Task FetchPlayers(ILogger logger, ScoreSaberApiService scoreSaberApiService)
 		{
-			var players = new List<SearchPlayerInfo>();
-			for (var i = 0; i < 4; i++)
+			// Temp
+			var players = new List<BasicProfile>();
+			for (uint i = 0; i < 4; i++)
 			{
 				var internalPage = i + 1;
 
 				logger.LogInformation("Fetching page {PageNumber} for players", internalPage);
 
-				/*await InvokeWithFixedMinimumRunDuration(Task.Run(async () =>
-				{
-					var playersPage = await scoreSaberScraperService.FetchCountryLeaderboard("BE", internalPage).ConfigureAwait(false);
-					if (playersPage == null)
-					{
-						throw new Exception();
-					}
-
-					players.AddRange(playersPage.Players);
-				}), 500);*/
-			}
-
-			// TODO: Fetch linked non-BE peeps
-		}
-
-		private static async Task FetchRankThresholds(ILogger logger, ScoreSaberApiService scoreSaberApiService)
-		{
-			var rankThresholds = new Dictionary<int, double>();
-			foreach (var (page, ranksOnPage) in new[] {25, 50, 250, 500, 2500, 5000}
-				.GroupBy(rank => (int) Math.Ceiling(rank / 50f))
-				.ToDictionary(kvp => kvp.Key, kvp => kvp.ToList()))
-			{
-				logger.LogInformation("Fetching page {PageNumber} for thresholds {Ranks}", page, string.Join(", ", ranksOnPage));
-
-				var playersPage = await scoreSaberApiService.FetchGlobalLeaderboardsPage(page).ConfigureAwait(false);
-				if (playersPage == null)
+				var playersPage = await scoreSaberApiService.FetchPlayers(internalPage, countries: new[] { "BE" }).ConfigureAwait(false);
+				if (players == null)
 				{
 					throw new Exception();
 				}
 
-				foreach (var rank in ranksOnPage)
-				{
-					var player = playersPage.Players.LastOrDefault(p => p.Rank == rank);
-					if (player == null)
-					{
-						throw new Exception();
-					}
-
-					rankThresholds[rank] = player.Pp;
-				}
+				players.AddRange(playersPage!);
 			}
+
+			// TODO: Fetch linked non-BE peeps
 		}
 	}
 }
