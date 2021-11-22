@@ -13,7 +13,6 @@ using NodaTime.Serialization.SystemTextJson;
 using POI.Core.Exceptions;
 using POI.Core.Models.ScoreSaber.New.Profile;
 using POI.Core.Models.ScoreSaber.New.Scores;
-using POI.Core.Models.ScoreSaber.Search;
 using POI.Core.Services.Interfaces;
 using Polly;
 using Polly.Bulkhead;
@@ -136,17 +135,23 @@ namespace POI.Core.Services
 			return FetchDataClass<List<PlayerScore>>(urlBuilder.ToString());
 		}
 
-		[Obsolete("Will be replaced later one")]
-		public Task<PlayersPage?> SearchPlayersByName(string name)
+		// TODO: Add intermediate model inheriting from BasicProfile that contains ScoreStats but doesn't have badges
+		// using FullProfile would be violating the nullability constraint of the Badges property
+		public Task<List<BasicProfile>?> FetchPlayers(uint page, string? searchQuery = null, string[]? countries = null)
 		{
-			VerifySearchQueryParamWithinBounds(name);
-			return FetchDataClass<PlayersPage>($"{SCORESABER_API_BASEURL}players/by-name/{name}");
-		}
+			var urlBuilder = new StringBuilder(SCORESABER_API_BASEURL + "players?page=" + page);
+			if (searchQuery != null)
+			{
+				VerifySearchQueryParamWithinBounds(searchQuery);
+				urlBuilder.Append("&search=").Append(searchQuery);
+			}
 
-		[Obsolete("Will be replaced later on")]
-		public Task<PlayersPage?> FetchGlobalLeaderboardsPage(int page)
-		{
-			return Task.FromResult<PlayersPage?>(null);
+			if (countries is { Length: > 0 })
+			{
+				urlBuilder.Append("?countries=").Append(string.Join(',', countries));
+			}
+
+			return FetchDataClass<List<BasicProfile>>(urlBuilder.ToString());
 		}
 
 		public Task<Refresh?> RefreshProfile(string scoreSaberId)
