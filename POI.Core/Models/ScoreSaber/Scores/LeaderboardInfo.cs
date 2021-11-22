@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using NodaTime;
 
-namespace POI.Core.Models.ScoreSaber.New.Scores
+namespace POI.Core.Models.ScoreSaber.Scores
 {
 	public class LeaderboardInfo
 	{

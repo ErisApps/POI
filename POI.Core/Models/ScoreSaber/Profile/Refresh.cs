@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace POI.Core.Models.ScoreSaber.New.Profile
+namespace POI.Core.Models.ScoreSaber.Profile
 {
 	public readonly struct Refresh
 	{

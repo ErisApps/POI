@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 
-namespace POI.Core.Models.ScoreSaber.New.Shared
+namespace POI.Core.Models.ScoreSaber.Shared
 {
 	public class PlayerInfoBase
 	{

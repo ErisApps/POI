@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace POI.Core.Models.ScoreSaber.New.Profile
+namespace POI.Core.Models.ScoreSaber.Profile
 {
 	public class FullProfile : BasicProfile
 	{
