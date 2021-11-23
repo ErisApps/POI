@@ -11,14 +11,14 @@ namespace POI.Core.Models.ScoreSaber.Profile
 		public uint Permissions { get; }
 
 		[JsonPropertyName("inactive")]
-		public uint Inactive { get; }
+		public bool Inactive { get; }
 
 		[JsonPropertyName("banned")]
-		public uint Banned { get; }
+		public bool Banned { get; }
 
 		[JsonConstructor]
-		public BasicProfile(string id, string name, string profilePicture, string country, uint rank, uint countryRank, double pp, string historyRaw, string role, uint permissions, uint inactive,
-			uint banned)
+		public BasicProfile(string id, string name, string profilePicture, string country, uint rank, uint countryRank, double pp, string historyRaw, string role, uint permissions, bool inactive,
+			bool banned)
 			: base(id, name, profilePicture, country, rank, countryRank, pp, historyRaw)
 		{
 			Role = role;
