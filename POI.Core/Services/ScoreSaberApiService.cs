@@ -121,7 +121,7 @@ namespace POI.Core.Services
 
 		public Task<List<PlayerScore>?> FetchPlayerScores(string scoreSaberId, uint page, SortType sortType, uint? limit = null)
 		{
-			var urlBuilder = new StringBuilder(SCORESABER_API_BASEURL + "player/" + scoreSaberId + "/scores?page=" + page + "&sort=" + sortType);
+			var urlBuilder = new StringBuilder(SCORESABER_API_BASEURL + "player/" + scoreSaberId + "/scores?page=" + page + "&sort=" + sortType.ToString("G").ToLower());
 			if (limit != null)
 			{
 				if (limit > 100)
