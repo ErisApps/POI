@@ -357,15 +357,18 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 
 			// Getting data for the second image
 			var beatSaviorProfileData = await BeatSaviorApiService.FetchBeatSaviorPlayerData(scoreSaberId).ConfigureAwait(false);
-			var beatSaviorSongData = beatSaviorProfileData?.FirstOrDefault(song => requestedSong.Leaderboard.SongHash.Equals(song.SongId, StringComparison.InvariantCultureIgnoreCase)
-			                                                                       && requestedSong.Leaderboard.DifficultyInfo.Difficulty == song.SongDifficultyRank
-			                                                                       && requestedSong.Leaderboard.DifficultyInfo.GameMode.Contains(song.GameMode)
-			                                                                       && requestedSong.Score.BaseScore == song.Trackers.ScoreTracker.Score);
 
 			//BeatSavior data found! (Making the second image)
-			if (beatSaviorSongData != null)
+			if (beatSaviorProfileData != null)
 			{
-				await SendBeatSaviorMemoryStream(ctx, profile, beatSaviorSongData.Value).ConfigureAwait(false);
+				var beatSaviorSongIndex = beatSaviorProfileData.FindIndex(song => requestedSong.Leaderboard.SongHash.Equals(song.SongId, StringComparison.InvariantCultureIgnoreCase)
+				                                                                   && requestedSong.Leaderboard.DifficultyInfo.Difficulty == song.SongDifficultyRank
+				                                                                   && requestedSong.Leaderboard.DifficultyInfo.GameMode.Contains(song.GameMode)
+				                                                                   && requestedSong.Score.BaseScore == song.Trackers.ScoreTracker.Score);
+				if (beatSaviorSongIndex >= 0)
+				{
+					await SendBeatSaviorMemoryStream(ctx, profile, beatSaviorProfileData![beatSaviorSongIndex]).ConfigureAwait(false);
+				}
 			}
 		}
 

@@ -57,24 +57,24 @@ namespace POI.Core.Models.BeatSavior.Trackers
 		public double AverageTimeDependence { get; }
 
 		[JsonPropertyName("leftAverageCut")]
-		public List<double?> LeftAverageCut { get; }
+		public List<double>? LeftAverageCut { get; }
 
 		[JsonPropertyName("rightAverageCut")]
-		public List<double?> RightAverageCut { get; }
+		public List<double>? RightAverageCut { get; }
 
 		[JsonPropertyName("averageCut")]
-		public List<double?> AverageCut { get; }
+		public List<double>? AverageCut { get; }
 
 		[JsonPropertyName("gridAcc")]
-		public List<double?> GridAcc { get; }
+		public List<double>? GridAcc { get; }
 
 		[JsonPropertyName("gridCut")]
-		public List<int?> GridCut { get; }
+		public List<int>? GridCut { get; }
 
 		[JsonConstructor]
 		public AccuracyTracker(double accRight, double accLeft, double averageAcc, double leftSpeed, double rightSpeed, double averageSpeed, double leftHighestSpeed, double rightHighestSpeed,
 			double leftPreswing, double rightPreswing, double averagePreswing, double leftPostswing, double rightPostswing, double averagePostswing, double leftTimeDependence,
-			double rightTimeDependence, double averageTimeDependence, List<double?> leftAverageCut, List<double?> rightAverageCut, List<double?> averageCut, List<double?> gridAcc, List<int?> gridCut)
+			double rightTimeDependence, double averageTimeDependence, List<double>? leftAverageCut, List<double>? rightAverageCut, List<double>? averageCut, List<double>? gridAcc, List<int>? gridCut)
 		{
 			AccRight = accRight;
 			AccLeft = accLeft;
