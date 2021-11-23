@@ -35,29 +35,23 @@ namespace POI.Core.Models.ScoreSaber.Scores
 		[JsonPropertyName("createdDate")]
 		public Instant CreatedDate { get; }
 
-		// TODO: Revisit this later on when the API has been changed... reflecting the actual schema, number as a date format is scuffed
-		/*[JsonPropertyName("rankedDate")]
-		public Instant RankedDate { get; }*/
+		[JsonPropertyName("rankedDate")]
+		public Instant? RankedDate { get; }
 
-		// TODO: Revisit this later on when the API has been changed... reflecting the actual schema, number as a date format is scuffed
-		/*[JsonPropertyName("qualifiedDate")]
-		public Instant QualifiedDate { get; }*/
+		[JsonPropertyName("qualifiedDate")]
+		public Instant? QualifiedDate { get; }
 
-		// TODO: Revisit this later on when the API has been changed... reflecting the actual schema, number as a date format is scuffed
-		/*[JsonPropertyName("lovedDate")]
-		public Instant LovedDate { get; }*/
+		[JsonPropertyName("lovedDate")]
+		public Instant? LovedDate { get; }
 
-		// TODO: Revisit this later on when the API has been changed... reflecting the actual schema, this should've been a bool
 		[JsonPropertyName("ranked")]
-		public uint Ranked { get; }
+		public bool Ranked { get; }
 
-		// TODO: Revisit this later on when the API has been changed... reflecting the actual schema, this should've been a bool
 		[JsonPropertyName("qualified")]
-		public uint Qualified { get; }
+		public bool Qualified { get; }
 
-		// TODO: Revisit this later on when the API has been changed... reflecting the actual schema, this should've been a bool
 		[JsonPropertyName("loved")]
-		public uint Loved { get; }
+		public bool Loved { get; }
 
 		// I wanna make this an uint but for reuse, it might sometimes default to -1...
 		[JsonPropertyName("maxPP")]
@@ -80,7 +74,7 @@ namespace POI.Core.Models.ScoreSaber.Scores
 
 		[JsonConstructor]
 		public LeaderboardInfo(uint id, string songHash, string songName, string songSubName, string songAuthorName, string levelAuthorName, int difficulty, string difficultyRaw, int maxScore,
-			Instant createdDate, uint ranked, uint qualified, uint loved, int maxPp, double stars, uint plays, uint dailyPlays,
+			Instant createdDate, Instant? rankedDate, Instant? qualifiedDate, Instant? lovedDate, bool ranked, bool qualified, bool loved, int maxPp, double stars, uint plays, uint dailyPlays,
 			bool positiveModifiers, string coverImageUrl)
 		{
 			Id = id;
@@ -93,6 +87,9 @@ namespace POI.Core.Models.ScoreSaber.Scores
 			DifficultyRaw = difficultyRaw;
 			MaxScore = maxScore;
 			CreatedDate = createdDate;
+			RankedDate = rankedDate;
+			QualifiedDate = qualifiedDate;
+			LovedDate = lovedDate;
 			Ranked = ranked;
 			Qualified = qualified;
 			Loved = loved;

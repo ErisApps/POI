@@ -6,16 +6,16 @@ namespace POI.Core.Models.ScoreSaber.Scores
 	public class Score
 	{
 		[JsonPropertyName("id")]
-		public int Id { get; }
+		public uint Id { get; }
 
 		[JsonPropertyName("rank")]
-		public int Rank { get; }
+		public uint Rank { get; }
 
 		[JsonPropertyName("baseScore")]
-		public int BaseScore { get; }
+		public ulong BaseScore { get; }
 
 		[JsonPropertyName("modifiedScore")]
-		public int ModifiedScore { get; }
+		public ulong ModifiedScore { get; }
 
 		[JsonPropertyName("pp")]
 		public double Pp { get; }
@@ -30,16 +30,16 @@ namespace POI.Core.Models.ScoreSaber.Scores
 		public int Multiplier { get; }
 
 		[JsonPropertyName("badCuts")]
-		public int BadCuts { get; }
+		public uint BadCuts { get; }
 
 		[JsonPropertyName("missedNotes")]
-		public int MissedNotes { get; }
+		public uint MissedNotes { get; }
 
 		[JsonPropertyName("maxCombo")]
-		public int MaxCombo { get; }
+		public uint MaxCombo { get; }
 
 		[JsonPropertyName("fullCombo")]
-		public int FullCombo { get; }
+		public bool FullCombo { get; }
 
 		[JsonPropertyName("hmd")]
 		public int Hmd { get; }
@@ -51,7 +51,7 @@ namespace POI.Core.Models.ScoreSaber.Scores
 		public bool HasReplay { get; }
 
 		[JsonConstructor]
-		public Score(int id, int rank, int baseScore, int modifiedScore, double pp, double weight, string modifiers, int multiplier, int badCuts, int missedNotes, int maxCombo, int fullCombo,
+		public Score(uint id, uint rank, ulong baseScore, ulong modifiedScore, double pp, double weight, string modifiers, int multiplier, uint badCuts, uint missedNotes, uint maxCombo, bool fullCombo,
 			int hmd, Instant timeSet, bool hasReplay)
 		{
 			Id = id;
