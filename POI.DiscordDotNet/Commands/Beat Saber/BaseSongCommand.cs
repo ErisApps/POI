@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
 using ImageMagick;
@@ -24,7 +23,6 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 	public abstract class BaseSongCommand : BeatSaberCommandsModule
 	{
 		private readonly ILogger<BaseSongCommand> _logger;
-		private readonly DiscordClient _client;
 		private readonly string _backgroundImagePath;
 		private readonly string _erisSignaturePath;
 		private readonly MongoDbService _mongoDbService;
@@ -36,11 +34,10 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 		private const int WIDTH = 1024;
 		private const int MARGIN = 35;
 
-		protected BaseSongCommand(ILogger<BaseSongCommand> logger, DiscordClient client, ScoreSaberApiService scoreSaberApiService, MongoDbService mongoDbService,
+		protected BaseSongCommand(ILogger<BaseSongCommand> logger, ScoreSaberApiService scoreSaberApiService, MongoDbService mongoDbService,
 			BeatSaverClientProvider beatSaverClientProvider, string backgroundImagePath, string erisSignaturePath, BeatSaviorApiService beatSaviorApiService)
 		{
 			_logger = logger;
-			_client = client;
 
 			ScoreSaberApiService = scoreSaberApiService;
 			BeatSaviorApiService = beatSaviorApiService;
@@ -53,6 +50,7 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 
 		protected abstract Task<List<PlayerScore>?> FetchScorePage(string playerId, uint page);
 
+		// ReSharper disable once CognitiveComplexity
 		protected async Task GenerateScoreImageAndSendInternal(CommandContext ctx)
 		{
 			await ctx.TriggerTypingAsync().ConfigureAwait(false);
@@ -359,10 +357,10 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 
 			// Getting data for the second image
 			var beatSaviorProfileData = await BeatSaviorApiService.FetchBeatSaviorPlayerData(scoreSaberId).ConfigureAwait(false);
-			var beatSaviorSongData = beatSaviorProfileData?.LastOrDefault(song => requestedSong.Leaderboard.SongHash.Equals(song.SongId, StringComparison.InvariantCultureIgnoreCase)
-			                                                             && requestedSong.Leaderboard.DifficultyInfo.Difficulty == song.SongDifficultyRank
-			                                                             && requestedSong.Leaderboard.DifficultyInfo.GameMode.Contains(song.GameMode)
-			                                                             && requestedSong.Score.BaseScore == song.Trackers.ScoreTracker.Score);
+			var beatSaviorSongData = beatSaviorProfileData?.FirstOrDefault(song => requestedSong.Leaderboard.SongHash.Equals(song.SongId, StringComparison.InvariantCultureIgnoreCase)
+			                                                                       && requestedSong.Leaderboard.DifficultyInfo.Difficulty == song.SongDifficultyRank
+			                                                                       && requestedSong.Leaderboard.DifficultyInfo.GameMode.Contains(song.GameMode)
+			                                                                       && requestedSong.Score.BaseScore == song.Trackers.ScoreTracker.Score);
 
 			//BeatSavior data found! (Making the second image)
 			if (beatSaviorSongData != null)
