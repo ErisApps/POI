@@ -27,7 +27,7 @@ namespace POI.Core.Models.ScoreSaber.Scores
 		public string Modifiers { get; }
 
 		[JsonPropertyName("multiplier")]
-		public int Multiplier { get; }
+		public double Multiplier { get; }
 
 		[JsonPropertyName("badCuts")]
 		public uint BadCuts { get; }
