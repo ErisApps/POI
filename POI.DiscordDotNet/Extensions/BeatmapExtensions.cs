@@ -2,6 +2,8 @@
 using System.Text.RegularExpressions;
 using BeatSaverSharp.Models;
 using ImageMagick;
+using POI.Core.Models.ScoreSaber.Scores;
+using POI.Core.Models.Shared;
 using POI.DiscordDotNet.Services;
 
 namespace POI.DiscordDotNet.Extensions
@@ -51,15 +53,15 @@ namespace POI.DiscordDotNet.Extensions
 			};
 		}
 
-		internal static MagickColor ReturnDifficultyColor(this int difficultyNumber)
+		internal static MagickColor ReturnDifficultyColor(this Difficulty difficultyNumber)
 		{
 			return difficultyNumber switch
 			{
-				1 => Constants.DifficultyColors.Easy,
-				3 => Constants.DifficultyColors.Normal,
-				5 => Constants.DifficultyColors.Hard,
-				7 => Constants.DifficultyColors.Expert,
-				9 => Constants.DifficultyColors.ExpertPlus,
+				Difficulty.Easy => Constants.DifficultyColors.Easy,
+				Difficulty.Normal => Constants.DifficultyColors.Normal,
+				Difficulty.Hard => Constants.DifficultyColors.Hard,
+				Difficulty.Expert => Constants.DifficultyColors.Expert,
+				Difficulty.ExpertPlus => Constants.DifficultyColors.ExpertPlus,
 				_ => MagickColors.Gray
 			};
 		}
@@ -81,16 +83,21 @@ namespace POI.DiscordDotNet.Extensions
 			return matchResult.Success;
 		}
 
-		internal static int NotesToMaxScore(this int valueNotes)
+		internal static uint NotesToMaxScore(this int valueNotes)
+		{
+			return NotesToMaxScore((uint) valueNotes);
+		}
+
+		internal static uint NotesToMaxScore(this uint valueNotes)
 		{
 			//TODO: Make it differently??
-			var num1 = 0;
-			int num2;
+			uint num1 = 0;
+			uint num2;
 			for (num2 = 1; num2 < 8; num2 *= 2)
 			{
 				if (valueNotes >= num2 * 2)
 				{
-					num1 += (int) Math.Pow(num2, 2) * 2 + num2;
+					num1 += (uint) Math.Pow(num2, 2) * 2 + num2;
 					valueNotes -= num2 * 2;
 				}
 				else

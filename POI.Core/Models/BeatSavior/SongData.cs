@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using NodaTime;
 using POI.Core.Models.BeatSavior.Trackers;
+using POI.Core.Models.Shared;
 
 namespace POI.Core.Models.BeatSavior
 {
@@ -35,7 +36,7 @@ namespace POI.Core.Models.BeatSavior
 		public string GameMode { get; init; } = string.Empty;
 
 		[JsonPropertyName("songDifficultyRank")]
-		public int SongDifficultyRank { get; init; }
+		public Difficulty SongDifficultyRank { get; init; }
 
 		[JsonPropertyName("songSpeed")]
 		public double SongSpeed { get; init; }

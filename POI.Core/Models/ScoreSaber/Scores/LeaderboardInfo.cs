@@ -24,13 +24,10 @@ namespace POI.Core.Models.ScoreSaber.Scores
 		public string LevelAuthorName { get; }
 
 		[JsonPropertyName("difficulty")]
-		public int Difficulty { get; }
-
-		[JsonPropertyName("difficultyRaw")]
-		public string DifficultyRaw { get; }
+		public LeaderboardDifficulty DifficultyInfo { get; }
 
 		[JsonPropertyName("maxScore")]
-		public int MaxScore { get; }
+		public uint MaxScore { get; }
 
 		[JsonPropertyName("createdDate")]
 		public Instant CreatedDate { get; }
@@ -54,8 +51,9 @@ namespace POI.Core.Models.ScoreSaber.Scores
 		public bool Loved { get; }
 
 		// I wanna make this an uint but for reuse, it might sometimes default to -1...
-		[JsonPropertyName("maxPP")]
-		public int MaxPp { get; }
+		// This is apparently something that's only available for admins...
+		/*[JsonPropertyName("maxPP")]
+		public int MaxPp { get; }*/
 
 		[JsonPropertyName("stars")]
 		public double Stars { get; }
@@ -73,8 +71,8 @@ namespace POI.Core.Models.ScoreSaber.Scores
 		public string CoverImageUrl { get; }
 
 		[JsonConstructor]
-		public LeaderboardInfo(uint id, string songHash, string songName, string songSubName, string songAuthorName, string levelAuthorName, int difficulty, string difficultyRaw, int maxScore,
-			Instant createdDate, Instant? rankedDate, Instant? qualifiedDate, Instant? lovedDate, bool ranked, bool qualified, bool loved, int maxPp, double stars, uint plays, uint dailyPlays,
+		public LeaderboardInfo(uint id, string songHash, string songName, string songSubName, string songAuthorName, string levelAuthorName, LeaderboardDifficulty difficultyInfo, uint maxScore,
+			Instant createdDate, Instant? rankedDate, Instant? qualifiedDate, Instant? lovedDate, bool ranked, bool qualified, bool loved, double stars, uint plays, uint dailyPlays,
 			bool positiveModifiers, string coverImageUrl)
 		{
 			Id = id;
@@ -83,8 +81,7 @@ namespace POI.Core.Models.ScoreSaber.Scores
 			SongSubName = songSubName;
 			SongAuthorName = songAuthorName;
 			LevelAuthorName = levelAuthorName;
-			Difficulty = difficulty;
-			DifficultyRaw = difficultyRaw;
+			DifficultyInfo = difficultyInfo;
 			MaxScore = maxScore;
 			CreatedDate = createdDate;
 			RankedDate = rankedDate;
@@ -93,7 +90,6 @@ namespace POI.Core.Models.ScoreSaber.Scores
 			Ranked = ranked;
 			Qualified = qualified;
 			Loved = loved;
-			MaxPp = maxPp;
 			Stars = stars;
 			Plays = plays;
 			DailyPlays = dailyPlays;

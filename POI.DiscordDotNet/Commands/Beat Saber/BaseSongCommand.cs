@@ -93,7 +93,7 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 				return;
 			}
 
-			if (!requestedSong.Leaderboard.DifficultyRaw.ParseScoreSaberDifficulty(out var characteristic, out var difficulty))
+			if (!requestedSong.Leaderboard.DifficultyInfo.DifficultyRaw.ParseScoreSaberDifficulty(out var characteristic, out var difficulty))
 			{
 				await _logger.LogError(ctx, "Failed to parse ScoreSaber difficulty").ConfigureAwait(false);
 				return;
@@ -196,7 +196,7 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 				}
 
 				// Difficulty color
-				using (var difficultyCaption = new MagickImage(requestedSong.Leaderboard.Difficulty.ReturnDifficultyColor(), 195, 40))
+				using (var difficultyCaption = new MagickImage(requestedSong.Leaderboard.DifficultyInfo.Difficulty.ReturnDifficultyColor(), 195, 40))
 				{
 					background.Composite(difficultyCaption, 50, 245, CompositeOperator.Over);
 				}
@@ -359,9 +359,9 @@ namespace POI.DiscordDotNet.Commands.Beat_Saber
 
 			// Getting data for the second image
 			var beatSaviorProfileData = await BeatSaviorApiService.FetchBeatSaviorPlayerData(scoreSaberId).ConfigureAwait(false);
-			var beatSaviorSongData = beatSaviorProfileData?.Find(song => requestedSong.Leaderboard.SongHash.Equals(song.SongId)
-			                                                             && requestedSong.Leaderboard.Difficulty == song.SongDifficultyRank
-			                                                             && requestedSong.Leaderboard.DifficultyRaw.Contains(song.GameMode)
+			var beatSaviorSongData = beatSaviorProfileData?.LastOrDefault(song => requestedSong.Leaderboard.SongHash.Equals(song.SongId, StringComparison.InvariantCultureIgnoreCase)
+			                                                             && requestedSong.Leaderboard.DifficultyInfo.Difficulty == song.SongDifficultyRank
+			                                                             && requestedSong.Leaderboard.DifficultyInfo.GameMode.Contains(song.GameMode)
 			                                                             && requestedSong.Score.BaseScore == song.Trackers.ScoreTracker.Score);
 
 			//BeatSavior data found! (Making the second image)
