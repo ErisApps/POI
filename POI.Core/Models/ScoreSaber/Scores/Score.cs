@@ -42,7 +42,8 @@ namespace POI.Core.Models.ScoreSaber.Scores
 		public bool FullCombo { get; }
 
 		[JsonPropertyName("hmd")]
-		public int Hmd { get; }
+		// ReSharper disable once InconsistentNaming
+		public HMD HMD { get; }
 
 		[JsonPropertyName("timeSet")]
 		public Instant TimeSet { get; }
@@ -51,8 +52,8 @@ namespace POI.Core.Models.ScoreSaber.Scores
 		public bool HasReplay { get; }
 
 		[JsonConstructor]
-		public Score(uint id, uint rank, ulong baseScore, ulong modifiedScore, double pp, double weight, string modifiers, int multiplier, uint badCuts, uint missedNotes, uint maxCombo, bool fullCombo,
-			int hmd, Instant timeSet, bool hasReplay)
+		public Score(uint id, uint rank, ulong baseScore, ulong modifiedScore, double pp, double weight, string modifiers, double multiplier, uint badCuts, uint missedNotes, uint maxCombo,
+			bool fullCombo, HMD hmd, Instant timeSet, bool hasReplay)
 		{
 			Id = id;
 			Rank = rank;
@@ -66,7 +67,7 @@ namespace POI.Core.Models.ScoreSaber.Scores
 			MissedNotes = missedNotes;
 			MaxCombo = maxCombo;
 			FullCombo = fullCombo;
-			Hmd = hmd;
+			HMD = hmd;
 			TimeSet = timeSet;
 			HasReplay = hasReplay;
 		}
