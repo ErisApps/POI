@@ -17,7 +17,7 @@
         <PackageReference Include="Magick.NET.Core" Version="8.4.0" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
-        <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
         <PackageReference Include="MongoDb.Bson.NodaTime" Version="3.0.0" />
         <PackageReference Include="MongoDB.Driver" Version="2.13.2" />
         <PackageReference Include="NodaTime" Version="3.0.9" />
