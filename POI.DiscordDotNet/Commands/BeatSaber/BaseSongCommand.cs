@@ -591,7 +591,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 				//Misses
 				var missTitleSettings = runStatsTitleSettings;
 				var missSettings = runStatsSettings;
-				var isFullCombo = hitTracker.MissedNotes == 0 && hitTracker.BombHit == 0 && hitTracker.NbOfWallHit == 0;
+				var isFullCombo = hitTracker.BadCuts == 0 && hitTracker.MissedNotes == 0 && hitTracker.BombHit == 0 && hitTracker.NbOfWallHit == 0;
 				if (isFullCombo)
 				{
 					missSettings.FillColor = MagickColors.Gold;
@@ -602,7 +602,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 					background.Composite(playerRankCaption, MARGIN + WIDTH / 4 * 2, 0, CompositeOperator.Over);
 				}
 
-				using (var playerRankCaption = new MagickImage($"label:{(isFullCombo ? "FC" : hitTracker.MissedNotes)}", missSettings))
+				using (var playerRankCaption = new MagickImage($"label:{(isFullCombo ? "FC" : (hitTracker.MissedNotes + hitTracker.BadCuts))}", missSettings))
 				{
 					background.Composite(playerRankCaption, MARGIN + WIDTH / 4 * 2, 45, CompositeOperator.Over);
 				}
