@@ -14,7 +14,7 @@
         <PackageReference Include="DSharpPlus.Interactivity" Version="4.1.0" />
         <PackageReference Include="DSharpPlus.Rest" Version="4.1.0" />
         <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="8.4.0" />
-        <PackageReference Include="Magick.NET.Core" Version="8.4.0" />
+        <PackageReference Include="Magick.NET.Core" Version="8.5.0" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
         <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
