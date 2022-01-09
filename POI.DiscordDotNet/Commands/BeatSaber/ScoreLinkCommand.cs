@@ -23,8 +23,10 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 
 		// ReSharper disable once StringLiteralTypo
 		[Command("scorelink")]
-		public async Task Handle(CommandContext ctx, [RemainingText] string _)
+		public override async Task Handle(CommandContext ctx, [RemainingText] string _)
 		{
+			await base.Handle(ctx, _).ConfigureAwait(false);
+
 			var messageBuilder = await IsProfileValid(ctx);
 			if (messageBuilder == null)
 			{

@@ -26,9 +26,13 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 			_scoreSaberLinkService = scoreSaberLinkService;
 		}
 
-		protected async Task<DiscordMessageBuilder?> IsProfileValid(CommandContext ctx)
+		public virtual async Task Handle(CommandContext ctx, string _)
 		{
 			await ctx.TriggerTypingAsync().ConfigureAwait(false);
+		}
+
+		protected async Task<DiscordMessageBuilder?> IsProfileValid(CommandContext ctx)
+		{
 			string? scoreSaberId;
 
 			// Extract scoreSaberId
