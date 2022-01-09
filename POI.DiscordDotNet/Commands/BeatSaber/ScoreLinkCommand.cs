@@ -16,8 +16,8 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 {
 	public class ScoreLinkCommand : BaseLinkCommand
 	{
-		public ScoreLinkCommand(ILogger<ScoreLinkCommand> logger, ScoreSaberApiService scoreSaberApiService, MongoDbService mongoDbService, ScoreSaberLinkService scoreSaberLinkService)
-			: base(logger, scoreSaberApiService, mongoDbService, scoreSaberLinkService)
+		public ScoreLinkCommand(ILogger<ScoreLinkCommand> logger, ScoreSaberApiService scoreSaberApiService, ScoreSaberLinkService scoreSaberLinkService)
+			: base(logger, scoreSaberApiService, scoreSaberLinkService)
 		{
 		}
 
@@ -26,7 +26,6 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 		public async Task Handle(CommandContext ctx, [RemainingText] string _)
 		{
 			var messageBuilder = await IsProfileValid(ctx);
-
 			if (messageBuilder == null)
 			{
 				return;
@@ -47,7 +46,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 			InteractivityResult<ComponentInteractionCreateEventArgs>? task = null;
 			while (!hasResponded)
 			{
-				task = await itv.WaitForButtonAsync(discordMessage, buttons, null);
+				task = await itv.WaitForButtonAsync(discordMessage, buttons, TimeSpan.FromHours(2));
 
 				if (task.Value.TimedOut)
 				{
@@ -59,21 +58,19 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 				hasResponded = task.Value.Result.User.Id is 148824637004840961 or 261830384663134209;
 			}
 
-
-
 			if (hasResponded && task != null)
 			{
 				await ctx.RespondAsync($"{task.Value.Result.User.Username} has responded with actionId: {task.Value.Result.Id}").ConfigureAwait(false);
 			}
 		}
 
-		protected override void Test(CommandContext ctx, DiscordEmbedBuilder embedBuilder)
+		protected override DiscordEmbedBuilder EnrichProfileEmbedBuilderShared(DiscordEmbedBuilder embedBuilder)
 		{
-			// todo: Eris want a better title!
 			embedBuilder
-				.WithColor(3447003)
 				.WithTitle("ScoreSaberId Regex matching and validation result")
 				.WithFooter($"Time remaining: <t:{DateTimeOffset.Now.AddHours(2).ToUnixTimeSeconds()}:R>");
+
+			return embedBuilder;
 		}
 	}
 }
