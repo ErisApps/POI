@@ -38,7 +38,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 			// Extract scoreSaberId
 			try
 			{
-				scoreSaberId = ExtractScoreSaberId(ctx);
+				scoreSaberId = await ExtractScoreSaberId(ctx);
 			}
 			catch (Exception e)
 			{
@@ -84,7 +84,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 			return messageBuilder;
 		}
 
-		protected static string ExtractScoreSaberId(CommandContext ctx)
+		protected async Task<string?> ExtractScoreSaberId(CommandContext ctx)
 		{
 			var args = ctx.RawArgumentString
 				.Split(" ", StringSplitOptions.RemoveEmptyEntries)
@@ -94,15 +94,15 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 
 			if (args.Count != 1)
 			{
-				throw new ArgumentException("No scoresaber profile provided");
+				await _logger.LogError(ctx, "No ScoreSaber profile provided", false).ConfigureAwait(false);
 			}
 
 			if (!args.First().ExtractScoreSaberId(out var scoreSaberId))
 			{
-				throw new Exception("Seems like this profile doesn't exist");
+				await _logger.LogError(ctx, "Seems like this profile doesn't exist", false).ConfigureAwait(false);
 			}
 
-			return scoreSaberId!;
+			return scoreSaberId;
 		}
 
 		protected virtual DiscordEmbedBuilder EnrichProfileEmbedBuilderShared(DiscordEmbedBuilder embedBuilder)
