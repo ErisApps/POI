@@ -15,26 +15,23 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 	public abstract class BaseLinkCommand : BeatSaberCommandsModule
 	{
 		private readonly ILogger<BaseLinkCommand> _logger;
-		private readonly MongoDbService _mongoDbService;
 		private readonly ScoreSaberLinkService _scoreSaberLinkService;
 
 		private readonly ScoreSaberApiService _scoreSaberApiService;
 
-		protected BaseLinkCommand(ILogger<BaseLinkCommand> logger, ScoreSaberApiService scoreSaberApiService, MongoDbService mongoDbService, ScoreSaberLinkService scoreSaberLinkService)
+		protected BaseLinkCommand(ILogger<BaseLinkCommand> logger, ScoreSaberApiService scoreSaberApiService, ScoreSaberLinkService scoreSaberLinkService)
 		{
 			_logger = logger;
 			_scoreSaberApiService = scoreSaberApiService;
-			_mongoDbService = mongoDbService;
 			_scoreSaberLinkService = scoreSaberLinkService;
 		}
-
-		protected abstract void Test(CommandContext ctx, DiscordEmbedBuilder embedBuilder);
 
 		protected async Task<DiscordMessageBuilder?> IsProfileValid(CommandContext ctx)
 		{
 			await ctx.TriggerTypingAsync().ConfigureAwait(false);
-			string? scoreSaberId = null;
-			// Extract
+			string? scoreSaberId;
+
+			// Extract scoreSaberId
 			try
 			{
 				scoreSaberId = ExtractScoreSaberId(ctx);
@@ -46,18 +43,15 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 			}
 
 			// Lookup scoreSaberId
-
 			var lookupSoreSaberIdLink = await _scoreSaberLinkService.LookupDiscordId(scoreSaberId);
-
 			if (lookupSoreSaberIdLink != null)
 			{
-				await ctx.Message.RespondAsync($"Scoresaber account is already linked to <@!{lookupSoreSaberIdLink}>! O.o").ConfigureAwait(false);
+				await ctx.Message.RespondAsync($"ScoreSaber account is already linked to <@!{lookupSoreSaberIdLink}>! O.o").ConfigureAwait(false);
 				return null;
 			}
 
 			// Lookup discordId
 			var lookupDiscordIdLink = await _scoreSaberLinkService.LookupScoreSaberId(ctx.Message.Author.Id.ToString());
-
 			if (lookupDiscordIdLink != null)
 			{
 				await ctx.Message.RespondAsync($"Your account is already linked to https://scoresaber.com/u/{lookupDiscordIdLink}! O.o").ConfigureAwait(false);
@@ -65,21 +59,17 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 			}
 
 			var playerInfo = await _scoreSaberApiService.FetchBasicPlayerProfile(scoreSaberId);
-
-			var messageBuilder = new DiscordMessageBuilder();
-			var embedBuilder = new DiscordEmbedBuilder();
-
-			embedBuilder.WithAuthor(ctx.User.Username, iconUrl: ctx.User.GetAvatarUrl(ImageFormat.Auto, 256));
-
-			Test(ctx, embedBuilder);
-
 			if (playerInfo == null)
 			{
 				await ctx.Message.RespondAsync("I didn't find the scoresaber account. Maybe you made a typo!?!");
 				return null;
 			}
 
-			embedBuilder
+			var messageBuilder = new DiscordMessageBuilder();
+			var embedBuilder = new DiscordEmbedBuilder();
+
+			EnrichProfileEmbedBuilderShared(embedBuilder)
+				.WithAuthor(ctx.User.Username, iconUrl: ctx.User.GetAvatarUrl(ImageFormat.Auto, 256))
 				.WithThumbnail(playerInfo.ProfilePicture)
 				.AddField("Name", playerInfo.Name, true)
 				.AddField("Country", playerInfo.Country, true)
@@ -87,11 +77,10 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 
 			messageBuilder.WithEmbed(embedBuilder.Build());
 
-			// var messageBuilder = Test(ctx);
 			return messageBuilder;
 		}
 
-		protected string ExtractScoreSaberId(CommandContext ctx)
+		protected static string ExtractScoreSaberId(CommandContext ctx)
 		{
 			var args = ctx.RawArgumentString
 				.Split(" ", StringSplitOptions.RemoveEmptyEntries)
@@ -110,6 +99,13 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 			}
 
 			return scoreSaberId!;
+		}
+
+		protected virtual DiscordEmbedBuilder EnrichProfileEmbedBuilderShared(DiscordEmbedBuilder embedBuilder)
+		{
+			embedBuilder.WithColor(3447003);
+
+			return embedBuilder;
 		}
 	}
 }

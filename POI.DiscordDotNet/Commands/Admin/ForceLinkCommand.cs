@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
@@ -9,10 +10,11 @@ using POI.DiscordDotNet.Services;
 
 namespace POI.DiscordDotNet.Commands.Admin
 {
+	[RequireUserPermissions(Permissions.Administrator)]
 	public class ForceLinkCommand : BaseLinkCommand
 	{
-		public ForceLinkCommand(ILogger<ForceLinkCommand> logger, ScoreSaberApiService scoreSaberApiService, MongoDbService mongoDbService, ScoreSaberLinkService scoreSaberLinkService)
-			: base(logger, scoreSaberApiService, mongoDbService, scoreSaberLinkService)
+		public ForceLinkCommand(ILogger<ForceLinkCommand> logger, ScoreSaberApiService scoreSaberApiService, ScoreSaberLinkService scoreSaberLinkService)
+			: base(logger, scoreSaberApiService, scoreSaberLinkService)
 		{
 		}
 
@@ -23,7 +25,7 @@ namespace POI.DiscordDotNet.Commands.Admin
 			await IsProfileValid(ctx);
 		}
 
-		protected override void Test(CommandContext ctx, DiscordEmbedBuilder embedBuilder)
+		protected override DiscordEmbedBuilder EnrichProfileEmbedBuilderShared(DiscordEmbedBuilder embedBuilder)
 		{
 			throw new System.NotImplementedException();
 		}
