@@ -5,8 +5,15 @@ namespace POI.DiscordDotNet.Models.Database
 	public class ScoreSaberLink
 	{
 		[BsonId]
-		public string DiscordId { get; set; } = null!;
+		public string DiscordId { get; }
 
-		public string ScoreSaberId { get; set; } = null!;
+		public string ScoreSaberId { get; }
+
+		[BsonConstructor]
+		public ScoreSaberLink(string discordId, string scoreSaberId)
+		{
+			DiscordId = discordId;
+			ScoreSaberId = scoreSaberId;
+		}
 	}
 }

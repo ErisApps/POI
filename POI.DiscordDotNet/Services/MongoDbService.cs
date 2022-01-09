@@ -30,7 +30,7 @@ namespace POI.DiscordDotNet.Services
 			_mongoDatabase = _mongoClient.GetDatabase("POINext");
 		}
 
-		internal IMongoCollection<T> GetCollection<T>(string? collectionName = null) where T : class, new()
+		internal IMongoCollection<T> GetCollection<T>(string? collectionName = null) where T : class
 			=> _mongoDatabase.GetCollection<T>(collectionName ?? typeof(T).Name);
 
 		internal async Task<bool> TestConnectivity()
