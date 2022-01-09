@@ -28,12 +28,16 @@ namespace POI.DiscordDotNet.Services
 			return (await LookupScoreSaberLink(link => link.ScoreSaberId == scoreSaberId).ConfigureAwait(false))?.DiscordId;
 		}
 
+		internal Task CreateScoreSaberLink(string discordId, string scoreSaberId)
+		{
+			return GetScoreSaberLinkCollection().InsertOneAsync(new ScoreSaberLink(discordId, scoreSaberId));
+		}
+
 		private async Task<ScoreSaberLink?> LookupScoreSaberLink(Expression<Func<ScoreSaberLink, bool>> predicate)
 		{
 			try
 			{
-				var userScoreLinks = await _mongoDbService
-					.GetCollection<ScoreSaberLink>()
+				var userScoreLinks = await GetScoreSaberLinkCollection()
 					.FindAsync(new ExpressionFilterDefinition<ScoreSaberLink>(predicate))
 					.ConfigureAwait(false);
 				return userScoreLinks.FirstOrDefault();
@@ -42,6 +46,11 @@ namespace POI.DiscordDotNet.Services
 			{
 				return null;
 			}
+		}
+
+		private IMongoCollection<ScoreSaberLink> GetScoreSaberLinkCollection()
+		{
+			return _mongoDbService.GetCollection<ScoreSaberLink>();
 		}
 	}
 }
