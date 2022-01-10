@@ -31,7 +31,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 			await ctx.TriggerTypingAsync().ConfigureAwait(false);
 		}
 
-		protected async Task<bool> CheckScoreLinkConflicts(CommandContext ctx, string scoreSaberId)
+		protected async Task<bool> CheckScoreLinkConflicts(CommandContext ctx, string discordId, string scoreSaberId)
 		{
 			// Lookup scoreSaberId
 			var lookupSoreSaberIdLink = await _scoreSaberLinkService.LookupDiscordId(scoreSaberId);
@@ -42,7 +42,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 			}
 
 			// Lookup discordId
-			var lookupDiscordIdLink = await _scoreSaberLinkService.LookupScoreSaberId(ctx.Message.Author.Id.ToString());
+			var lookupDiscordIdLink = await _scoreSaberLinkService.LookupScoreSaberId(discordId);
 			if (lookupDiscordIdLink != null)
 			{
 				await ctx.Message.RespondAsync($"Your account is already linked to https://scoresaber.com/u/{lookupDiscordIdLink}! O.o").ConfigureAwait(false);

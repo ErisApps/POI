@@ -33,7 +33,8 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 				return;
 			}
 
-			if (await CheckScoreLinkConflicts(ctx, scoreSaberId).ConfigureAwait(false))
+			var discordId = ctx.Message.Author.Id.ToString();
+			if (await CheckScoreLinkConflicts(ctx, discordId, scoreSaberId).ConfigureAwait(false))
 			{
 				return;
 			}
