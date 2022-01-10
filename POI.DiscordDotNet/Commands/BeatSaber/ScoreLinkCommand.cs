@@ -27,11 +27,25 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 		{
 			await base.Handle(ctx, _).ConfigureAwait(false);
 
-			var messageBuilder = await IsProfileValid(ctx);
-			if (messageBuilder == null)
+			var scoreSaberId = await ExtractScoreSaberId(ctx).ConfigureAwait(false);
+			if (scoreSaberId == null)
 			{
 				return;
 			}
+
+			if (await CheckScoreLinkConflicts(ctx, scoreSaberId).ConfigureAwait(false))
+			{
+				return;
+			}
+
+			var playerProfile = await FetchScoreSaberProfile(ctx, scoreSaberId).ConfigureAwait(false);
+			if (playerProfile == null)
+			{
+				return;
+			}
+
+			var messageBuilder = CreateScoreSaberProfileEmbed(ctx, playerProfile);
+
 
 			var buttons = new[]
 			{
@@ -52,7 +66,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 
 				if (task.Value.TimedOut)
 				{
-					await ctx.RespondAsync("Mea culpa, I timed out :c").ConfigureAwait(false);
+					await ctx.Message.RespondAsync("Mea culpa, I timed out :c").ConfigureAwait(false);
 					break;
 				}
 
@@ -63,14 +77,17 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 			if (hasResponded && task != null)
 			{
 				await ctx.RespondAsync($"{task.Value.Result.User.Username} has responded with actionId: {task.Value.Result.Id}").ConfigureAwait(false);
+
+				if (task.Value.Result.Id == "approve")
+				{
+					await CreateScoreLink(ctx.Message.Author.Id.ToString(), scoreSaberId).ConfigureAwait(false);
+				}
 			}
 		}
 
-		protected override DiscordEmbedBuilder EnrichProfileEmbedBuilderShared(DiscordEmbedBuilder embedBuilder)
+		protected DiscordEmbedBuilder EnrichProfileEmbedBuilderShared(DiscordEmbedBuilder embedBuilder)
 		{
-			embedBuilder
-				.WithTitle("ScoreSaberId Regex matching and validation result")
-				.WithFooter($"Time remaining: <t:{DateTimeOffset.Now.AddHours(2).ToUnixTimeSeconds()}:R>");
+			embedBuilder.WithFooter($"Time remaining: <t:{DateTimeOffset.Now.AddHours(2).ToUnixTimeSeconds()}:R>");
 
 			return embedBuilder;
 		}

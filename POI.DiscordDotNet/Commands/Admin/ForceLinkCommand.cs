@@ -2,7 +2,6 @@
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
-using DSharpPlus.Entities;
 using Microsoft.Extensions.Logging;
 using POI.Core.Services;
 using POI.DiscordDotNet.Commands.BeatSaber;
@@ -21,11 +20,6 @@ namespace POI.DiscordDotNet.Commands.Admin
 		// ReSharper disable once StringLiteralTypo
 		[Command("forcelink")]
 		public async Task Handle(CommandContext ctx, [RemainingText] string _)
-		{
-			await IsProfileValid(ctx);
-		}
-
-		protected override DiscordEmbedBuilder EnrichProfileEmbedBuilderShared(DiscordEmbedBuilder embedBuilder)
 		{
 			throw new System.NotImplementedException();
 		}
