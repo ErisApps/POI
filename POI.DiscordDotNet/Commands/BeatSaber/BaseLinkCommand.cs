@@ -5,6 +5,7 @@ using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
 using Microsoft.Extensions.Logging;
+using POI.Core.Models.ScoreSaber.Profile;
 using POI.Core.Services;
 using POI.DiscordDotNet.Commands.Modules;
 using POI.DiscordDotNet.Extensions;
@@ -16,7 +17,6 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 	{
 		private readonly ILogger<BaseLinkCommand> _logger;
 		private readonly ScoreSaberLinkService _scoreSaberLinkService;
-
 		private readonly ScoreSaberApiService _scoreSaberApiService;
 
 		protected BaseLinkCommand(ILogger<BaseLinkCommand> logger, ScoreSaberApiService scoreSaberApiService, ScoreSaberLinkService scoreSaberLinkService)
@@ -31,27 +31,14 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 			await ctx.TriggerTypingAsync().ConfigureAwait(false);
 		}
 
-		protected async Task<DiscordMessageBuilder?> IsProfileValid(CommandContext ctx)
+		protected async Task<bool> CheckScoreLinkConflicts(CommandContext ctx, string scoreSaberId)
 		{
-			string? scoreSaberId;
-
-			// Extract scoreSaberId
-			try
-			{
-				scoreSaberId = await ExtractScoreSaberId(ctx);
-			}
-			catch (Exception e)
-			{
-				await ctx.Message.RespondAsync(e.Message + "! ><").ConfigureAwait(false);
-				return null;
-			}
-
 			// Lookup scoreSaberId
 			var lookupSoreSaberIdLink = await _scoreSaberLinkService.LookupDiscordId(scoreSaberId);
 			if (lookupSoreSaberIdLink != null)
 			{
 				await ctx.Message.RespondAsync($"ScoreSaber account is already linked to <@!{lookupSoreSaberIdLink}>! O.o").ConfigureAwait(false);
-				return null;
+				return true;
 			}
 
 			// Lookup discordId
@@ -59,25 +46,34 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 			if (lookupDiscordIdLink != null)
 			{
 				await ctx.Message.RespondAsync($"Your account is already linked to https://scoresaber.com/u/{lookupDiscordIdLink}! O.o").ConfigureAwait(false);
-				return null;
+				return true;
 			}
 
+			return false;
+		}
+
+		protected async Task<BasicProfile?> FetchScoreSaberProfile(CommandContext ctx, string scoreSaberId)
+		{
 			var playerInfo = await _scoreSaberApiService.FetchBasicPlayerProfile(scoreSaberId);
 			if (playerInfo == null)
 			{
 				await ctx.Message.RespondAsync("I didn't find the scoresaber account. Maybe you made a typo!?!");
-				return null;
 			}
 
-			var messageBuilder = new DiscordMessageBuilder();
-			var embedBuilder = new DiscordEmbedBuilder();
+			return playerInfo;
+		}
 
-			EnrichProfileEmbedBuilderShared(embedBuilder)
+		protected static DiscordMessageBuilder CreateScoreSaberProfileEmbed(CommandContext ctx, BasicProfile basicProfile)
+		{
+			var messageBuilder = new DiscordMessageBuilder();
+			var embedBuilder = new DiscordEmbedBuilder()
+				.WithPoiColor()
 				.WithAuthor(ctx.User.Username, iconUrl: ctx.User.GetAvatarUrl(ImageFormat.Auto, 256))
-				.WithThumbnail(playerInfo.ProfilePicture)
-				.AddField("Name", playerInfo.Name, true)
-				.AddField("Country", playerInfo.Country, true)
-				.AddField("Rank", playerInfo.Rank.ToString(), true);
+				.WithThumbnail(basicProfile.ProfilePicture)
+				.WithTitle("ScoreSaberId Regex matching and validation result")
+				.AddField("Name", basicProfile.Name, true)
+				.AddField("Country", basicProfile.Country, true)
+				.AddField("Rank", basicProfile.Rank.ToString(), true);
 
 			messageBuilder.WithEmbed(embedBuilder.Build());
 
@@ -105,11 +101,9 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 			return scoreSaberId;
 		}
 
-		protected virtual DiscordEmbedBuilder EnrichProfileEmbedBuilderShared(DiscordEmbedBuilder embedBuilder)
+		protected Task CreateScoreLink(string discordId, string scoreSaberId)
 		{
-			embedBuilder.WithColor(3447003);
-
-			return embedBuilder;
+			return _scoreSaberLinkService.CreateScoreSaberLink(discordId, scoreSaberId);
 		}
 	}
 }
