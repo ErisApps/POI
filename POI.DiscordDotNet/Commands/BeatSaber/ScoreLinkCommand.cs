@@ -1,13 +1,6 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using DSharpPlus;
+﻿using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
-using DSharpPlus.Entities;
-using DSharpPlus.EventArgs;
-using DSharpPlus.Interactivity;
-using DSharpPlus.Interactivity.Extensions;
 using Microsoft.Extensions.Logging;
 using POI.Core.Services;
 using POI.DiscordDotNet.Services;
@@ -45,52 +38,21 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 				return;
 			}
 
-			var messageBuilder = CreateScoreSaberProfileEmbed(ctx, playerProfile);
-
-
-			var buttons = new[]
+			var scoreLinkApproval = await WaitForScoreLinkConfirmation(ctx, playerProfile, "ScoreLink request confirmation?").ConfigureAwait(false);
+			switch (scoreLinkApproval)
 			{
-				new DiscordButtonComponent(ButtonStyle.Success, "approve", "✅"),
-				new DiscordButtonComponent(ButtonStyle.Danger, "deny", "🚫")
-			};
-			messageBuilder.AddComponents(buttons.Cast<DiscordComponent>());
+				case true:
+					await CreateScoreLink(discordId, scoreSaberId).ConfigureAwait(false);
+					// TODO: Role assignment logic
 
-			var discordMessage = await ctx.Message.RespondAsync(messageBuilder).ConfigureAwait(false);
-
-			var itv = ctx.Client.GetInteractivity();
-
-			var hasResponded = false;
-			InteractivityResult<ComponentInteractionCreateEventArgs>? task = null;
-			while (!hasResponded)
-			{
-				task = await itv.WaitForButtonAsync(discordMessage, buttons, TimeSpan.FromHours(2));
-
-				if (task.Value.TimedOut)
-				{
-					await ctx.Message.RespondAsync("Mea culpa, I timed out :c").ConfigureAwait(false);
 					break;
-				}
-
-				await task.Value.Result.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate);
-				hasResponded = task.Value.Result.User.Id is 148824637004840961 or 261830384663134209;
+				case false:
+					await ctx.Message.RespondAsync("I'm sorry, your scorelink request was denied :c").ConfigureAwait(false);
+					break;
+				case null:
+					await ctx.Message.RespondAsync("Uh oh... it seems like nobody reviewed your scorelink request in the past 2 hours, please try again when more people are awake ^^").ConfigureAwait(false);
+					break;
 			}
-
-			if (hasResponded && task != null)
-			{
-				await ctx.RespondAsync($"{task.Value.Result.User.Username} has responded with actionId: {task.Value.Result.Id}").ConfigureAwait(false);
-
-				if (task.Value.Result.Id == "approve")
-				{
-					await CreateScoreLink(ctx.Message.Author.Id.ToString(), scoreSaberId).ConfigureAwait(false);
-				}
-			}
-		}
-
-		protected DiscordEmbedBuilder EnrichProfileEmbedBuilderShared(DiscordEmbedBuilder embedBuilder)
-		{
-			embedBuilder.WithFooter($"Time remaining: <t:{DateTimeOffset.Now.AddHours(2).ToUnixTimeSeconds()}:R>");
-
-			return embedBuilder;
 		}
 	}
 }

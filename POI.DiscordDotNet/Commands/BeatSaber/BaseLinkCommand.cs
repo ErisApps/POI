@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
+using DSharpPlus.EventArgs;
+using DSharpPlus.Interactivity;
+using DSharpPlus.Interactivity.Extensions;
 using Microsoft.Extensions.Logging;
 using POI.Core.Models.ScoreSaber.Profile;
 using POI.Core.Services;
@@ -15,6 +18,9 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 {
 	public abstract class BaseLinkCommand : BeatSaberCommandsModule
 	{
+		private const string APPROVE_ACTION_ID = "approve";
+		private const string DENY_ACTION_ID = "deny";
+
 		private readonly ILogger<BaseLinkCommand> _logger;
 		private readonly ScoreSaberLinkService _scoreSaberLinkService;
 		private readonly ScoreSaberApiService _scoreSaberApiService;
@@ -63,21 +69,49 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 			return playerInfo;
 		}
 
-		protected static DiscordMessageBuilder CreateScoreSaberProfileEmbed(CommandContext ctx, BasicProfile basicProfile)
+		protected static async Task<bool?> WaitForScoreLinkConfirmation(CommandContext ctx, BasicProfile basicProfile, string title)
 		{
 			var messageBuilder = new DiscordMessageBuilder();
 			var embedBuilder = new DiscordEmbedBuilder()
 				.WithPoiColor()
 				.WithAuthor(ctx.User.Username, iconUrl: ctx.User.GetAvatarUrl(ImageFormat.Auto, 256))
 				.WithThumbnail(basicProfile.ProfilePicture)
-				.WithTitle("ScoreSaberId Regex matching and validation result")
+				.WithTitle(title)
+				.WithDescription("ScoreSaberId Regex matching and validation result")
 				.AddField("Name", basicProfile.Name, true)
 				.AddField("Country", basicProfile.Country, true)
-				.AddField("Rank", basicProfile.Rank.ToString(), true);
+				.AddField("Rank", basicProfile.Rank.ToString(), true)
+				.WithFooter($"Request valid for 2 hours (until: {DateTimeOffset.Now.AddHours(2):G}");
 
 			messageBuilder.WithEmbed(embedBuilder.Build());
 
-			return messageBuilder;
+			var buttons = new[]
+			{
+				new DiscordButtonComponent(ButtonStyle.Success, APPROVE_ACTION_ID, "✅"),
+				new DiscordButtonComponent(ButtonStyle.Danger, DENY_ACTION_ID, "🚫")
+			};
+			messageBuilder.AddComponents(buttons.Cast<DiscordComponent>());
+
+			var discordMessage = await ctx.Message.RespondAsync(messageBuilder).ConfigureAwait(false);
+
+			var itv = ctx.Client.GetInteractivity();
+
+			bool hasResponded;
+			InteractivityResult<ComponentInteractionCreateEventArgs>? interactivityResult;
+			do
+			{
+				interactivityResult = await itv.WaitForButtonAsync(discordMessage, buttons, TimeSpan.FromHours(2));
+
+				if (interactivityResult.Value.TimedOut)
+				{
+					return null;
+				}
+
+				await interactivityResult.Value.Result.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate);
+				hasResponded = interactivityResult.Value.Result.User.Id is 148824637004840961 or 261830384663134209;
+			} while (!hasResponded);
+
+			return (interactivityResult.Value.Result.Id == APPROVE_ACTION_ID);
 		}
 
 		protected async Task<string?> ExtractScoreSaberId(CommandContext ctx)
@@ -91,11 +125,13 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 			if (args.Count != 1)
 			{
 				await _logger.LogError(ctx, "No ScoreSaber profile provided", false).ConfigureAwait(false);
+				return null;
 			}
 
 			if (!args.First().ExtractScoreSaberId(out var scoreSaberId))
 			{
 				await _logger.LogError(ctx, "Seems like this profile doesn't exist", false).ConfigureAwait(false);
+				return null;
 			}
 
 			return scoreSaberId;
