@@ -43,6 +43,9 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 			{
 				case true:
 					await CreateScoreLink(discordId, scoreSaberId).ConfigureAwait(false);
+
+					await ctx.Message.RespondAsync("Yay, congrats. Your scorelink request was approved. ^^").ConfigureAwait(false);
+
 					// TODO: Role assignment logic
 
 					break;
@@ -53,6 +56,32 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 					await ctx.Message.RespondAsync("Uh oh... it seems like nobody reviewed your scorelink request in the past 2 hours, please try again when more people are awake ^^").ConfigureAwait(false);
 					break;
 			}
+		}
+
+		private async Task<bool> CheckScoreLinkConflicts(CommandContext ctx, string discordId, string scoreSaberId)
+		{
+			// Check discordId conflict
+			var scoreSaberLink = await ScoreSaberLinkService.LookupLinkByDiscordId(discordId);
+			if (scoreSaberLink != null)
+			{
+				if (scoreSaberLink.ScoreSaberId == scoreSaberId)
+				{
+					await ctx.Message.RespondAsync($"Your account is already linked to https://scoresaber.com/u/{scoreSaberLink.DiscordId}! O.o").ConfigureAwait(false);
+					return true;
+				}
+
+				await ctx.Message.RespondAsync($"⚠️Warning: Your account is currently linked to https://scoresaber.com/u/{scoreSaberLink.DiscordId}! Are you sure you want to relink? O.o").ConfigureAwait(false);
+			}
+
+			// Check scoreSaberId conflict
+			scoreSaberLink = await ScoreSaberLinkService.LookupLinkByScoreSaberId(scoreSaberId);
+			if (scoreSaberLink != null)
+			{
+				await ctx.Message.RespondAsync($"ScoreSaber account is already linked to <@!{scoreSaberLink.DiscordId}>! O.o").ConfigureAwait(false);
+				return true;
+			}
+
+			return false;
 		}
 	}
 }

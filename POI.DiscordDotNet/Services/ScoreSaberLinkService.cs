@@ -18,19 +18,23 @@ namespace POI.DiscordDotNet.Services
 			_mongoDbService = mongoDbService;
 		}
 
-		internal async Task<string?> LookupScoreSaberId(string discordId)
-		{
-			return (await LookupScoreSaberLink(link => link.DiscordId == discordId).ConfigureAwait(false))?.ScoreSaberId;
-		}
+		internal Task<ScoreSaberLink?> LookupLinkByDiscordId(string discordId) => LookupScoreSaberLink(link => link.DiscordId == discordId);
 
-		internal async Task<string?> LookupDiscordId(string scoreSaberId)
-		{
-			return (await LookupScoreSaberLink(link => link.ScoreSaberId == scoreSaberId).ConfigureAwait(false))?.DiscordId;
-		}
+		internal Task<ScoreSaberLink?> LookupLinkByScoreSaberId(string scoreSaberId) => LookupScoreSaberLink(link => link.ScoreSaberId == scoreSaberId);
 
-		internal Task CreateScoreSaberLink(string discordId, string scoreSaberId)
+		internal async Task<string?> LookupScoreSaberId(string discordId) => (await LookupLinkByDiscordId(discordId).ConfigureAwait(false))?.ScoreSaberId;
+
+		internal async Task<string?> LookupDiscordId(string scoreSaberId) => (await LookupLinkByScoreSaberId(scoreSaberId).ConfigureAwait(false))?.DiscordId;
+
+		internal Task CreateOrUpdateScoreSaberLink(string discordId, string scoreSaberId)
 		{
-			return GetScoreSaberLinkCollection().InsertOneAsync(new ScoreSaberLink(discordId, scoreSaberId));
+			return GetScoreSaberLinkCollection().ReplaceOneAsync(
+				link => link.DiscordId == discordId,
+				new ScoreSaberLink(discordId, scoreSaberId),
+				new ReplaceOptions
+				{
+					IsUpsert = true
+				});
 		}
 
 		private async Task<ScoreSaberLink?> LookupScoreSaberLink(Expression<Func<ScoreSaberLink, bool>> predicate)

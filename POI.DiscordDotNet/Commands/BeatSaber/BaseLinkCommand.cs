@@ -22,40 +22,21 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 		private const string DENY_ACTION_ID = "deny";
 
 		private readonly ILogger<BaseLinkCommand> _logger;
-		private readonly ScoreSaberLinkService _scoreSaberLinkService;
 		private readonly ScoreSaberApiService _scoreSaberApiService;
+
+		protected readonly ScoreSaberLinkService ScoreSaberLinkService;
 
 		protected BaseLinkCommand(ILogger<BaseLinkCommand> logger, ScoreSaberApiService scoreSaberApiService, ScoreSaberLinkService scoreSaberLinkService)
 		{
 			_logger = logger;
 			_scoreSaberApiService = scoreSaberApiService;
-			_scoreSaberLinkService = scoreSaberLinkService;
+
+			ScoreSaberLinkService = scoreSaberLinkService;
 		}
 
 		public virtual async Task Handle(CommandContext ctx, string _)
 		{
 			await ctx.TriggerTypingAsync().ConfigureAwait(false);
-		}
-
-		protected async Task<bool> CheckScoreLinkConflicts(CommandContext ctx, string discordId, string scoreSaberId)
-		{
-			// Lookup scoreSaberId
-			var lookupSoreSaberIdLink = await _scoreSaberLinkService.LookupDiscordId(scoreSaberId);
-			if (lookupSoreSaberIdLink != null)
-			{
-				await ctx.Message.RespondAsync($"ScoreSaber account is already linked to <@!{lookupSoreSaberIdLink}>! O.o").ConfigureAwait(false);
-				return true;
-			}
-
-			// Lookup discordId
-			var lookupDiscordIdLink = await _scoreSaberLinkService.LookupScoreSaberId(discordId);
-			if (lookupDiscordIdLink != null)
-			{
-				await ctx.Message.RespondAsync($"Your account is already linked to https://scoresaber.com/u/{lookupDiscordIdLink}! O.o").ConfigureAwait(false);
-				return true;
-			}
-
-			return false;
 		}
 
 		protected async Task<BasicProfile?> FetchScoreSaberProfile(CommandContext ctx, string scoreSaberId)
@@ -139,7 +120,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 
 		protected Task CreateScoreLink(string discordId, string scoreSaberId)
 		{
-			return _scoreSaberLinkService.CreateScoreSaberLink(discordId, scoreSaberId);
+			return ScoreSaberLinkService.CreateOrUpdateScoreSaberLink(discordId, scoreSaberId);
 		}
 	}
 }
