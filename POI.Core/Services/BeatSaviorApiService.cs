@@ -114,9 +114,9 @@ namespace POI.Core.Services
 			{
 				_logger.LogError("The content type is not supported");
 			}
-			catch (JsonException) // Invalid JSON
+			catch (JsonException ex) // Invalid JSON
 			{
-				_logger.LogError("Invalid JSON");
+				_logger.LogError(ex, "Invalid JSON for call: {Url}", url);
 			}
 
 			return null;
