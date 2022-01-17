@@ -62,7 +62,6 @@ namespace POI.DiscordDotNet.Commands.Admin
 
 					await ctx.Message.RespondAsync($"Yay, congrats <@{discordId}>. Your forcelink request was approved. ^^").ConfigureAwait(false);
 
-					// TODO: Role assignment logic
 					break;
 				case false:
 					await ctx.Message.RespondAsync($"I'm sorry, the forcelink request for user {user.Username} was denied :c").ConfigureAwait(false);
