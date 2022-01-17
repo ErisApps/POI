@@ -5,7 +5,7 @@ using POI.Core.Models.ScoreSaber.Profile;
 namespace POI.Core.Models.ScoreSaber.Wrappers
 {
 	/// <remark>
-	/// This class matches the PlayersCollection object in the swagger documentation
+	/// This class matches the PlayerCollection object in the swagger documentation
 	/// </remark>
 	public class PlayersWrapper : BaseWrapper
 	{
