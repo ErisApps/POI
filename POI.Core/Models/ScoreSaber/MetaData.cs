@@ -13,7 +13,7 @@ namespace POI.Core.Models.ScoreSaber
 		[JsonPropertyName("itemsPerPage")]
 		public uint ItemsPerPage { get; }
 
-		[Newtonsoft.Json.JsonConstructor]
+		[JsonConstructor]
 		public MetaData(uint total, uint page, uint itemsPerPage)
 		{
 			Total = total;

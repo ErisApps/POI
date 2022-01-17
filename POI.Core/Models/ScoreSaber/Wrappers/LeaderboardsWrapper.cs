@@ -9,6 +9,7 @@ namespace POI.Core.Models.ScoreSaber.Wrappers
 		[JsonPropertyName("leaderboards")]
 		public List<LeaderboardInfo> Leaderboards { get; }
 
+		[JsonConstructor]
 		public LeaderboardsWrapper(List<LeaderboardInfo> leaderboards, MetaData metaData) : base(metaData)
 		{
 			Leaderboards = leaderboards;

@@ -12,6 +12,7 @@ namespace POI.Core.Models.ScoreSaber.Wrappers
 		[JsonPropertyName("players")]
 		public List<ExtendedBasicProfile> Players { get; }
 
+		[JsonConstructor]
 		public PlayersWrapper(List<ExtendedBasicProfile> players, MetaData metaData) : base(metaData)
 		{
 			Players = players;
