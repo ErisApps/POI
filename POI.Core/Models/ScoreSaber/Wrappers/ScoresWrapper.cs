@@ -4,6 +4,9 @@ using POI.Core.Models.ScoreSaber.Scores;
 
 namespace POI.Core.Models.ScoreSaber.Wrappers
 {
+	/// <remark>
+	/// This class matches the ScoreCollection object in the swagger documentation
+	/// </remark>
 	public class ScoresWrapper : BaseWrapper
 	{
 		[JsonPropertyName("scores")]
