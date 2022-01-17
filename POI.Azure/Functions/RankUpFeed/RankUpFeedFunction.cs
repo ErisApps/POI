@@ -53,12 +53,12 @@ namespace POI.Azure.Functions.RankUpFeed
 				logger.LogInformation("Fetching page {PageNumber} for players", internalPage);
 
 				var playersPage = await scoreSaberApiService.FetchPlayers(internalPage, countries: new[] { "BE" }).ConfigureAwait(false);
-				if (players == null)
+				if (playersPage == null)
 				{
 					throw new Exception();
 				}
 
-				players.AddRange(playersPage!);
+				players.AddRange(playersPage.Players);
 			}
 
 			// TODO: Fetch linked non-BE peeps

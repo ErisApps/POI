@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -14,7 +13,7 @@ using NodaTime.Serialization.SystemTextJson;
 using POI.Core.Exceptions;
 using POI.Core.Helpers.JSON;
 using POI.Core.Models.ScoreSaber.Profile;
-using POI.Core.Models.ScoreSaber.Scores;
+using POI.Core.Models.ScoreSaber.Wrappers;
 using POI.Core.Services.Interfaces;
 using Polly;
 using Polly.Bulkhead;
@@ -113,17 +112,17 @@ namespace POI.Core.Services
 			return FetchDataClass($"{SCORESABER_API_BASEURL}player/{scoreSaberId}/full", _scoreSaberSerializerContext.FullProfile);
 		}
 
-		public Task<List<PlayerScore>?> FetchRecentSongsScorePage(string scoreSaberId, uint page, uint? limit = null)
+		public Task<PlayerScoresWrapper?> FetchRecentSongsScorePage(string scoreSaberId, uint page, uint? limit = null)
 		{
 			return FetchPlayerScores(scoreSaberId, page, SortType.Recent, limit);
 		}
 
-		public Task<List<PlayerScore>?> FetchTopSongsScorePage(string scoreSaberId, uint page, uint? limit = null)
+		public Task<PlayerScoresWrapper?> FetchTopSongsScorePage(string scoreSaberId, uint page, uint? limit = null)
 		{
 			return FetchPlayerScores(scoreSaberId, page, SortType.Top, limit);
 		}
 
-		public Task<List<PlayerScore>?> FetchPlayerScores(string scoreSaberId, uint page, SortType sortType, uint? limit = null)
+		public Task<PlayerScoresWrapper?> FetchPlayerScores(string scoreSaberId, uint page, SortType sortType, uint? limit = null)
 		{
 			var urlBuilder = new StringBuilder(SCORESABER_API_BASEURL + "player/" + scoreSaberId + "/scores?page=" + page + "&sort=" + sortType.ToString("G").ToLower());
 			if (limit != null)
@@ -136,12 +135,12 @@ namespace POI.Core.Services
 				urlBuilder.Append("&limit=").Append(limit);
 			}
 
-			return FetchDataClass(urlBuilder.ToString(), _scoreSaberSerializerContext.ListPlayerScore);
+			return FetchDataClass(urlBuilder.ToString(), _scoreSaberSerializerContext.PlayerScoresWrapper);
 		}
 
 		// TODO: Add intermediate model inheriting from BasicProfile that contains ScoreStats but doesn't have badges
 		// using FullProfile would be violating the nullability constraint of the Badges property
-		public Task<List<BasicProfile>?> FetchPlayers(uint page, string? searchQuery = null, string[]? countries = null)
+		public Task<PlayersWrapper?> FetchPlayers(uint page, string? searchQuery = null, string[]? countries = null)
 		{
 			var urlBuilder = new StringBuilder(SCORESABER_API_BASEURL + "players?page=" + page);
 			if (searchQuery != null)
@@ -155,7 +154,7 @@ namespace POI.Core.Services
 				urlBuilder.Append("?countries=").Append(string.Join(',', countries));
 			}
 
-			return FetchDataClass(urlBuilder.ToString(), _scoreSaberSerializerContext.ListBasicProfile);
+			return FetchDataClass(urlBuilder.ToString(), _scoreSaberSerializerContext.PlayersWrapper);
 		}
 
 		public Task<Refresh?> RefreshProfile(string scoreSaberId)

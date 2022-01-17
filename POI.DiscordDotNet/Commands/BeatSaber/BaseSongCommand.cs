@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,6 +11,7 @@ using NodaTime;
 using POI.Core.Models.BeatSavior;
 using POI.Core.Models.ScoreSaber.Profile;
 using POI.Core.Models.ScoreSaber.Scores;
+using POI.Core.Models.ScoreSaber.Wrappers;
 using POI.Core.Services;
 using POI.DiscordDotNet.Commands.Modules;
 using POI.DiscordDotNet.Extensions;
@@ -48,7 +48,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 			_erisSignaturePath = erisSignaturePath;
 		}
 
-		protected abstract Task<List<PlayerScore>?> FetchScorePage(string playerId, uint page);
+		protected abstract Task<PlayerScoresWrapper?> FetchScorePage(string playerId, uint page);
 
 		// ReSharper disable once CognitiveComplexity
 		protected async Task GenerateScoreImageAndSendInternal(CommandContext ctx)
@@ -81,9 +81,9 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 
 			PlayerScore requestedSong;
 			var localSongIndex = --nthSong % ScoreSaberApiService.PLAYS_PER_PAGE;
-			if (songPage.Count > localSongIndex)
+			if (songPage.PlayerScores.Count > localSongIndex)
 			{
-				requestedSong = songPage[localSongIndex];
+				requestedSong = songPage.PlayerScores[localSongIndex];
 			}
 			else
 			{
