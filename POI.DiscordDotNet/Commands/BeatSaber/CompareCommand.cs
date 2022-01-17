@@ -109,7 +109,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 				new[] {profile1.ScoreStats.TotalRankedCount.ToString("N0"), "Ranked Play Count", profile2.ScoreStats.TotalRankedCount.ToString("N0")},
 				new[] {profile1.ScoreStats.TotalScore.ToString("N0"), "Score", profile2.ScoreStats.TotalScore.ToString("N0")},
 				new[] {profile1.ScoreStats.TotalRankedScore.ToString("N0"), "Ranked Score", profile2.ScoreStats.TotalRankedScore.ToString("N0")},
-				new[] {profile1TopPage[0].Score.Pp.ToString("N2"), "Top PP Play", profile2TopPage[0].Score.Pp.ToString("N2")}
+				new[] {profile1TopPage.PlayerScores[0].Score.Pp.ToString("N2"), "Top PP Play", profile2TopPage.PlayerScores[0].Score.Pp.ToString("N2")}
 			};
 
 			await using var memoryStream = new MemoryStream();
