@@ -121,6 +121,8 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 		protected Task CreateScoreLink(string discordId, string scoreSaberId)
 		{
 			return ScoreSaberLinkService.CreateOrUpdateScoreSaberLink(discordId, scoreSaberId);
+
+			// TODO: Role assignment logic (Preferably call into service)
 		}
 	}
 }

@@ -46,8 +46,6 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 
 					await ctx.Message.RespondAsync("Yay, congrats. Your scorelink request was approved. ^^").ConfigureAwait(false);
 
-					// TODO: Role assignment logic
-
 					break;
 				case false:
 					await ctx.Message.RespondAsync("I'm sorry, your scorelink request was denied :c").ConfigureAwait(false);
