@@ -4,8 +4,7 @@
         <TargetFramework>net6.0</TargetFramework>
         <OutputType>Exe</OutputType>
         <Nullable>enable</Nullable>
-        <AssemblyVersion>2.0.0</AssemblyVersion>
-        <FileVersion>2.0.0</FileVersion>
+        <AssemblyVersion>2.1.0</AssemblyVersion>
     </PropertyGroup>
 
     <ItemGroup>
