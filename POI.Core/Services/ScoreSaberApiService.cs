@@ -138,8 +138,6 @@ namespace POI.Core.Services
 			return FetchDataClass(urlBuilder.ToString(), _scoreSaberSerializerContext.PlayerScoresWrapper);
 		}
 
-		// TODO: Add intermediate model inheriting from BasicProfile that contains ScoreStats but doesn't have badges
-		// using FullProfile would be violating the nullability constraint of the Badges property
 		public Task<PlayersWrapper?> FetchPlayers(uint page, string? searchQuery = null, string[]? countries = null)
 		{
 			var urlBuilder = new StringBuilder(SCORESABER_API_BASEURL + "players?page=" + page);
