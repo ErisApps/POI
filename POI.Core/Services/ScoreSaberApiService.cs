@@ -208,11 +208,11 @@ namespace POI.Core.Services
 			return (false, default);
 		}
 
-		public async Task<byte[]?> FetchImageFromCdn(string url)
+		public async Task<byte[]?> FetchImageFromCdn(string url, CancellationToken cancellationToken = default)
 		{
 			try
 			{
-				return await _scoreSaberImageRetryPolicy.ExecuteAsync(() => _scoreSaberApiClient.GetByteArrayAsync(url));
+				return await _scoreSaberImageRetryPolicy.ExecuteAsync(ct => _scoreSaberApiClient.GetByteArrayAsync(url, ct), cancellationToken);
 			}
 			catch (Exception e)
 			{
