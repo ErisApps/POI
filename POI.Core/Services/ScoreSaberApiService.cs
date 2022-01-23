@@ -193,7 +193,7 @@ namespace POI.Core.Services
 			{
 				try
 				{
-					return (true, await response.Content.ReadFromJsonAsync(jsonResponseTypeInfo).ConfigureAwait(false));
+					return (true, await response.Content.ReadFromJsonAsync(jsonResponseTypeInfo, cancellationToken).ConfigureAwait(false));
 				}
 				catch (NotSupportedException) // When content type is not valid
 				{
