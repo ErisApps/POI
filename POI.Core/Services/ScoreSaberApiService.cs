@@ -103,27 +103,27 @@ namespace POI.Core.Services
 				.WaitAndRetryAsync(3, _ => TimeSpan.FromSeconds(10));
 		}
 
-		public Task<BasicProfile?> FetchBasicPlayerProfile(string scoreSaberId, CancellationToken? cancellationToken = null)
+		public Task<BasicProfile?> FetchBasicPlayerProfile(string scoreSaberId, CancellationToken cancellationToken = default)
 		{
 			return FetchDataClass($"{SCORESABER_API_BASEURL}player/{scoreSaberId}/basic", _scoreSaberSerializerContext.BasicProfile, cancellationToken);
 		}
 
-		public Task<FullProfile?> FetchFullPlayerProfile(string scoreSaberId, CancellationToken? cancellationToken = null)
+		public Task<FullProfile?> FetchFullPlayerProfile(string scoreSaberId, CancellationToken cancellationToken = default)
 		{
 			return FetchDataClass($"{SCORESABER_API_BASEURL}player/{scoreSaberId}/full", _scoreSaberSerializerContext.FullProfile, cancellationToken);
 		}
 
-		public Task<PlayerScoresWrapper?> FetchRecentSongsScorePage(string scoreSaberId, uint page, uint? limit = null, CancellationToken? cancellationToken = null)
+		public Task<PlayerScoresWrapper?> FetchRecentSongsScorePage(string scoreSaberId, uint page, uint? limit = null, CancellationToken cancellationToken = default)
 		{
 			return FetchPlayerScores(scoreSaberId, page, SortType.Recent, limit, cancellationToken);
 		}
 
-		public Task<PlayerScoresWrapper?> FetchTopSongsScorePage(string scoreSaberId, uint page, uint? limit = null, CancellationToken? cancellationToken = null)
+		public Task<PlayerScoresWrapper?> FetchTopSongsScorePage(string scoreSaberId, uint page, uint? limit = null, CancellationToken cancellationToken = default)
 		{
 			return FetchPlayerScores(scoreSaberId, page, SortType.Top, limit, cancellationToken);
 		}
 
-		public Task<PlayerScoresWrapper?> FetchPlayerScores(string scoreSaberId, uint page, SortType sortType, uint? limit = null, CancellationToken? cancellationToken = null)
+		public Task<PlayerScoresWrapper?> FetchPlayerScores(string scoreSaberId, uint page, SortType sortType, uint? limit = null, CancellationToken cancellationToken = default)
 		{
 			var urlBuilder = new StringBuilder(SCORESABER_API_BASEURL + "player/" + scoreSaberId + "/scores?page=" + page + "&sort=" + sortType.ToString("G").ToLower());
 			if (limit != null)
@@ -139,7 +139,7 @@ namespace POI.Core.Services
 			return FetchDataClass(urlBuilder.ToString(), _scoreSaberSerializerContext.PlayerScoresWrapper, cancellationToken);
 		}
 
-		public Task<PlayersWrapper?> FetchPlayers(uint page, string? searchQuery = null, string[]? countries = null, CancellationToken? cancellationToken = null)
+		public Task<PlayersWrapper?> FetchPlayers(uint page, string? searchQuery = null, string[]? countries = null, CancellationToken cancellationToken = default)
 		{
 			var urlBuilder = new StringBuilder(SCORESABER_API_BASEURL + "players?page=" + page);
 			if (searchQuery != null)
@@ -156,7 +156,7 @@ namespace POI.Core.Services
 			return FetchDataClass(urlBuilder.ToString(), _scoreSaberSerializerContext.PlayersWrapper, cancellationToken);
 		}
 
-		public Task<Refresh?> RefreshProfile(string scoreSaberId, CancellationToken? cancellationToken = null)
+		public Task<Refresh?> RefreshProfile(string scoreSaberId, CancellationToken cancellationToken = default)
 		{
 			if (scoreSaberId.Length != 17 || scoreSaberId.StartsWith("7"))
 			{
@@ -174,20 +174,20 @@ namespace POI.Core.Services
 			}
 		}
 
-		private async Task<TResponse?> FetchDataClass<TResponse>(string url, JsonTypeInfo<TResponse> jsonResponseTypeInfo, CancellationToken? cancellationToken = null) where TResponse : class
+		private async Task<TResponse?> FetchDataClass<TResponse>(string url, JsonTypeInfo<TResponse> jsonResponseTypeInfo, CancellationToken cancellationToken = default) where TResponse : class
 		{
 			return (await FetchData(url, jsonResponseTypeInfo, cancellationToken).ConfigureAwait(false)).response;
 		}
 
-		private async Task<TResponse?> FetchDataStruct<TResponse>(string url, JsonTypeInfo<TResponse> jsonResponseTypeInfo, CancellationToken? cancellationToken = null) where TResponse : struct
+		private async Task<TResponse?> FetchDataStruct<TResponse>(string url, JsonTypeInfo<TResponse> jsonResponseTypeInfo, CancellationToken cancellationToken = default) where TResponse : struct
 		{
 			var (success, response) = await FetchData(url, jsonResponseTypeInfo, cancellationToken).ConfigureAwait(false);
 			return success ? response : null;
 		}
 
-		private async Task<(bool success, TResponse? response)> FetchData<TResponse>(string url, JsonTypeInfo<TResponse> jsonResponseTypeInfo, CancellationToken? cancellationToken = null)
+		private async Task<(bool success, TResponse? response)> FetchData<TResponse>(string url, JsonTypeInfo<TResponse> jsonResponseTypeInfo, CancellationToken cancellationToken = default)
 		{
-			using var response = await _scoreSaberApiChainedRateLimitPolicy.ExecuteAsync(() => _scoreSaberApiClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, cancellationToken ?? CancellationToken.None));
+			using var response = await _scoreSaberApiChainedRateLimitPolicy.ExecuteAsync(() => _scoreSaberApiClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, cancellationToken));
 
 			if (response.IsSuccessStatusCode)
 			{
