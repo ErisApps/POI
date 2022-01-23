@@ -187,7 +187,7 @@ namespace POI.Core.Services
 
 		private async Task<(bool success, TResponse? response)> FetchData<TResponse>(string url, JsonTypeInfo<TResponse> jsonResponseTypeInfo, CancellationToken cancellationToken = default)
 		{
-			using var response = await _scoreSaberApiChainedRateLimitPolicy.ExecuteAsync(() => _scoreSaberApiClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, cancellationToken));
+			using var response = await _scoreSaberApiChainedRateLimitPolicy.ExecuteAsync(ct => _scoreSaberApiClient.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, ct), cancellationToken);
 
 			if (response.IsSuccessStatusCode)
 			{
