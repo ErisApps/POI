@@ -151,7 +151,7 @@ namespace POI.Core.Services
 
 			if (countries is { Length: > 0 })
 			{
-				urlBuilder.Append("?countries=").Append(string.Join(',', countries));
+				urlBuilder.Append("&countries=").Append(string.Join(',', countries));
 			}
 
 			return FetchDataClass(urlBuilder.ToString(), _scoreSaberSerializerContext.PlayersWrapper);
