@@ -12,10 +12,10 @@ namespace POI.Core.Models.ScoreSaber.Scores
 		public uint Rank { get; }
 
 		[JsonPropertyName("baseScore")]
-		public ulong BaseScore { get; }
+		public int BaseScore { get; }
 
 		[JsonPropertyName("modifiedScore")]
-		public ulong ModifiedScore { get; }
+		public int ModifiedScore { get; }
 
 		[JsonPropertyName("pp")]
 		public double Pp { get; }
@@ -52,7 +52,7 @@ namespace POI.Core.Models.ScoreSaber.Scores
 		public bool HasReplay { get; }
 
 		[JsonConstructor]
-		public Score(uint id, uint rank, ulong baseScore, ulong modifiedScore, double pp, double weight, string modifiers, double multiplier, uint badCuts, uint missedNotes, uint maxCombo,
+		public Score(uint id, uint rank, int baseScore, int modifiedScore, double pp, double weight, string modifiers, double multiplier, uint badCuts, uint missedNotes, uint maxCombo,
 			bool fullCombo, HMD hmd, Instant timeSet, bool hasReplay)
 		{
 			Id = id;
