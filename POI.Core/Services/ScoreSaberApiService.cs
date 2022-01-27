@@ -83,7 +83,7 @@ namespace POI.Core.Services
 					});
 
 			_scoreSaberApiBulkheadPolicy = Policy.BulkheadAsync<HttpResponseMessage>(
-				1,
+				4,
 				MAX_BULKHEAD_QUEUE_SIZE, // Allow calls to queue indef
 				_ =>
 				{
