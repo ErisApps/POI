@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization.Metadata;
@@ -14,6 +16,7 @@ using NodaTime.Serialization.SystemTextJson;
 using POI.Core.Exceptions;
 using POI.Core.Helpers.JSON;
 using POI.Core.Models.ScoreSaber.Profile;
+using POI.Core.Models.ScoreSaber.Scores;
 using POI.Core.Models.ScoreSaber.Wrappers;
 using POI.Core.Services.Interfaces;
 using Polly;
@@ -118,9 +121,19 @@ namespace POI.Core.Services
 			return FetchPlayerScores(scoreSaberId, page, SortType.Recent, limit, cancellationToken);
 		}
 
+		public IAsyncEnumerable<PlayerScore> FetchPlayerRecentScoresPaged(string scoreSaberId, uint? itemsPerPage = null, CancellationToken cancellationToken = default)
+		{
+			return FetchPlayerScoresPaged(scoreSaberId, SortType.Recent, itemsPerPage, cancellationToken);
+		}
+
 		public Task<PlayerScoresWrapper?> FetchTopSongsScorePage(string scoreSaberId, uint page, uint? limit = null, CancellationToken cancellationToken = default)
 		{
 			return FetchPlayerScores(scoreSaberId, page, SortType.Top, limit, cancellationToken);
+		}
+
+		public IAsyncEnumerable<PlayerScore> FetchPlayerTopScoresPaged(string scoreSaberId, uint? itemsPerPage = null, CancellationToken cancellationToken = default)
+		{
+			return FetchPlayerScoresPaged(scoreSaberId, SortType.Top, itemsPerPage, cancellationToken);
 		}
 
 		public Task<PlayerScoresWrapper?> FetchPlayerScores(string scoreSaberId, uint page, SortType sortType, uint? limit = null, CancellationToken cancellationToken = default)
@@ -139,6 +152,33 @@ namespace POI.Core.Services
 			return FetchDataClass(urlBuilder.ToString(), _scoreSaberSerializerContext.PlayerScoresWrapper, cancellationToken);
 		}
 
+		public async IAsyncEnumerable<PlayerScore> FetchPlayerScoresPaged(string scoreSaberId, SortType sortType, uint? itemsPerPage = null,
+			[EnumeratorCancellation] CancellationToken cancellationToken = default)
+		{
+			uint returnedPlayerCount = 0;
+			uint totalPlayerCount;
+
+			uint pagesReturned = 0;
+
+			do
+			{
+				var playerScoresWrapper = await FetchPlayerScores(scoreSaberId, ++pagesReturned, sortType, itemsPerPage, cancellationToken);
+				if (playerScoresWrapper == null)
+				{
+					_logger.LogWarning("Something went wrong :c");
+					yield break;
+				}
+
+				returnedPlayerCount += (uint) playerScoresWrapper.PlayerScores.Count;
+				totalPlayerCount = playerScoresWrapper.MetaData.Total;
+
+				foreach (var score in playerScoresWrapper.PlayerScores)
+				{
+					yield return score;
+				}
+			} while (returnedPlayerCount < totalPlayerCount);
+		}
+
 		public Task<PlayersWrapper?> FetchPlayers(uint page, string? searchQuery = null, string[]? countries = null, CancellationToken cancellationToken = default)
 		{
 			var urlBuilder = new StringBuilder(SCORESABER_API_BASEURL + "players?page=" + page);
@@ -154,6 +194,33 @@ namespace POI.Core.Services
 			}
 
 			return FetchDataClass(urlBuilder.ToString(), _scoreSaberSerializerContext.PlayersWrapper, cancellationToken);
+		}
+
+		public async IAsyncEnumerable<ExtendedBasicProfile> FetchPlayersPaged(string? searchQuery = null, string[]? countries = null,
+			[EnumeratorCancellation] CancellationToken cancellationToken = default)
+		{
+			uint returnedPlayerCount = 0;
+			uint totalPlayerCount;
+
+			uint pagesReturned = 0;
+
+			do
+			{
+				var playersWrapper = await FetchPlayers(++pagesReturned, searchQuery, countries, cancellationToken);
+				if (playersWrapper == null)
+				{
+					_logger.LogWarning("Something went wrong :c");
+					yield break;
+				}
+
+				returnedPlayerCount += (uint) playersWrapper.Players.Count;
+				totalPlayerCount = playersWrapper.MetaData.Total;
+
+				foreach (var player in playersWrapper.Players)
+				{
+					yield return player;
+				}
+			} while (returnedPlayerCount < totalPlayerCount);
 		}
 
 		public Task<Refresh?> RefreshProfile(string scoreSaberId, CancellationToken cancellationToken = default)
