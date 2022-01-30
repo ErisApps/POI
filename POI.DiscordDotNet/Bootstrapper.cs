@@ -14,6 +14,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using POI.Core.Extensions;
 using POI.Core.Services.Interfaces;
+using POI.DiscordDotNet.Jobs;
 using POI.DiscordDotNet.Services;
 using POI.DiscordDotNet.Services.Interfaces;
 using Quartz;
@@ -90,6 +91,8 @@ namespace POI.DiscordDotNet
 					sc.AddSingleton<UptimeManagementService>();
 					sc.AddSingleton<ScoreSaberLinkService>();
 
+					sc.AddSingleton<RankUpFeedJob>();
+
 					sc.AddQuartz(q =>
 					{
 						// handy when part of cluster or you want to otherwise identify multiple schedulers
@@ -105,6 +108,11 @@ namespace POI.DiscordDotNet
 						{
 							tp.MaxConcurrency = 5;
 						});
+
+						q.ScheduleJob<RankUpFeedJob>(trigger => trigger
+							.WithIdentity("RankUpFeed Trigger")
+							.StartNow());
+						//.WithSchedule(CronScheduleBuilder.CronSchedule("0 0/5 * * * ?")));
 					});
 				}).Build();
 
