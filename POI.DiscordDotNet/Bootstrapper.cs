@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Specialized;
 using System.Globalization;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -15,6 +16,7 @@ using POI.Core.Extensions;
 using POI.Core.Services.Interfaces;
 using POI.DiscordDotNet.Services;
 using POI.DiscordDotNet.Services.Interfaces;
+using Quartz;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
@@ -87,6 +89,23 @@ namespace POI.DiscordDotNet
 					sc.AddSingleton<MongoDbService>();
 					sc.AddSingleton<UptimeManagementService>();
 					sc.AddSingleton<ScoreSaberLinkService>();
+
+					sc.AddQuartz(q =>
+					{
+						// handy when part of cluster or you want to otherwise identify multiple schedulers
+						q.SchedulerId = "Scheduler-Core";
+
+						// as of 3.3.2 this also injects scoped services (like EF DbContext) without problems
+						q.UseMicrosoftDependencyInjectionJobFactory();
+
+						// these are the defaults
+						q.UseSimpleTypeLoader();
+						q.UseInMemoryStore();
+						q.UseDefaultThreadPool(tp =>
+						{
+							tp.MaxConcurrency = 5;
+						});
+					});
 				}).Build();
 
 			// Verify mongoDbConnection
@@ -122,6 +141,9 @@ namespace POI.DiscordDotNet
 			_client.UseInteractivity();
 
 			await _client.ConnectAsync(new DiscordActivity("POI for mod? (pretty please)", ActivityType.Playing)).ConfigureAwait(false);
+
+			var scheduler = await hostBuilder.Services.GetService<ISchedulerFactory>()!.GetScheduler();
+			await scheduler.Start();
 
 			await hostBuilder.RunAsync().ConfigureAwait(false);
 		}
