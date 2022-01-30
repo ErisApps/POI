@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -25,6 +26,8 @@ namespace POI.DiscordDotNet.Services
 		internal async Task<string?> LookupScoreSaberId(string discordId) => (await LookupLinkByDiscordId(discordId).ConfigureAwait(false))?.ScoreSaberId;
 
 		internal async Task<string?> LookupDiscordId(string scoreSaberId) => (await LookupLinkByScoreSaberId(scoreSaberId).ConfigureAwait(false))?.DiscordId;
+
+		internal async Task<List<ScoreSaberLink>> GetAll() => await (await GetScoreSaberLinkCollection().FindAsync(_ => true)).ToListAsync();
 
 		internal Task CreateOrUpdateScoreSaberLink(string discordId, string scoreSaberId)
 		{
