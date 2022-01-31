@@ -33,6 +33,7 @@ namespace POI.DiscordDotNet.Jobs
 			var acquiredLock = await _concurrentExecutionSemaphoreSlim.WaitAsync(0).ConfigureAwait(false);
 			if (!acquiredLock)
 			{
+				_logger.LogWarning("Couldn't acquire lock. Job is still running...");
 				return;
 			}
 
