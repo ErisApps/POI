@@ -1,11 +1,17 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using DSharpPlus;
+using DSharpPlus.Entities;
 using Microsoft.Extensions.Logging;
+using MongoDB.Driver;
+using POI.Core.Models.ScoreSaber.Profile;
 using POI.Core.Services;
+using POI.DiscordDotNet.Extensions;
+using POI.DiscordDotNet.Models.Database;
 using POI.DiscordDotNet.Services;
 using Quartz;
 
@@ -17,15 +23,18 @@ namespace POI.DiscordDotNet.Jobs
 		private readonly DiscordClient _discordClient;
 		private readonly ScoreSaberApiService _scoreSaberApiService;
 		private readonly ScoreSaberLinkService _scoreSaberLinkService;
+		private readonly MongoDbService _mongoDbService;
 
 		private readonly SemaphoreSlim _concurrentExecutionSemaphoreSlim = new(1, 1);
 
-		public RankUpFeedJob(ILogger<RankUpFeedJob> logger, DiscordClient discordClient, ScoreSaberApiService scoreSaberApiService, ScoreSaberLinkService scoreSaberLinkService)
+		public RankUpFeedJob(ILogger<RankUpFeedJob> logger, DiscordClient discordClient, ScoreSaberApiService scoreSaberApiService, ScoreSaberLinkService scoreSaberLinkService,
+			MongoDbService mongoDbService)
 		{
 			_logger = logger;
 			_discordClient = discordClient;
 			_scoreSaberApiService = scoreSaberApiService;
 			_scoreSaberLinkService = scoreSaberLinkService;
+			_mongoDbService = mongoDbService;
 		}
 
 		public async Task Execute(IJobExecutionContext context)
@@ -112,7 +121,29 @@ namespace POI.DiscordDotNet.Jobs
 				}
 			}
 
-			Debugger.Break();
+			var leaderboardEntriesCollection = _mongoDbService.GetCollection<LeaderboardEntry>();
+			var originalLeaderboardEntries = await (await leaderboardEntriesCollection.FindAsync(_ => true).ConfigureAwait(false)).ToListAsync().ConfigureAwait(false);
+			var rankedUpPlayers = DetermineRankedUpPlayers(originalLeaderboardEntries, players);
+
+			var rankUpFeedChannel = guild.GetChannel(634091663526199307);
+			if (rankUpFeedChannel != null)
+			{
+				foreach (var player in rankedUpPlayers)
+				{
+					var rankUpEmbed = new DiscordEmbedBuilder()
+						.WithPoiColor()
+						.WithTitle($"Well done, {player.Name}")
+						.WithUrl($"https://scoresaber.com/u/{player.Id}")
+						.WithThumbnail(player.ProfilePicture)
+						.WithDescription($"{player.Name} is now rank **#{player.CountryRank}** of the BE beat saber players with a total pp of **{player.Pp}**")
+						.Build();
+
+					await rankUpFeedChannel.SendMessageAsync(rankUpEmbed).ConfigureAwait(false);
+				}
+			}
+
+			_ = await leaderboardEntriesCollection.DeleteManyAsync(_ => true).ConfigureAwait(false);
+			await leaderboardEntriesCollection.InsertManyAsync(players.Select(p => new LeaderboardEntry(p.Id, p.Name, p.CountryRank))).ConfigureAwait(false);
 		}
 
 		private static List<(uint? RankThreshold, DiscordRole Role)> OrderTopRoles(IEnumerable<KeyValuePair<ulong, DiscordRole>> unorderedTopRoles)
@@ -146,6 +177,21 @@ namespace POI.DiscordDotNet.Jobs
 			}
 
 			return applicableRole;
+		}
+
+		private static List<ExtendedBasicProfile> DetermineRankedUpPlayers(IReadOnlyCollection<LeaderboardEntry> originalLeaderboard, List<ExtendedBasicProfile> currentLeaderboard)
+		{
+			var playersWithRankUp = new List<ExtendedBasicProfile>();
+			foreach (var player in currentLeaderboard)
+			{
+				var oldEntry = originalLeaderboard.FirstOrDefault(x => x.ScoreSaberId == player.Id);
+				if (oldEntry == null || player.CountryRank < oldEntry.CountryRank)
+				{
+					playersWithRankUp.Add(player);
+				}
+			}
+
+			return playersWithRankUp;
 		}
 	}
 }
