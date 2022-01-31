@@ -57,7 +57,7 @@ namespace POI.DiscordDotNet.Jobs
 
 		private async Task ExecuteInternal(IJobExecutionContext context)
 		{
-			_logger.LogInformation("Heya there from the very first job");
+			_logger.LogInformation("Executing RankUpFeed logic");
 
 			var allScoreSaberLinks = await _scoreSaberLinkService.GetAll().ConfigureAwait(false);
 			var guild = await _discordClient.GetGuildAsync(561207570669371402, true).ConfigureAwait(false);
@@ -107,14 +107,14 @@ namespace POI.DiscordDotNet.Jobs
 
 				var applicableRole = DetermineApplicableRole(roles, player.Rank);
 
-				// TODO: Check whether the applicable role is granted
+				// Check whether the applicable role is granted
 				if (currentTopRoles.All(role => role.Id != applicableRole.Id))
 				{
 					_logger.LogInformation("Granting {PlayerName} role {RoleName}", member.DisplayName, applicableRole.Name);
 					await member.GrantRoleAsync(applicableRole, "RankUpFeed update").ConfigureAwait(false);
 				}
 
-				// TODO: Revoke all other top roles if needed
+				// Revoke all other top roles if needed
 				foreach (var revocableRole in currentTopRoles.Where(role => role.Id != applicableRole.Id))
 				{
 					_logger.LogInformation("Revoking role {RoleName} for {PlayerName}", revocableRole.Name, member.DisplayName);
