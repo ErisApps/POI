@@ -72,15 +72,14 @@ namespace POI.DiscordDotNet.Jobs
 				return;
 			}
 
-			var roles = guild.Roles.Where(x => x.Value.Name.Contains("(Top ", StringComparison.Ordinal));
+			var roles = OrderTopRoles(guild.Roles.Where(x => x.Value.Name.Contains("(Top ", StringComparison.Ordinal)));
 
 			var players = playersWrappers.SelectMany(x => x!.Players).ToList();
 			foreach (var player in players)
 			{
 				_logger.LogDebug("#{Rank} {Name}", player.CountryRank, player.Name);
 
-				var player1 = player;
-				var discordId = allScoreSaberLinks.FirstOrDefault(x => x.ScoreSaberId == player1.Id)?.DiscordId;
+				var discordId = allScoreSaberLinks.FirstOrDefault(x => x.ScoreSaberId == player.Id)?.DiscordId;
 				if (discordId == null)
 				{
 					_logger.LogWarning("Has no link");
@@ -94,11 +93,58 @@ namespace POI.DiscordDotNet.Jobs
 					continue;
 				}
 
-				var currentTopRole = member.Roles.FirstOrDefault(x => x.Name.Contains("(Top ", StringComparison.Ordinal));
-				_logger.LogDebug("Currently has role {RoleName}", currentTopRole?.Name);
+				var currentTopRoles = member.Roles.Where(x => x.Name.Contains("(Top ", StringComparison.Ordinal)).ToList();
+				_logger.LogDebug("Currently has role {RoleName}", string.Join(", ", currentTopRoles.Select(x => x.Name)));
+
+				var applicableRole = DetermineApplicableRole(roles, player.Rank);
+
+				// TODO: Check whether the applicable role is granted
+				if (currentTopRoles.All(role => role.Id != applicableRole.Id))
+				{
+					_logger.LogInformation("Granting {PlayerName} role {RoleName}", member.DisplayName, applicableRole.Name);
+				}
+
+				// TODO: Revoke all other top roles if needed
+				foreach (var revocableRole in currentTopRoles.Where(role => role.Id != applicableRole.Id))
+				{
+					_logger.LogInformation("Revoking role {RoleName} for {PlayerName}", revocableRole.Name, member.DisplayName);
+				}
 			}
 
 			Debugger.Break();
+		}
+
+		private static List<(uint? RankThreshold, DiscordRole Role)> OrderTopRoles(IEnumerable<KeyValuePair<ulong, DiscordRole>> unorderedTopRoles)
+		{
+			uint? ExtractRankThresholdFromRole(string role)
+			{
+				var startIndex = role.LastIndexOf("(Top ", StringComparison.OrdinalIgnoreCase) + 5;
+				var rankThreshold = role.Substring(startIndex, role.LastIndexOf(')') - startIndex);
+				return uint.TryParse(rankThreshold, out var parsedRankedThreshold) ? parsedRankedThreshold : null;
+			}
+
+			return unorderedTopRoles
+				.Select(x => (RankThreshold: ExtractRankThresholdFromRole(x.Value.Name), Role: x.Value))
+				.OrderByDescending(x => x.RankThreshold ?? uint.MaxValue)
+				.ToList();
+		}
+
+		private static DiscordRole DetermineApplicableRole(IReadOnlyCollection<(uint? RankThreshold, DiscordRole Role)> possibleRoles, uint rank)
+		{
+			var applicableRole = possibleRoles.First().Role;
+			foreach (var (rankThreshold, role) in possibleRoles.Skip(1))
+			{
+				if (rankThreshold!.Value >= rank)
+				{
+					applicableRole = role;
+				}
+				else
+				{
+					break;
+				}
+			}
+
+			return applicableRole;
 		}
 	}
 }
