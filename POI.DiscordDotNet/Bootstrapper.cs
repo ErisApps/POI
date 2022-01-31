@@ -111,8 +111,7 @@ namespace POI.DiscordDotNet
 
 						q.ScheduleJob<RankUpFeedJob>(trigger => trigger
 							.WithIdentity("RankUpFeed Trigger")
-							.StartNow());
-						//.WithSchedule(CronScheduleBuilder.CronSchedule("0 0/5 * * * ?")));
+							.WithSchedule(CronScheduleBuilder.CronSchedule("0 0/5 * * * ?")));
 					});
 				}).Build();
 
