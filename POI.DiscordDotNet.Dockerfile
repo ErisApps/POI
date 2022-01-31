@@ -7,18 +7,18 @@ RUN apt-get update; apt-get install -y ttf-mscorefonts-installer fontconfig
 FROM mcr.microsoft.com/dotnet/sdk:6.0.101 AS build-env
 WORKDIR /src
 
-COPY ["nuget.config", ""]
+COPY ["NuGet.Config", ""]
 COPY ["POI.Core/POI.Core.csproj", "POI.Core/"]
-RUN dotnet restore "POI.Core/POI.Core.csproj" --configfile "nuget.config"
+RUN dotnet restore "POI.Core/POI.Core.csproj" --configfile "NuGet.Config"
 COPY ["POI.DiscordDotNet/POI.DiscordDotNet.csproj", "POI.DiscordDotNet/"]
-RUN dotnet restore "POI.DiscordDotNet/POI.DiscordDotNet.csproj" --configfile "nuget.config"
+RUN dotnet restore "POI.DiscordDotNet/POI.DiscordDotNet.csproj" --configfile "NuGet.Config"
 
 COPY ["POI.Core/.", "POI.Core/"]
 COPY ["POI.DiscordDotNet/.", "POI.DiscordDotNet/"]
 
 WORKDIR ./POI.DiscordDotNet
-RUN dotnet build "POI.DiscordDotNet.csproj" --configfile "../nuget.config" -c Release -o /app/build
-RUN dotnet publish "POI.DiscordDotNet.csproj" --configfile "../nuget.config" -c Release -o /app/publish
+RUN dotnet build "POI.DiscordDotNet.csproj" --configfile "../NuGet.Config" -c Release -o /app/build
+RUN dotnet publish "POI.DiscordDotNet.csproj" --configfile "../NuGet.Config" -c Release -o /app/publish
 
 FROM runtime-env as final
 WORKDIR /app
