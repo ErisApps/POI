@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -112,12 +111,14 @@ namespace POI.DiscordDotNet.Jobs
 				if (currentTopRoles.All(role => role.Id != applicableRole.Id))
 				{
 					_logger.LogInformation("Granting {PlayerName} role {RoleName}", member.DisplayName, applicableRole.Name);
+					await member.GrantRoleAsync(applicableRole, "RankUpFeed update").ConfigureAwait(false);
 				}
 
 				// TODO: Revoke all other top roles if needed
 				foreach (var revocableRole in currentTopRoles.Where(role => role.Id != applicableRole.Id))
 				{
 					_logger.LogInformation("Revoking role {RoleName} for {PlayerName}", revocableRole.Name, member.DisplayName);
+					await member.RevokeRoleAsync(revocableRole, "RankUpFeed update").ConfigureAwait(false);
 				}
 			}
 
