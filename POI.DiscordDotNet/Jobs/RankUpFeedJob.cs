@@ -186,7 +186,7 @@ namespace POI.DiscordDotNet.Jobs
 			foreach (var player in currentLeaderboard)
 			{
 				var oldEntry = originalLeaderboard.FirstOrDefault(x => x.ScoreSaberId == player.Id);
-				if (oldEntry == null || player.CountryRank < oldEntry.CountryRank)
+				if (oldEntry == null || (player.CountryRank < oldEntry.CountryRank && Math.Abs(player.Pp - oldEntry.Pp) > 0.01))
 				{
 					playersWithRankUp.Add(player);
 				}
