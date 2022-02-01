@@ -11,12 +11,15 @@ namespace POI.DiscordDotNet.Models.Database
 
 		public uint CountryRank { get; }
 
+		public double Pp { get; }
+
 		[BsonConstructor]
-		public LeaderboardEntry(string scoreSaberId, string name, uint countryRank)
+		public LeaderboardEntry(string scoreSaberId, string name, uint countryRank, double pp)
 		{
 			ScoreSaberId = scoreSaberId;
 			Name = name;
 			CountryRank = countryRank;
+			Pp = pp;
 		}
 	}
 }

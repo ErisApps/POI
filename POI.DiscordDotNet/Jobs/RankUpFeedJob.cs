@@ -144,7 +144,7 @@ namespace POI.DiscordDotNet.Jobs
 			}
 
 			_ = await leaderboardEntriesCollection.DeleteManyAsync(_ => true).ConfigureAwait(false);
-			await leaderboardEntriesCollection.InsertManyAsync(players.Select(p => new LeaderboardEntry(p.Id, p.Name, p.CountryRank))).ConfigureAwait(false);
+			await leaderboardEntriesCollection.InsertManyAsync(players.Select(p => new LeaderboardEntry(p.Id, p.Name, p.CountryRank, p.Pp))).ConfigureAwait(false);
 		}
 
 		private static List<(uint? RankThreshold, DiscordRole Role)> OrderTopRoles(IEnumerable<KeyValuePair<ulong, DiscordRole>> unorderedTopRoles)
