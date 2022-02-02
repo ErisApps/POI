@@ -225,7 +225,7 @@ namespace POI.Core.Services
 
 		public Task<Refresh?> RefreshProfile(string scoreSaberId, CancellationToken cancellationToken = default)
 		{
-			if (scoreSaberId.Length != 17 || scoreSaberId.StartsWith("7"))
+			if (scoreSaberId.Length != 17 || !scoreSaberId.StartsWith("7"))
 			{
 				throw new ArgumentException("Refreshing only works with for Steam accounts");
 			}
@@ -233,7 +233,7 @@ namespace POI.Core.Services
 			return FetchDataStruct($"{SCORESABER_API_BASEURL}user/{scoreSaberId}/refresh", _scoreSaberSerializerContext.Refresh, cancellationToken);
 		}
 
-		private void VerifySearchQueryParamWithinBounds(string query)
+		private static void VerifySearchQueryParamWithinBounds(string query)
 		{
 			if (string.IsNullOrWhiteSpace(query) || query.Length is < 4 or >= 32)
 			{
