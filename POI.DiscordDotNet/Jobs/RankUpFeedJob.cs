@@ -86,7 +86,7 @@ namespace POI.DiscordDotNet.Jobs
 			var players = playersWrappers.SelectMany(x => x!.Players).ToList();
 			foreach (var player in players)
 			{
-				_logger.LogDebug("#{Rank} {Name}", player.CountryRank, player.Name);
+				// _logger.LogDebug("#{Rank} {Name}", player.CountryRank, player.Name);
 
 				var discordId = allScoreSaberLinks.FirstOrDefault(x => x.ScoreSaberId == player.Id)?.DiscordId;
 				if (discordId == null)
@@ -103,7 +103,7 @@ namespace POI.DiscordDotNet.Jobs
 				}
 
 				var currentTopRoles = member.Roles.Where(x => x.Name.Contains("(Top ", StringComparison.Ordinal)).ToList();
-				_logger.LogDebug("Currently has role {RoleName}", string.Join(", ", currentTopRoles.Select(x => x.Name)));
+				// _logger.LogDebug("Currently has role {RoleName}", string.Join(", ", currentTopRoles.Select(x => x.Name)));
 
 				var applicableRole = DetermineApplicableRole(roles, player.Rank);
 
