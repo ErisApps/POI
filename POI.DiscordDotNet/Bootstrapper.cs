@@ -41,7 +41,7 @@ namespace POI.DiscordDotNet
 				.MinimumLevel.Override(nameof(DSharpPlus), LogEventLevel.Information)
 				.MinimumLevel.Override(nameof(Microsoft), LogEventLevel.Information)
 				.Enrich.FromLogContext()
-				.WriteTo.Console(theme: SystemConsoleTheme.Colored)
+				.WriteTo.Console(theme: SystemConsoleTheme.Colored, outputTemplate: "[{Timestamp:HH:mm:ss.fff} {Level:u3} {SourceContext:l}] {Message:lj}{NewLine}{Exception}")
 				.WriteTo.Conditional(_ => dockerized,
 					(writeTo => writeTo.Async(
 						writeToInternal => writeToInternal.File(pathProvider.LogsPath, rollingInterval: RollingInterval.Day, retainedFileCountLimit: 60, buffered: true)
