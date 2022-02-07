@@ -18,6 +18,15 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 {
 	public abstract class BaseLinkCommand : BeatSaberCommandsModule
 	{
+		// One day... this will be fetched dynamically from the database... one day...
+		private static readonly ulong[] ApproverUserIds = {
+			261830384663134209 /* Eris */,
+			246209289444655105 /* Pyro */,
+			212220646732595200 /* Logius */,
+			299995209331113985 /* Arno */,
+			353308809931784204 /* Jestro */
+		};
+
 		private const string APPROVE_ACTION_ID = "approve";
 		private const string DENY_ACTION_ID = "deny";
 
@@ -89,7 +98,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 				}
 
 				await interactivityResult.Value.Result.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate);
-				hasResponded = interactivityResult.Value.Result.User.Id is 148824637004840961 or 261830384663134209;
+				hasResponded = ApproverUserIds.Contains(interactivityResult.Value.Result.User.Id);
 			} while (!hasResponded);
 
 			return (interactivityResult.Value.Result.Id == APPROVE_ACTION_ID);
