@@ -120,33 +120,11 @@ namespace POI.DiscordDotNet
 				return;
 			}
 
-			var commandsNext = _client.UseCommandsNext(new CommandsNextConfiguration
-			{
-				EnableMentionPrefix = false,
-				EnableDefaultHelp = false,
-				CaseSensitive = false,
-				DmHelp = false,
-				IgnoreExtraArguments = false,
-				StringPrefixes = new[] {configProvider.Discord.Prefix},
-				Services = hostBuilder.Services
-			});
-			commandsNext.CommandErrored += (_, eventArgs) =>
-			{
-				logger.Error(eventArgs.Exception, "{Username} tried to execute command {CommandName}, but it errored", eventArgs.Context.User.Username, eventArgs.Command.Name);
-
-				return Task.CompletedTask;
-			};
-			commandsNext.CommandExecuted += (_, eventArgs) =>
-			{
-				logger.Debug("{Username} executed command {CommandName}", eventArgs.Context.User.Username, eventArgs.Command.Name);
-
-				return Task.CompletedTask;
-			};
-			commandsNext.RegisterCommands(Assembly.GetEntryAssembly());
+			SetupCommandsNext(hostBuilder.Services, logger, configProvider);
 
 			_client.UseInteractivity();
 
-			SetupSlashCommands(hostBuilder, logger);
+			SetupSlashCommands(hostBuilder.Services, logger);
 
 			await _client.ConnectAsync(new DiscordActivity("POI for mod? (pretty please)", ActivityType.Playing)).ConfigureAwait(false);
 
@@ -170,9 +148,36 @@ namespace POI.DiscordDotNet
 			return false;
 		}
 
-		private static void SetupSlashCommands(IHost hostBuilder, Serilog.ILogger logger)
+		private static void SetupCommandsNext(IServiceProvider services, Serilog.ILogger logger, ConfigProviderService configProvider)
 		{
-			var slashCommands = _client.UseSlashCommands(new SlashCommandsConfiguration { Services = hostBuilder.Services });
+			var commandsNext = _client.UseCommandsNext(new CommandsNextConfiguration
+			{
+				EnableMentionPrefix = false,
+				EnableDefaultHelp = false,
+				CaseSensitive = false,
+				DmHelp = false,
+				IgnoreExtraArguments = false,
+				StringPrefixes = new[] { configProvider.Discord.Prefix },
+				Services = services
+			});
+			commandsNext.CommandErrored += (_, eventArgs) =>
+			{
+				logger.Error(eventArgs.Exception, "{Username} tried to execute command {CommandName}, but it errored", eventArgs.Context.User.Username, eventArgs.Command.Name);
+
+				return Task.CompletedTask;
+			};
+			commandsNext.CommandExecuted += (_, eventArgs) =>
+			{
+				logger.Debug("{Username} executed command {CommandName}", eventArgs.Context.User.Username, eventArgs.Command.Name);
+
+				return Task.CompletedTask;
+			};
+			commandsNext.RegisterCommands(Assembly.GetEntryAssembly());
+		}
+
+		private static void SetupSlashCommands(IServiceProvider services, Serilog.ILogger logger)
+		{
+			var slashCommands = _client.UseSlashCommands(new SlashCommandsConfiguration { Services = services });
 			slashCommands.SlashCommandErrored += (_, eventArgs) =>
 			{
 				logger.Error(eventArgs.Exception, "{Username} tried to execute command {CommandName}, but it errored", eventArgs.Context.User.Username, eventArgs.Context.CommandName);
