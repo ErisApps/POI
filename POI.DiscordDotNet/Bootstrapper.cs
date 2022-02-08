@@ -6,6 +6,7 @@ using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity.Extensions;
+using DSharpPlus.SlashCommands;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -145,6 +146,8 @@ namespace POI.DiscordDotNet
 
 			_client.UseInteractivity();
 
+			SetupSlashCommands(hostBuilder, logger);
+
 			await _client.ConnectAsync(new DiscordActivity("POI for mod? (pretty please)", ActivityType.Playing)).ConfigureAwait(false);
 
 			var scheduler = await hostBuilder.Services.GetService<ISchedulerFactory>()!.GetScheduler();
@@ -165,6 +168,26 @@ namespace POI.DiscordDotNet
 
 			logger.Fatal("Couldn't connect to database. Exiting...");
 			return false;
+		}
+
+		private static void SetupSlashCommands(IHost hostBuilder, Serilog.ILogger logger)
+		{
+			var slashCommands = _client.UseSlashCommands(new SlashCommandsConfiguration { Services = hostBuilder.Services });
+			slashCommands.SlashCommandErrored += (_, eventArgs) =>
+			{
+				logger.Error(eventArgs.Exception, "{Username} tried to execute command {CommandName}, but it errored", eventArgs.Context.User.Username, eventArgs.Context.CommandName);
+
+				return Task.CompletedTask;
+			};
+			slashCommands.SlashCommandExecuted += (_, eventArgs) =>
+			{
+				logger.Debug("{Username} executed command {CommandName}", eventArgs.Context.User.Username, eventArgs.Context.CommandName);
+
+				return Task.CompletedTask;
+			};
+
+			// TODO: Register slash commands below
+			// Eg: slashCommands.RegisterCommands<TestSlashCommand>();
 		}
 	}
 }
