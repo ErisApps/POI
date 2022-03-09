@@ -1,5 +1,5 @@
 # Set up runtime environment
-FROM mcr.microsoft.com/dotnet/aspnet:6.0.2 AS runtime-env
+FROM mcr.microsoft.com/dotnet/aspnet:6.0.3 AS runtime-env
 RUN sed -i'.bak' 's/$/ contrib/' /etc/apt/sources.list
 RUN apt-get update; apt-get install -y ttf-mscorefonts-installer fontconfig
 
