@@ -22,7 +22,7 @@ namespace POI.Core.Services
 {
 	public class BeatSaviorApiService
 	{
-		private const string BEATSAVIOR_BASEURL = "https://www.beatsavior.io";
+		private const string BEATSAVIOR_BASEURL = "https://beat-savior.herokuapp.com";
 		private const string BEATSAVIOR_API_BASEURL = BEATSAVIOR_BASEURL + "/api/";
 		private const int MAX_BULKHEAD_QUEUE_SIZE = 1000;
 
