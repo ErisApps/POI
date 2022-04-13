@@ -9,7 +9,7 @@
 
     <ItemGroup>
         <PackageReference Include="DSharpPlus" Version="4.2.0-nightly-01113" />
-        <PackageReference Include="DSharpPlus.CommandsNext" Version="4.2.0-nightly-01111" />
+        <PackageReference Include="DSharpPlus.CommandsNext" Version="4.2.0-nightly-01113" />
         <PackageReference Include="DSharpPlus.Interactivity" Version="4.2.0-nightly-01111" />
         <PackageReference Include="DSharpPlus.Rest" Version="4.2.0-nightly-01111" />
         <PackageReference Include="DSharpPlus.SlashCommands" Version="4.2.0-nightly-01111" />
