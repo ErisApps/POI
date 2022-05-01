@@ -69,7 +69,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 				.WithTitle(title)
 				.WithDescription("ScoreSaberId Regex matching and validation result")
 				.AddField("Name", basicProfile.Name, true)
-				.AddField("Country", basicProfile.Country, true)
+				.AddField("Country", !string.IsNullOrWhiteSpace(basicProfile.Country) ? basicProfile.Country : "N/A", true)
 				.AddField("Rank", basicProfile.Rank.ToString(), true)
 				.WithFooter($"Request valid for 2 hours (until: {DateTimeOffset.Now.AddHours(2):G}");
 
