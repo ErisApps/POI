@@ -19,12 +19,14 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 	public abstract class BaseLinkCommand : BeatSaberCommandsModule
 	{
 		// One day... this will be fetched dynamically from the database... one day...
-		private static readonly ulong[] ApproverUserIds = {
+		private static readonly ulong[] ApproverUserIds =
+		{
 			261830384663134209 /* Eris */,
 			246209289444655105 /* Pyro */,
 			212220646732595200 /* Logius */,
 			299995209331113985 /* Arno */,
-			353308809931784204 /* Jestro */
+			353308809931784204 /* Jestro */,
+			321354941589618698 /* GianniKoch */
 		};
 
 		private const string APPROVE_ACTION_ID = "approve";
@@ -75,11 +77,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 
 			messageBuilder.WithEmbed(embedBuilder.Build());
 
-			var buttons = new[]
-			{
-				new DiscordButtonComponent(ButtonStyle.Success, APPROVE_ACTION_ID, "✅"),
-				new DiscordButtonComponent(ButtonStyle.Danger, DENY_ACTION_ID, "🚫")
-			};
+			var buttons = new[] { new DiscordButtonComponent(ButtonStyle.Success, APPROVE_ACTION_ID, "✅"), new DiscordButtonComponent(ButtonStyle.Danger, DENY_ACTION_ID, "🚫") };
 			messageBuilder.AddComponents(buttons.Cast<DiscordComponent>());
 
 			var discordMessage = await ctx.Message.RespondAsync(messageBuilder).ConfigureAwait(false);
