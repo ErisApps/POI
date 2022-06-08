@@ -24,7 +24,7 @@
         <PackageReference Include="NodaTime.Serialization.SystemTextJson" Version="1.0.0" />
         <PackageReference Include="Polly" Version="7.2.3" />
         <PackageReference Include="Quartz" Version="3.4.0" />
-        <PackageReference Include="Quartz.Extensions.DependencyInjection" Version="3.3.3" />
+        <PackageReference Include="Quartz.Extensions.DependencyInjection" Version="3.4.0" />
         <PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
         <PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
         <PackageReference Include="Serilog.Sinks.Console" Version="4.0.2-dev-00890" />
