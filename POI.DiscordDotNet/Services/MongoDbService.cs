@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
+using MongoDb.Bson.NodaTime;
 using MongoDB.Driver;
 using POI.DiscordDotNet.Services.Interfaces;
 
@@ -20,6 +21,8 @@ namespace POI.DiscordDotNet.Services
 		{
 			_logger = logger;
 			_configProviderService = configProviderService;
+
+			NodaTimeSerializers.Register();
 
 			var mongoClientSettings = MongoClientSettings.FromConnectionString(_configProviderService.MongoDb.MongoDbConnectionString);
 			mongoClientSettings.ApplicationName = $"{constants.Name}/{constants.Version.ToString(3)}";
