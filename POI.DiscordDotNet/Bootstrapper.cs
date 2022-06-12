@@ -6,7 +6,6 @@ using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity.Extensions;
-using DSharpPlus.SlashCommands;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -125,11 +124,14 @@ namespace POI.DiscordDotNet
 
 			_client.UseInteractivity();
 
-			SetupSlashCommands(hostBuilder.Services, logger);
+			var slashCommandsManagementService = hostBuilder.Services.GetRequiredService<SlashCommandsManagementService>()!;
+			slashCommandsManagementService.Setup();
+
+			_ = hostBuilder.Services.GetRequiredService<UptimeManagementService>();
 
 			await _client.ConnectAsync(new DiscordActivity("POI for mod? (pretty please)", ActivityType.Playing)).ConfigureAwait(false);
 
-			var scheduler = await hostBuilder.Services.GetService<ISchedulerFactory>()!.GetScheduler();
+			var scheduler = await hostBuilder.Services.GetRequiredService<ISchedulerFactory>().GetScheduler();
 			await scheduler.Start();
 
 			await hostBuilder.RunAsync().ConfigureAwait(false);
@@ -137,7 +139,7 @@ namespace POI.DiscordDotNet
 
 		private static async Task<bool> VerifyMongoDbConnection(IServiceProvider serviceProvider, Serilog.ILogger logger)
 		{
-			var mongoDbService = serviceProvider.GetService<MongoDbService>()!;
+			var mongoDbService = serviceProvider.GetRequiredService<MongoDbService>();
 			if (await mongoDbService.TestConnectivity().ConfigureAwait(false))
 			{
 				logger.Information("Connected to MongoDb instance");
