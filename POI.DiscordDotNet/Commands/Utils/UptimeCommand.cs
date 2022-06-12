@@ -1,14 +1,13 @@
 using System;
 using System.Threading.Tasks;
-using DSharpPlus.CommandsNext;
-using DSharpPlus.CommandsNext.Attributes;
+using DSharpPlus.SlashCommands;
 using NodaTime.Extensions;
-using POI.DiscordDotNet.Commands.Modules;
+using POI.DiscordDotNet.Commands.Modules.SlashCommands;
 using POI.DiscordDotNet.Services;
 
 namespace POI.DiscordDotNet.Commands.Utils
 {
-    public class UptimeCommand : UtilCommandsModule
+    public class UptimeCommand : UtilSlashCommandsModule
     {
 	    private readonly UptimeManagementService _uptimeManagementService;
 
@@ -17,9 +16,8 @@ namespace POI.DiscordDotNet.Commands.Utils
 	        _uptimeManagementService = uptimeManagementService;
         }
 
-        [Command("uptime")]
-        [Aliases("uppy")]
-        public async Task Handle(CommandContext ctx)
+        [SlashCommand("uppy", "Shows how long I've been online already 😅")]
+        public async Task Handle(InteractionContext ctx)
         {
 	        string message;
             var upSince = _uptimeManagementService.UpSince;
@@ -30,10 +28,10 @@ namespace POI.DiscordDotNet.Commands.Utils
             }
             else
             {
-                message = $"I've been online for... erm... some time I guess Tehe";
+                message = "I've been online for... erm... some time I guess Tehe";
             }
 
-            await ctx.Channel.SendMessageAsync(message).ConfigureAwait(false);
+            await ctx.CreateResponseAsync(message).ConfigureAwait(false);
         }
     }
 }

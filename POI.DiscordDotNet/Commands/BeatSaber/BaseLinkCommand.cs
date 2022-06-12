@@ -10,7 +10,7 @@ using DSharpPlus.Interactivity.Extensions;
 using Microsoft.Extensions.Logging;
 using POI.Core.Models.ScoreSaber.Profile;
 using POI.Core.Services;
-using POI.DiscordDotNet.Commands.Modules;
+using POI.DiscordDotNet.Commands.Modules.ChatCommands;
 using POI.DiscordDotNet.Extensions;
 using POI.DiscordDotNet.Services;
 

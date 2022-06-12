@@ -193,6 +193,8 @@ namespace POI.DiscordDotNet
 
 			// TODO: Register slash commands below
 			// Eg: slashCommands.RegisterCommands<TestSlashCommand>();
+			slashCommands.RegisterCommands<PingCommand>();
+			slashCommands.RegisterCommands<UptimeCommand>();
 		}
 	}
 }

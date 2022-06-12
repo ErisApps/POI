@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using NodaTime;
 using POI.Core.Services;
-using POI.DiscordDotNet.Commands.Modules;
+using POI.DiscordDotNet.Commands.Modules.ChatCommands;
 using POI.DiscordDotNet.Extensions;
 using POI.DiscordDotNet.Models.Database;
 using POI.DiscordDotNet.Services;
