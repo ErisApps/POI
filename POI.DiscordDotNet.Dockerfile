@@ -9,16 +9,16 @@ WORKDIR /src
 
 COPY ["NuGet.Config", ""]
 COPY ["POI.Core/POI.Core.csproj", "POI.Core/"]
-RUN dotnet restore "POI.Core/POI.Core.csproj" --configfile "NuGet.Config"
+RUN dotnet restore "POI.Core/POI.Core.csproj"
 COPY ["POI.DiscordDotNet/POI.DiscordDotNet.csproj", "POI.DiscordDotNet/"]
-RUN dotnet restore "POI.DiscordDotNet/POI.DiscordDotNet.csproj" --configfile "NuGet.Config"
+RUN dotnet restore "POI.DiscordDotNet/POI.DiscordDotNet.csproj"
 
 COPY ["POI.Core/.", "POI.Core/"]
 COPY ["POI.DiscordDotNet/.", "POI.DiscordDotNet/"]
 
 WORKDIR ./POI.DiscordDotNet
-RUN dotnet build "POI.DiscordDotNet.csproj" --configfile "../NuGet.Config" -c Release -o /app/build
-RUN dotnet publish "POI.DiscordDotNet.csproj" --configfile "../NuGet.Config" -c Release -o /app/publish
+RUN dotnet build "POI.DiscordDotNet.csproj" -c Release -o /app/build
+RUN dotnet publish "POI.DiscordDotNet.csproj" -c Release -o /app/publish
 
 FROM runtime-env as final
 WORKDIR /app
