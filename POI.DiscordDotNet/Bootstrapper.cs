@@ -89,6 +89,7 @@ namespace POI.DiscordDotNet
 					sc.AddSingleton<MongoDbService>();
 					sc.AddSingleton<UptimeManagementService>();
 					sc.AddSingleton<ScoreSaberLinkService>();
+					sc.AddSingleton<SlashCommandsManagementService>();
 
 					sc.AddSingleton<RankUpFeedJob>();
 
@@ -148,6 +149,7 @@ namespace POI.DiscordDotNet
 			return false;
 		}
 
+		// TODO: Deprecate in due time...
 		private static void SetupCommandsNext(IServiceProvider services, Serilog.ILogger logger, ConfigProviderService configProvider)
 		{
 			var commandsNext = _client.UseCommandsNext(new CommandsNextConfiguration
@@ -173,28 +175,6 @@ namespace POI.DiscordDotNet
 				return Task.CompletedTask;
 			};
 			commandsNext.RegisterCommands(Assembly.GetEntryAssembly());
-		}
-
-		private static void SetupSlashCommands(IServiceProvider services, Serilog.ILogger logger)
-		{
-			var slashCommands = _client.UseSlashCommands(new SlashCommandsConfiguration { Services = services });
-			slashCommands.SlashCommandErrored += (_, eventArgs) =>
-			{
-				logger.Error(eventArgs.Exception, "{Username} tried to execute command {CommandName}, but it errored", eventArgs.Context.User.Username, eventArgs.Context.CommandName);
-
-				return Task.CompletedTask;
-			};
-			slashCommands.SlashCommandExecuted += (_, eventArgs) =>
-			{
-				logger.Debug("{Username} executed command {CommandName}", eventArgs.Context.User.Username, eventArgs.Context.CommandName);
-
-				return Task.CompletedTask;
-			};
-
-			// TODO: Register slash commands below
-			// Eg: slashCommands.RegisterCommands<TestSlashCommand>();
-			slashCommands.RegisterCommands<PingCommand>();
-			slashCommands.RegisterCommands<UptimeCommand>();
 		}
 	}
 }
