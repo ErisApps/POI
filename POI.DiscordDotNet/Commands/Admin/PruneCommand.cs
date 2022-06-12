@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
-using POI.DiscordDotNet.Commands.Modules;
+using POI.DiscordDotNet.Commands.Modules.ChatCommands;
 
 namespace POI.DiscordDotNet.Commands.Admin
 {

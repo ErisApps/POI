@@ -13,7 +13,7 @@ using POI.Core.Models.ScoreSaber.Profile;
 using POI.Core.Models.ScoreSaber.Scores;
 using POI.Core.Models.ScoreSaber.Wrappers;
 using POI.Core.Services;
-using POI.DiscordDotNet.Commands.Modules;
+using POI.DiscordDotNet.Commands.Modules.ChatCommands;
 using POI.DiscordDotNet.Extensions;
 using POI.DiscordDotNet.Models.Database;
 using POI.DiscordDotNet.Services;
