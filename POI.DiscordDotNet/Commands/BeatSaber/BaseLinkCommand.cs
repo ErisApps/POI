@@ -35,14 +35,14 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 		private readonly ILogger<BaseLinkCommand> _logger;
 		private readonly ScoreSaberApiService _scoreSaberApiService;
 
-		protected readonly ScoreSaberLinkService ScoreSaberLinkService;
+		protected readonly UserSettingsService UserSettingsService;
 
-		protected BaseLinkCommand(ILogger<BaseLinkCommand> logger, ScoreSaberApiService scoreSaberApiService, ScoreSaberLinkService scoreSaberLinkService)
+		protected BaseLinkCommand(ILogger<BaseLinkCommand> logger, ScoreSaberApiService scoreSaberApiService, UserSettingsService userSettingsService)
 		{
 			_logger = logger;
 			_scoreSaberApiService = scoreSaberApiService;
 
-			ScoreSaberLinkService = scoreSaberLinkService;
+			UserSettingsService = userSettingsService;
 		}
 
 		public virtual async Task Handle(CommandContext ctx, string _)
@@ -127,7 +127,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 
 		protected Task CreateScoreLink(string discordId, string scoreSaberId)
 		{
-			return ScoreSaberLinkService.CreateOrUpdateScoreSaberLink(discordId, scoreSaberId);
+			return UserSettingsService.CreateOrUpdateScoreSaberLink(discordId, scoreSaberId);
 
 			// TODO: Role assignment logic (Preferably call into service)
 		}
