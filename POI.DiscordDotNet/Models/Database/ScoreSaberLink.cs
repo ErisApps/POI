@@ -2,6 +2,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace POI.DiscordDotNet.Models.Database
 {
+	// TODO: Deprecate usage as database model
 	public class ScoreSaberLink
 	{
 		[BsonId]
