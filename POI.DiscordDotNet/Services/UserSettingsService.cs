@@ -23,6 +23,19 @@ namespace POI.DiscordDotNet.Services
 
 		internal Task<UserSettings?> LookupSettingsByScoreSaberId(string scoreSaberId) => LookupUserSettings(settings => settings.AccountLinks.ScoreSaberId == scoreSaberId);
 
+		internal async Task<List<ScoreSaberLink>> GetAllScoreSaberLinks()
+		{
+			var filterDefinition = Builders<UserSettings>.Filter.Where(settings => settings.AccountLinks.ScoreSaberId != null);
+			var projectionDefinition = Builders<UserSettings>.Projection.Expression(settings => new ScoreSaberLink(settings.DiscordId, settings.AccountLinks.ScoreSaberId!));
+
+			var aggregationPipelineDefinition = new EmptyPipelineDefinition<UserSettings>()
+				.AppendStage(PipelineStageDefinitionBuilder.Match(filterDefinition))
+				.AppendStage(PipelineStageDefinitionBuilder.Project(projectionDefinition));
+
+			var aggregationResultAsync = await GetUserSettingsCollection().AggregateAsync(aggregationPipelineDefinition).ConfigureAwait(false);
+			return await aggregationResultAsync.ToListAsync().ConfigureAwait(false);
+		}
+
 		internal async Task CreateOrUpdateScoreSaberLink(string discordId, string scoreSaberId)
 		{
 			await CreateAndInsertUserSettingsIfNotExists(discordId);
