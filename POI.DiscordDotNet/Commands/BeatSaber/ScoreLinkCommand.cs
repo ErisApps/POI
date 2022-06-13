@@ -9,8 +9,8 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 {
 	public class ScoreLinkCommand : BaseLinkCommand
 	{
-		public ScoreLinkCommand(ILogger<ScoreLinkCommand> logger, ScoreSaberApiService scoreSaberApiService, ScoreSaberLinkService scoreSaberLinkService)
-			: base(logger, scoreSaberApiService, scoreSaberLinkService)
+		public ScoreLinkCommand(ILogger<ScoreLinkCommand> logger, ScoreSaberApiService scoreSaberApiService, UserSettingsService userSettingsService)
+			: base(logger, scoreSaberApiService, userSettingsService)
 		{
 		}
 
@@ -59,23 +59,23 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 		private async Task<bool> CheckScoreLinkConflicts(CommandContext ctx, string discordId, string scoreSaberId)
 		{
 			// Check discordId conflict
-			var scoreSaberLink = await ScoreSaberLinkService.LookupLinkByDiscordId(discordId);
-			if (scoreSaberLink != null)
+			var userSettings = await UserSettingsService.LookupSettingsByDiscordId(discordId);
+			if (userSettings != null)
 			{
-				if (scoreSaberLink.ScoreSaberId == scoreSaberId)
+				if (userSettings.AccountLinks.ScoreSaberId == scoreSaberId)
 				{
-					await ctx.Message.RespondAsync($"Your account is already linked to this ScoreSaber account! O.o").ConfigureAwait(false);
+					await ctx.Message.RespondAsync("Your account is already linked to this ScoreSaber account! O.o").ConfigureAwait(false);
 					return true;
 				}
 
-				await ctx.Message.RespondAsync($"⚠️Warning: Your account is currently linked to https://scoresaber.com/u/{scoreSaberLink.ScoreSaberId} ! Are you sure you want to relink? O.o").ConfigureAwait(false);
+				await ctx.Message.RespondAsync($"⚠️Warning: Your account is currently linked to https://scoresaber.com/u/{userSettings.AccountLinks.ScoreSaberId} ! Are you sure you want to relink? O.o").ConfigureAwait(false);
 			}
 
 			// Check scoreSaberId conflict
-			scoreSaberLink = await ScoreSaberLinkService.LookupLinkByScoreSaberId(scoreSaberId);
-			if (scoreSaberLink != null)
+			userSettings = await UserSettingsService.LookupSettingsByScoreSaberId(scoreSaberId);
+			if (userSettings != null)
 			{
-				await ctx.Message.RespondAsync($"ScoreSaber account is already linked to <@!{scoreSaberLink.DiscordId}>! O.o").ConfigureAwait(false);
+				await ctx.Message.RespondAsync($"ScoreSaber account is already linked to <@!{userSettings.DiscordId}>! O.o").ConfigureAwait(false);
 				return true;
 			}
 
