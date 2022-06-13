@@ -11,5 +11,10 @@ namespace POI.DiscordDotNet.Models.Database
 		{
 			ScoreSaberId = scoreSaberId;
 		}
+
+		public static AccountLinks CreateDefault()
+		{
+			return new AccountLinks(null);
+		}
 	}
 }

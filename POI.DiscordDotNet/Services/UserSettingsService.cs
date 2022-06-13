@@ -23,6 +23,26 @@ namespace POI.DiscordDotNet.Services
 
 		internal Task<UserSettings?> LookupSettingsByScoreSaberId(string scoreSaberId) => LookupUserSettings(settings => settings.AccountLinks.ScoreSaberId == scoreSaberId);
 
+		internal async Task CreateOrUpdateScoreSaberLink(string discordId, string scoreSaberId)
+		{
+			await CreateAndInsertUserSettingsIfNotExists(discordId);
+
+			var updateDefinition = Builders<UserSettings>.Update.Set(settings => settings.AccountLinks.ScoreSaberId, scoreSaberId);
+			await GetUserSettingsCollection().FindOneAndUpdateAsync(
+				link => link.DiscordId == discordId,
+				updateDefinition);
+		}
+
+		private async Task CreateAndInsertUserSettingsIfNotExists(string discordId)
+		{
+			var userSettings = await LookupSettingsByDiscordId(discordId).ConfigureAwait(false);
+			if (userSettings == null)
+			{
+				userSettings = UserSettings.CreateDefault(discordId);
+				await GetUserSettingsCollection().InsertOneAsync(userSettings).ConfigureAwait(false);
+			}
+		}
+
 		private async Task<UserSettings?> LookupUserSettings(Expression<Func<UserSettings, bool>> predicate)
 		{
 			try
