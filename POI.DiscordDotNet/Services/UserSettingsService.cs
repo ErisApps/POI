@@ -23,10 +23,16 @@ namespace POI.DiscordDotNet.Services
 
 		internal Task<UserSettings?> LookupSettingsByScoreSaberId(string scoreSaberId) => LookupUserSettings(settings => settings.AccountLinks.ScoreSaberId == scoreSaberId);
 
-		internal async Task<List<ScoreSaberLink>> GetAllScoreSaberLinks()
+		internal Task<List<ScoreSaberLink>> GetAllScoreSaberLinksWithGenericUnderlyingLogic() => GetAllGenericAccountLinks(
+				settings => settings.AccountLinks.ScoreSaberId != null,
+				settings => new ScoreSaberLink(settings.DiscordId, settings.AccountLinks.ScoreSaberId!));
+
+		private async Task<List<TProjected>> GetAllGenericAccountLinks<TProjected>(
+			Expression<Func<UserSettings, bool>> genericAccountFilter,
+			Expression<Func<UserSettings, TProjected>> genericAccountProjector)
 		{
-			var filterDefinition = Builders<UserSettings>.Filter.Where(settings => settings.AccountLinks.ScoreSaberId != null);
-			var projectionDefinition = Builders<UserSettings>.Projection.Expression(settings => new ScoreSaberLink(settings.DiscordId, settings.AccountLinks.ScoreSaberId!));
+			var filterDefinition = Builders<UserSettings>.Filter.Where(genericAccountFilter);
+			var projectionDefinition = Builders<UserSettings>.Projection.Expression(genericAccountProjector);
 
 			var aggregationPipelineDefinition = new EmptyPipelineDefinition<UserSettings>()
 				.AppendStage(PipelineStageDefinitionBuilder.Match(filterDefinition))
