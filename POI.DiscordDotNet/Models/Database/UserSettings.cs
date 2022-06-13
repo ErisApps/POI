@@ -13,11 +13,16 @@ namespace POI.DiscordDotNet.Models.Database
 		public AccountLinks AccountLinks { get; set; }
 
 		[BsonConstructor]
-		public UserSettings(string discordId, LocalDate? birthday, AccountLinks accountLinks)
+		public UserSettings(string discordId, LocalDate? birthday, AccountLinks? accountLinks)
 		{
 			DiscordId = discordId;
 			Birthday = birthday;
-			AccountLinks = accountLinks;
+			AccountLinks = accountLinks ?? AccountLinks.CreateDefault();
+		}
+
+		public static UserSettings CreateDefault(string discordId)
+		{
+			return new UserSettings(discordId, null, null);
 		}
 	}
 }
