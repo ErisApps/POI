@@ -6,7 +6,6 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
 using ImageMagick;
 using Microsoft.Extensions.Logging;
-using MongoDB.Driver;
 using NodaTime;
 using POI.Core.Models.BeatSavior;
 using POI.Core.Models.ScoreSaber.Profile;
@@ -15,7 +14,6 @@ using POI.Core.Models.ScoreSaber.Wrappers;
 using POI.Core.Services;
 using POI.DiscordDotNet.Commands.Modules.ChatCommands;
 using POI.DiscordDotNet.Extensions;
-using POI.DiscordDotNet.Models.Database;
 using POI.DiscordDotNet.Services;
 
 namespace POI.DiscordDotNet.Commands.BeatSaber
@@ -25,7 +23,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 		private readonly ILogger<BaseSongCommand> _logger;
 		private readonly string _backgroundImagePath;
 		private readonly string _erisSignaturePath;
-		private readonly MongoDbService _mongoDbService;
+		private readonly UserSettingsService _userSettingsService;
 		private readonly BeatSaverClientProvider _beatSaverClientProvider;
 
 		protected readonly ScoreSaberApiService ScoreSaberApiService;
@@ -34,7 +32,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 		private const int WIDTH = 1024;
 		private const int MARGIN = 35;
 
-		protected BaseSongCommand(ILogger<BaseSongCommand> logger, ScoreSaberApiService scoreSaberApiService, MongoDbService mongoDbService,
+		protected BaseSongCommand(ILogger<BaseSongCommand> logger, ScoreSaberApiService scoreSaberApiService, UserSettingsService userSettingsService,
 			BeatSaverClientProvider beatSaverClientProvider, string backgroundImagePath, string erisSignaturePath, BeatSaviorApiService beatSaviorApiService)
 		{
 			_logger = logger;
@@ -42,7 +40,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 			ScoreSaberApiService = scoreSaberApiService;
 			BeatSaviorApiService = beatSaviorApiService;
 
-			_mongoDbService = mongoDbService;
+			_userSettingsService = userSettingsService;
 			_beatSaverClientProvider = beatSaverClientProvider;
 			_backgroundImagePath = backgroundImagePath;
 			_erisSignaturePath = erisSignaturePath;
@@ -642,15 +640,14 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 			{
 				try
 				{
-					var userScoreLinks = await _mongoDbService
-						.GetCollection<ScoreSaberLink>()
-						.FindAsync(new ExpressionFilterDefinition<ScoreSaberLink>(link => link.DiscordId == discordId))
+					var userSettings = await _userSettingsService
+						.LookupSettingsByDiscordId(discordId)
 						.ConfigureAwait(false);
-					scoreSaberId = userScoreLinks.FirstOrDefault()?.ScoreSaberId;
+					scoreSaberId = userSettings?.AccountLinks.ScoreSaberId;
 				}
 				catch (Exception)
 				{
-					_logger.LogWarning("Couldn't find scoreLink for user {Username}", ctx.Message.Author.Username);
+					_logger.LogWarning("Couldn't find userSettings for user with discord id {DiscordId}", discordId);
 					scoreSaberId = null;
 				}
 			}
