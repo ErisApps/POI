@@ -7,12 +7,10 @@ using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using ImageMagick;
 using Microsoft.Extensions.Logging;
-using MongoDB.Driver;
 using NodaTime;
 using POI.Core.Services;
 using POI.DiscordDotNet.Commands.Modules.ChatCommands;
 using POI.DiscordDotNet.Extensions;
-using POI.DiscordDotNet.Models.Database;
 using POI.DiscordDotNet.Services;
 
 namespace POI.DiscordDotNet.Commands.BeatSaber
@@ -28,16 +26,16 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 		private const int RANK_HEIGHT = PFP_HEIGHT + 150 + SPACING;
 
 		private readonly ILogger<CompareCommand> _logger;
-		private readonly MongoDbService _mongoDbService;
+		private readonly UserSettingsService _userSettingsService;
 		private readonly PathProvider _pathProvider;
 		private readonly ScoreSaberApiService _scoreSaberService;
 
-		public CompareCommand(ILogger<CompareCommand> logger, ScoreSaberApiService scoreSaberService, MongoDbService mongoDbService, PathProvider pathProvider)
+		public CompareCommand(ILogger<CompareCommand> logger, ScoreSaberApiService scoreSaberService, UserSettingsService userSettingsService, PathProvider pathProvider)
 		{
 			_logger = logger;
 
 			_scoreSaberService = scoreSaberService;
-			_mongoDbService = mongoDbService;
+			_userSettingsService = userSettingsService;
 			_pathProvider = pathProvider;
 		}
 
@@ -246,15 +244,14 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 			{
 				try
 				{
-					var userScoreLinks = await _mongoDbService
-						.GetCollection<ScoreSaberLink>()
-						.FindAsync(new ExpressionFilterDefinition<ScoreSaberLink>(link => link.DiscordId == discordId))
+					var userScoreLinks = await _userSettingsService
+						.LookupSettingsByDiscordId(discordId)
 						.ConfigureAwait(false);
-					return userScoreLinks.FirstOrDefault()?.ScoreSaberId;
+					return userScoreLinks?.AccountLinks.ScoreSaberId;
 				}
 				catch (Exception)
 				{
-					_logger.LogWarning("Couldn't find scoreLink for user {Username}", ctx.Message.Author.Username);
+					_logger.LogWarning("Couldn't find userSettings for user with id {DiscordId}", discordId);
 					return null;
 				}
 			}
