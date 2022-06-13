@@ -1,6 +1,5 @@
 using System.IO;
 using System.Threading.Tasks;
-using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using Microsoft.Extensions.Logging;
@@ -12,9 +11,9 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 {
 	public class TopSongCommand : BaseSongCommand
 	{
-		public TopSongCommand(ILogger<TopSongCommand> logger, DiscordClient client, PathProvider pathProvider, ScoreSaberApiService scoreSaberApiService, MongoDbService mongoDbService,
+		public TopSongCommand(ILogger<TopSongCommand> logger, PathProvider pathProvider, ScoreSaberApiService scoreSaberApiService, UserSettingsService userSettingsService,
 			BeatSaverClientProvider beatSaverClientProvider, BeatSaviorApiService beatSaviorApiService)
-			: base(logger, scoreSaberApiService, mongoDbService, beatSaverClientProvider, Path.Combine(pathProvider.AssetsPath, "poinext1.png"),
+			: base(logger, scoreSaberApiService, userSettingsService, beatSaverClientProvider, Path.Combine(pathProvider.AssetsPath, "poinext1.png"),
 				Path.Combine(pathProvider.AssetsPath, "Signature-Eris.png"), beatSaviorApiService)
 		{
 		}
