@@ -83,5 +83,12 @@ namespace POI.DiscordDotNet.Services
 		{
 			return _mongoDbService.GetCollection<UserSettings>();
 		}
+
+		internal async Task EnsureIndexes()
+		{
+			var scoreSaberIdIndex = Builders<UserSettings>.IndexKeys.Ascending(settings => settings.AccountLinks.ScoreSaberId);
+			await GetUserSettingsCollection().Indexes
+				.CreateOneAsync(new CreateIndexModel<UserSettings>(scoreSaberIdIndex, new CreateIndexOptions { Name = "AccountLinks.ScoreSaberId", Unique = true }));
+		}
 	}
 }
