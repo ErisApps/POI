@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
+using POI.DiscordDotNet.Models.AccountLink;
 using POI.DiscordDotNet.Models.Database;
 
 namespace POI.DiscordDotNet.Services
@@ -23,13 +24,14 @@ namespace POI.DiscordDotNet.Services
 
 		internal Task<UserSettings?> LookupSettingsByScoreSaberId(string scoreSaberId) => LookupUserSettings(settings => settings.AccountLinks.ScoreSaberId == scoreSaberId);
 
-		internal Task<List<ScoreSaberLink>> GetAllScoreSaberLinksWithGenericUnderlyingLogic() => GetAllGenericAccountLinks(
-				settings => settings.AccountLinks.ScoreSaberId != null,
-				settings => new ScoreSaberLink(settings.DiscordId, settings.AccountLinks.ScoreSaberId!));
 
-		private async Task<List<TProjected>> GetAllGenericAccountLinks<TProjected>(
+		internal Task<List<ScoreSaberAccountLink>> GetAllScoreSaberAccountLinks() => GetAllAccountLinksGeneric(
+				settings => settings.AccountLinks.ScoreSaberId != null,
+			settings => new ScoreSaberAccountLink(settings.DiscordId, settings.AccountLinks.ScoreSaberId!));
+
+		private async Task<List<TProjected>> GetAllAccountLinksGeneric<TProjected>(
 			Expression<Func<UserSettings, bool>> genericAccountFilter,
-			Expression<Func<UserSettings, TProjected>> genericAccountProjector)
+			Expression<Func<UserSettings, TProjected>> genericAccountProjector) where TProjected : AccountLinkBase
 		{
 			var filterDefinition = Builders<UserSettings>.Filter.Where(genericAccountFilter);
 			var projectionDefinition = Builders<UserSettings>.Projection.Expression(genericAccountProjector);
