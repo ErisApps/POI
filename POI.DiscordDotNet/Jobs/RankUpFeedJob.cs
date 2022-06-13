@@ -21,18 +21,18 @@ namespace POI.DiscordDotNet.Jobs
 		private readonly ILogger<RankUpFeedJob> _logger;
 		private readonly DiscordClient _discordClient;
 		private readonly ScoreSaberApiService _scoreSaberApiService;
-		private readonly ScoreSaberLinkService _scoreSaberLinkService;
+		private readonly UserSettingsService _userSettingsService;
 		private readonly MongoDbService _mongoDbService;
 
 		private readonly SemaphoreSlim _concurrentExecutionSemaphoreSlim = new(1, 1);
 
-		public RankUpFeedJob(ILogger<RankUpFeedJob> logger, DiscordClient discordClient, ScoreSaberApiService scoreSaberApiService, ScoreSaberLinkService scoreSaberLinkService,
+		public RankUpFeedJob(ILogger<RankUpFeedJob> logger, DiscordClient discordClient, ScoreSaberApiService scoreSaberApiService, UserSettingsService userSettingsService,
 			MongoDbService mongoDbService)
 		{
 			_logger = logger;
 			_discordClient = discordClient;
 			_scoreSaberApiService = scoreSaberApiService;
-			_scoreSaberLinkService = scoreSaberLinkService;
+			_userSettingsService = userSettingsService;
 			_mongoDbService = mongoDbService;
 		}
 
@@ -59,7 +59,7 @@ namespace POI.DiscordDotNet.Jobs
 		{
 			_logger.LogInformation("Executing RankUpFeed logic");
 
-			var allScoreSaberLinks = await _scoreSaberLinkService.GetAll().ConfigureAwait(false);
+			var allScoreSaberLinks = await _userSettingsService.GetAllScoreSaberAccountLinks().ConfigureAwait(false);
 			var guild = await _discordClient.GetGuildAsync(561207570669371402, true).ConfigureAwait(false);
 
 			var members = await guild.GetAllMembersAsync();
