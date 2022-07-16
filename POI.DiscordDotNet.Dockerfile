@@ -7,7 +7,6 @@ RUN apt-get update; apt-get install -y ttf-mscorefonts-installer fontconfig
 FROM mcr.microsoft.com/dotnet/sdk:6.0.302 AS build-env
 WORKDIR /src
 
-COPY ["NuGet.Config", ""]
 COPY ["POI.Core/POI.Core.csproj", "POI.Core/"]
 RUN dotnet restore "POI.Core/POI.Core.csproj"
 COPY ["POI.DiscordDotNet/POI.DiscordDotNet.csproj", "POI.DiscordDotNet/"]
