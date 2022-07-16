@@ -18,6 +18,8 @@ namespace POI.DiscordDotNet.Jobs
 {
 	public class RankUpFeedJob : IJob
 	{
+		private const int TOP = 1000;
+
 		private readonly ILogger<RankUpFeedJob> _logger;
 		private readonly DiscordClient _discordClient;
 		private readonly ScoreSaberApiService _scoreSaberApiService;
@@ -70,11 +72,9 @@ namespace POI.DiscordDotNet.Jobs
 
 			var countryDefinition = new[] { "BE" };
 
-			var playersWrappers = await Task.WhenAll(
-				_scoreSaberApiService.FetchPlayers(1, countries: countryDefinition),
-				_scoreSaberApiService.FetchPlayers(2, countries: countryDefinition),
-				_scoreSaberApiService.FetchPlayers(3, countries: countryDefinition),
-				_scoreSaberApiService.FetchPlayers(4, countries: countryDefinition));
+			var playersWrappers = await Task.WhenAll(Enumerable
+				.Range(1, TOP/50)
+				.Select(page => _scoreSaberApiService.FetchPlayers((uint) page, countries: countryDefinition)));
 
 			if (playersWrappers.Any(x => x == null))
 			{
