@@ -26,6 +26,8 @@ namespace POI.DiscordDotNet
 	{
 		private static DiscordClient _client = null!;
 
+		private const string LOG_OUTPUT_TEMPLATE = "[{Timestamp:HH:mm:ss.fff} {Level:u3} {SourceContext:l}] {Message:lj}{NewLine}{Exception}";
+
 		public static async Task Main(string[]? args = null)
 		{
 			var cultureInfo = new CultureInfo("en-GB");
@@ -41,10 +43,10 @@ namespace POI.DiscordDotNet
 				.MinimumLevel.Override(nameof(DSharpPlus), LogEventLevel.Information)
 				.MinimumLevel.Override(nameof(Microsoft), LogEventLevel.Information)
 				.Enrich.FromLogContext()
-				.WriteTo.Console(theme: SystemConsoleTheme.Colored, outputTemplate: "[{Timestamp:HH:mm:ss.fff} {Level:u3} {SourceContext:l}] {Message:lj}{NewLine}{Exception}")
+				.WriteTo.Console(theme: SystemConsoleTheme.Colored, outputTemplate: LOG_OUTPUT_TEMPLATE)
 				.WriteTo.Conditional(_ => dockerized,
 					(writeTo => writeTo.Async(
-						writeToInternal => writeToInternal.File(pathProvider.LogsPath, rollingInterval: RollingInterval.Day, retainedFileCountLimit: 60, buffered: true)
+						writeToInternal => writeToInternal.File(pathProvider.LogsPath, rollingInterval: RollingInterval.Day, retainedFileCountLimit: 60, buffered: true, outputTemplate: LOG_OUTPUT_TEMPLATE)
 					)))
 				.CreateLogger();
 
