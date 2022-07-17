@@ -21,13 +21,13 @@ namespace POI.DiscordDotNet.Services
 			_mongoDbService = mongoDbService;
 		}
 
-		internal Task<UserSettings?> LookupSettingsByDiscordId(string discordId) => LookupUserSettings(settings => settings.DiscordId == discordId);
+		internal Task<UserSettings?> LookupSettingsByDiscordId(string discordId) => LookupUserSettingsOne(settings => settings.DiscordId == discordId);
 
-		internal Task<UserSettings?> LookupSettingsByScoreSaberId(string scoreSaberId) => LookupUserSettings(settings => settings.AccountLinks.ScoreSaberId == scoreSaberId);
+		internal Task<UserSettings?> LookupSettingsByScoreSaberId(string scoreSaberId) => LookupUserSettingsOne(settings => settings.AccountLinks.ScoreSaberId == scoreSaberId);
 
 
 		internal Task<List<ScoreSaberAccountLink>> GetAllScoreSaberAccountLinks() => GetAllAccountLinksGeneric(
-				settings => settings.AccountLinks.ScoreSaberId != null,
+			settings => settings.AccountLinks.ScoreSaberId != null,
 			settings => new ScoreSaberAccountLink(settings.DiscordId, settings.AccountLinks.ScoreSaberId!));
 
 		private async Task<List<TProjected>> GetAllAccountLinksGeneric<TProjected>(
@@ -45,21 +45,26 @@ namespace POI.DiscordDotNet.Services
 			return await aggregationResultAsync.ToListAsync().ConfigureAwait(false);
 		}
 
-		internal async Task UpdateBirthday(string discordId, LocalDate? birthday)
-		{
-			await CreateAndInsertUserSettingsIfNotExists(discordId);
-
-			var updateDefinition = Builders<UserSettings>.Update.Set(settings => settings.Birthday, birthday);
-			await GetUserSettingsCollection().FindOneAndUpdateAsync(
-				link => link.DiscordId == discordId,
-				updateDefinition);
-		}
-
 		internal async Task CreateOrUpdateScoreSaberLink(string discordId, string scoreSaberId)
 		{
 			await CreateAndInsertUserSettingsIfNotExists(discordId);
 
 			var updateDefinition = Builders<UserSettings>.Update.Set(settings => settings.AccountLinks.ScoreSaberId, scoreSaberId);
+			await GetUserSettingsCollection().FindOneAndUpdateAsync(
+				link => link.DiscordId == discordId,
+				updateDefinition);
+		}
+
+		internal Task<List<UserSettings>> GetAllBirthdayGirls(LocalDate birthdayDate)
+		{
+			return LookupUserSettings(settings => settings.Birthday == birthdayDate);
+		}
+
+		internal async Task UpdateBirthday(string discordId, LocalDate? birthday)
+		{
+			await CreateAndInsertUserSettingsIfNotExists(discordId);
+
+			var updateDefinition = Builders<UserSettings>.Update.Set(settings => settings.Birthday, birthday);
 			await GetUserSettingsCollection().FindOneAndUpdateAsync(
 				link => link.DiscordId == discordId,
 				updateDefinition);
@@ -75,7 +80,7 @@ namespace POI.DiscordDotNet.Services
 			}
 		}
 
-		private async Task<UserSettings?> LookupUserSettings(Expression<Func<UserSettings, bool>> predicate)
+		private async Task<UserSettings?> LookupUserSettingsOne(Expression<Func<UserSettings, bool>> predicate)
 		{
 			try
 			{
@@ -87,6 +92,20 @@ namespace POI.DiscordDotNet.Services
 			catch (Exception)
 			{
 				return null;
+			}
+		}
+
+		private async Task<List<UserSettings>> LookupUserSettings(Expression<Func<UserSettings, bool>> predicate)
+		{
+			try
+			{
+				return await (await GetUserSettingsCollection()
+					.FindAsync(new ExpressionFilterDefinition<UserSettings>(predicate))
+					.ConfigureAwait(false)).ToListAsync();
+			}
+			catch (Exception)
+			{
+				return new List<UserSettings>();
 			}
 		}
 
