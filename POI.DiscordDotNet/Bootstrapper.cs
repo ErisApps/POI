@@ -112,6 +112,9 @@ namespace POI.DiscordDotNet
 						q.ScheduleJob<RankUpFeedJob>(trigger => trigger
 							.WithIdentity("RankUpFeed Trigger")
 							.WithSchedule(CronScheduleBuilder.CronSchedule("0 0/5 * * * ?")));
+						q.ScheduleJob<BirthdayGirlsJob>(trigger => trigger
+							.WithIdentity("Birthday Girl trigger")
+							.WithCronSchedule(CronScheduleBuilder.DailyAtHourAndMinute(0, 0)));
 					});
 				}).Build();
 
