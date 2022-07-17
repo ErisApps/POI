@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
+using NodaTime;
 using POI.DiscordDotNet.Models.AccountLink;
 using POI.DiscordDotNet.Models.Database;
 
@@ -42,6 +43,16 @@ namespace POI.DiscordDotNet.Services
 
 			var aggregationResultAsync = await GetUserSettingsCollection().AggregateAsync(aggregationPipelineDefinition).ConfigureAwait(false);
 			return await aggregationResultAsync.ToListAsync().ConfigureAwait(false);
+		}
+
+		internal async Task UpdateBirthday(string discordId, LocalDate? birthday)
+		{
+			await CreateAndInsertUserSettingsIfNotExists(discordId);
+
+			var updateDefinition = Builders<UserSettings>.Update.Set(settings => settings.Birthday, birthday);
+			await GetUserSettingsCollection().FindOneAndUpdateAsync(
+				link => link.DiscordId == discordId,
+				updateDefinition);
 		}
 
 		internal async Task CreateOrUpdateScoreSaberLink(string discordId, string scoreSaberId)
@@ -86,9 +97,15 @@ namespace POI.DiscordDotNet.Services
 
 		internal async Task EnsureIndexes()
 		{
-			var scoreSaberIdIndex = Builders<UserSettings>.IndexKeys.Ascending(settings => settings.AccountLinks.ScoreSaberId);
+			await EnsureIndexInternal("AccountLinks.ScoreSaberId", settings => settings.AccountLinks.ScoreSaberId!);
+			await EnsureIndexInternal("Birthday", settings => settings.Birthday!, false);
+		}
+
+		private async Task EnsureIndexInternal(string indexName, Expression<Func<UserSettings, object>> fieldSelector, bool unique = true)
+		{
+			var scoreSaberIdIndex = Builders<UserSettings>.IndexKeys.Ascending(fieldSelector);
 			await GetUserSettingsCollection().Indexes
-				.CreateOneAsync(new CreateIndexModel<UserSettings>(scoreSaberIdIndex, new CreateIndexOptions { Name = "AccountLinks.ScoreSaberId", Unique = true }));
+				.CreateOneAsync(new CreateIndexModel<UserSettings>(scoreSaberIdIndex, new CreateIndexOptions { Name = indexName, Unique = unique }));
 		}
 	}
 }

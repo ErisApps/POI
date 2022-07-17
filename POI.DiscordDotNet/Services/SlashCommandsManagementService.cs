@@ -4,6 +4,7 @@ using DSharpPlus;
 using DSharpPlus.SlashCommands;
 using DSharpPlus.SlashCommands.EventArgs;
 using Microsoft.Extensions.Logging;
+using POI.DiscordDotNet.Commands.Profile;
 using POI.DiscordDotNet.Commands.Utils;
 
 namespace POI.DiscordDotNet.Services
@@ -32,6 +33,8 @@ namespace POI.DiscordDotNet.Services
 			// TODO: Register slash commands below
 			_slashCommands.RegisterCommands<PingCommand>();
 			_slashCommands.RegisterCommands<UptimeCommand>();
+
+			_slashCommands.RegisterCommands<ProfileSlashCommandsModule>();
 		}
 
 		public void Dispose()
