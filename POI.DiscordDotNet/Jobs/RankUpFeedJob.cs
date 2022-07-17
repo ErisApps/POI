@@ -96,14 +96,14 @@ namespace POI.DiscordDotNet.Jobs
 				var discordId = allScoreSaberLinks.FirstOrDefault(x => x.ScoreSaberId == player.Id)?.DiscordId;
 				if (discordId == null)
 				{
-					_logger.LogWarning("Has no link");
+					// _logger.LogWarning("Has no link");
 					continue;
 				}
 
 				var member = members.FirstOrDefault(x => string.Equals(x.Id.ToString(), discordId, StringComparison.Ordinal));
 				if (member == null)
 				{
-					_logger.LogWarning("ScoreLink exists for non-member");
+					// _logger.LogWarning("ScoreLink exists for non-member");
 					continue;
 				}
 
