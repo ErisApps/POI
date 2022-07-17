@@ -7,7 +7,7 @@ namespace POI.DiscordDotNet.Commands.Profile
 {
 	public partial class ProfileSlashCommandsModule
 	{
-		[SlashCommandGroup("birthday", "Commands related to your birthday")]
+		[SlashCommandGroup("birthday", "Commands related to managing your birthday")]
 		public class BirthdaySlashCommandsModule : ApplicationCommandModule
 		{
 			private readonly UserSettingsService _userSettingsService;
