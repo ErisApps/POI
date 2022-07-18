@@ -89,7 +89,7 @@ namespace POI.DiscordDotNet.Jobs
 				// _logger.LogDebug("#{Rank} {Name}", player.CountryRank, player.Name);
 				if (player.ProfilePicture.EndsWith("steam.png") && player.Id.Length == 17 && player.Id.StartsWith("7"))
 				{
-					_logger.LogInformation("Calling Refresh for player: {PlayerName}", player.Name);
+					_logger.LogInformation("Calling Refresh for player {PlayerName} at rank {PlayerRank}", player.Name, player.CountryRank);
 					await _scoreSaberApiService.RefreshProfile(player.Id).ConfigureAwait(false);
 				}
 
