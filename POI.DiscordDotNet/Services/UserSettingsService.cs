@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using MongoDB.Bson;
 using MongoDB.Driver;
 using NodaTime;
 using POI.DiscordDotNet.Models.AccountLink;
@@ -103,7 +105,7 @@ namespace POI.DiscordDotNet.Services
 			try
 			{
 				return await (await GetUserSettingsCollection()
-					.FindAsync(new ExpressionFilterDefinition<UserSettings>(predicate))
+						.FindAsync(new ExpressionFilterDefinition<UserSettings>(predicate))
 						.ConfigureAwait(false))
 					.ToListAsync().ConfigureAwait(false);
 			}
@@ -120,15 +122,48 @@ namespace POI.DiscordDotNet.Services
 
 		internal async Task EnsureIndexes()
 		{
-			await EnsureIndexInternal("AccountLinks.ScoreSaberId", settings => settings.AccountLinks.ScoreSaberId!);
-			await EnsureIndexInternal("Birthday", settings => settings.Birthday!, false);
+			await EnsureIndexUniqueNullable("AccountLinks.ScoreSaberId", settings => settings.AccountLinks.ScoreSaberId!, BsonType.String);
+			await EnsureIndexNonUnique("Birthday", settings => settings.Birthday!);
 		}
 
-		private async Task EnsureIndexInternal(string indexName, Expression<Func<UserSettings, object>> fieldSelector, bool unique = true)
+		private Task EnsureIndexNonUnique(string indexName, Expression<Func<UserSettings, object>> fieldSelector)
 		{
-			var scoreSaberIdIndex = Builders<UserSettings>.IndexKeys.Ascending(fieldSelector);
-			await GetUserSettingsCollection().Indexes
-				.CreateOneAsync(new CreateIndexModel<UserSettings>(scoreSaberIdIndex, new CreateIndexOptions { Name = indexName, Unique = unique }));
+			return EnsureSingleIndexInternal(indexName, fieldSelector);
+		}
+
+		private Task EnsureIndexUnique(string indexName, Expression<Func<UserSettings, object>> fieldSelector)
+		{
+			return EnsureSingleIndexInternal(indexName, fieldSelector, options =>
+			{
+				options.Unique = true;
+			});
+		}
+
+		private Task EnsureIndexUniqueNullable(string indexName, Expression<Func<UserSettings, object>> fieldSelector, BsonType bsonFieldType)
+		{
+			return EnsureSingleIndexInternal(indexName, fieldSelector, options =>
+			{
+				options.Unique = true;
+				options.PartialFilterExpression = Builders<UserSettings>.Filter.Type(fieldSelector, bsonFieldType);
+			});
+		}
+
+		private async Task EnsureSingleIndexInternal(string indexName, Expression<Func<UserSettings, object>> fieldSelector,
+			Action<CreateIndexOptions<UserSettings>>? indexCreationOptionsExtension = null)
+		{
+			var collectionIndexManager = GetUserSettingsCollection().Indexes;
+			var collectionIndexesCursor = await collectionIndexManager.ListAsync().ConfigureAwait(false);
+			var collectionIndexesList = await collectionIndexesCursor.ToListAsync().ConfigureAwait(false);
+			if (collectionIndexesList.Any(x => x["name"] == indexName))
+			{
+				await collectionIndexManager.DropOneAsync(indexName).ConfigureAwait(false);
+			}
+
+			var indexKeysDefinition = Builders<UserSettings>.IndexKeys.Ascending(fieldSelector);
+			var indexCreationOptions = new CreateIndexOptions<UserSettings> { Name = indexName };
+			indexCreationOptionsExtension?.Invoke(indexCreationOptions);
+
+			await collectionIndexManager.CreateOneAsync(new CreateIndexModel<UserSettings>(indexKeysDefinition, indexCreationOptions));
 		}
 	}
 }
