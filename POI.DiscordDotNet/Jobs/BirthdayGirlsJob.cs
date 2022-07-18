@@ -44,7 +44,7 @@ namespace POI.DiscordDotNet.Jobs
 				}
 				else if (!isBirthdayPartyPeep && hasBirthdayRole)
 				{
-					await member.GrantRoleAsync(birthdayRole, "Awww, birthday is over...").ConfigureAwait(false);
+					await member.RevokeRoleAsync(birthdayRole, "Awww, birthday is over...").ConfigureAwait(false);
 				}
 			}
 		}
