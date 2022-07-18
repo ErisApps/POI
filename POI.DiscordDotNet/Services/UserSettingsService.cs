@@ -55,9 +55,12 @@ namespace POI.DiscordDotNet.Services
 				updateDefinition);
 		}
 
-		internal Task<List<UserSettings>> GetAllBirthdayGirls(LocalDate birthdayDate)
+		internal async Task<List<UserSettings>> GetAllBirthdayGirls(LocalDate birthdayDate)
 		{
-			return LookupUserSettings(settings => settings.Birthday == birthdayDate);
+			var peopleWithRegisteredBirthday = await LookupUserSettings(settings => settings.Birthday != null);
+			return peopleWithRegisteredBirthday
+				.Where(settings => settings.Birthday!.Value.Day == birthdayDate.Day && settings.Birthday.Value.Month == birthdayDate.Month)
+				.ToList();
 		}
 
 		internal async Task UpdateBirthday(string discordId, LocalDate? birthday)
@@ -101,7 +104,8 @@ namespace POI.DiscordDotNet.Services
 			{
 				return await (await GetUserSettingsCollection()
 					.FindAsync(new ExpressionFilterDefinition<UserSettings>(predicate))
-					.ConfigureAwait(false)).ToListAsync();
+						.ConfigureAwait(false))
+					.ToListAsync().ConfigureAwait(false);
 			}
 			catch (Exception)
 			{
