@@ -6,6 +6,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POI.Core", "POI.Core\POI.Co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POI.Azure", "POI.Azure\POI.Azure.csproj", "{3CA6BF2A-2028-407E-9D0A-2F98713A5DE7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POI.Shared.Utils", "POI.Shared.Utils\POI.Shared.Utils.csproj", "{BCF58A10-6675-438F-B7B7-1916AE62592A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POI.DiscordDotNet.Core", "POI.DiscordDotNet.Core\POI.DiscordDotNet.Core.csproj", "{B2DDA71C-B45B-40B9-95C4-2CC9A2B52F95}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POI.DiscordDotNet.Module.Base", "POI.DiscordDotNet.Module.Base\POI.DiscordDotNet.Module.Base.csproj", "{B24394EA-CAFB-41EB-9F02-089F76D29CDF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POI.DiscordDotNet.Module.Utils", "POI.DiscordDotNet.Module.Utils\POI.DiscordDotNet.Module.Utils.csproj", "{BA029137-B547-4D0D-BE7E-0002B5D19D43}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +32,21 @@ Global
 		{3CA6BF2A-2028-407E-9D0A-2F98713A5DE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3CA6BF2A-2028-407E-9D0A-2F98713A5DE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3CA6BF2A-2028-407E-9D0A-2F98713A5DE7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BCF58A10-6675-438F-B7B7-1916AE62592A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCF58A10-6675-438F-B7B7-1916AE62592A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCF58A10-6675-438F-B7B7-1916AE62592A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCF58A10-6675-438F-B7B7-1916AE62592A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B2DDA71C-B45B-40B9-95C4-2CC9A2B52F95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2DDA71C-B45B-40B9-95C4-2CC9A2B52F95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B2DDA71C-B45B-40B9-95C4-2CC9A2B52F95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B2DDA71C-B45B-40B9-95C4-2CC9A2B52F95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B24394EA-CAFB-41EB-9F02-089F76D29CDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B24394EA-CAFB-41EB-9F02-089F76D29CDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B24394EA-CAFB-41EB-9F02-089F76D29CDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B24394EA-CAFB-41EB-9F02-089F76D29CDF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA029137-B547-4D0D-BE7E-0002B5D19D43}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA029137-B547-4D0D-BE7E-0002B5D19D43}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA029137-B547-4D0D-BE7E-0002B5D19D43}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA029137-B547-4D0D-BE7E-0002B5D19D43}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
