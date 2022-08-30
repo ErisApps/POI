@@ -136,7 +136,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 				if (playerImageBytes != null)
 				{
 					using var avatarImage = new MagickImage(playerImageBytes);
-					avatarImage.Resize(new MagickGeometry {Width = 100, Height = 100});
+					avatarImage.Resize(new MagickGeometry { Width = 100, Height = 100 });
 
 					using var avatarLayer = new MagickImage(MagickColors.Transparent, 100, 100);
 					avatarLayer.Draw(
@@ -359,13 +359,17 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 			//BeatSavior data found! (Making the second image)
 			if (beatSaviorProfileData != null)
 			{
-				var beatSaviorSongIndex = beatSaviorProfileData.FindIndex(song => requestedSong.Leaderboard.SongHash.Equals(song.SongId, StringComparison.InvariantCultureIgnoreCase)
-				                                                                   && requestedSong.Leaderboard.DifficultyInfo.Difficulty == song.SongDifficultyRank
-				                                                                   && requestedSong.Leaderboard.DifficultyInfo.GameMode.Contains(song.GameMode)
-				                                                                   && requestedSong.Score.BaseScore == song.Trackers.ScoreTracker.Score);
-				if (beatSaviorSongIndex >= 0)
+				var beatSaviorMatchingPlays = beatSaviorProfileData
+					.Where(song => requestedSong.Leaderboard.SongHash.Equals(song.SongId, StringComparison.InvariantCultureIgnoreCase)
+					               && requestedSong.Leaderboard.DifficultyInfo.Difficulty == song.SongDifficultyRank
+					               && !string.IsNullOrWhiteSpace(song.GameMode)
+					               && requestedSong.Leaderboard.DifficultyInfo.GameMode.Contains(song.GameMode))
+					.OrderByDescending(song => song.Trackers.ScoreTracker.Score)
+					.ToList();
+
+				if (beatSaviorMatchingPlays.Any())
 				{
-					await SendBeatSaviorMemoryStream(ctx, profile, beatSaviorProfileData![beatSaviorSongIndex]).ConfigureAwait(false);
+					await SendBeatSaviorMemoryStream(ctx, profile, beatSaviorMatchingPlays.FirstOrDefault()).ConfigureAwait(false);
 				}
 			}
 		}
