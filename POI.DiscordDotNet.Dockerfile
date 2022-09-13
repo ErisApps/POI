@@ -4,7 +4,7 @@ RUN sed -i'.bak' 's/$/ contrib/' /etc/apt/sources.list
 RUN apt-get update; apt-get install -y ttf-mscorefonts-installer fontconfig
 
 # Set up build environment
-FROM mcr.microsoft.com/dotnet/sdk:6.0.400 AS build-env
+FROM mcr.microsoft.com/dotnet/sdk:6.0.401 AS build-env
 WORKDIR /src
 
 COPY ["POI.Core/POI.Core.csproj", "POI.Core/"]
