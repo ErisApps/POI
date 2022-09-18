@@ -21,8 +21,13 @@ namespace POI.DiscordDotNet.Commands.Helpers
 
 		public override async Task<bool> ExecuteCheckAsync(CommandContext ctx, bool help)
 		{
+			if (ctx.Guild?.Id == null)
+			{
+				return false;
+			}
+
 			var serverDependentUserSettingsRepository = ctx.Services.GetRequiredService<ServerDependentUserSettingsRepository>();
-			var serverDependentUserSettings = await serverDependentUserSettingsRepository.FindOneById(ctx.Member.Id, ctx.Guild.Id);
+			var serverDependentUserSettings = await serverDependentUserSettingsRepository.FindOneById(ctx.Member!.Id, ctx.Guild.Id);
 			return serverDependentUserSettings != null && serverDependentUserSettings.Permissions.HasFlag(_requiredPermission);
 		}
 	}
