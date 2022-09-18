@@ -14,6 +14,7 @@ using POI.Core.Models.ScoreSaber.Wrappers;
 using POI.Core.Services;
 using POI.DiscordDotNet.Commands.Modules.ChatCommands;
 using POI.DiscordDotNet.Extensions;
+using POI.DiscordDotNet.Repositories;
 using POI.DiscordDotNet.Services;
 
 namespace POI.DiscordDotNet.Commands.BeatSaber
@@ -23,7 +24,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 		private readonly ILogger<BaseSongCommand> _logger;
 		private readonly string _backgroundImagePath;
 		private readonly string _erisSignaturePath;
-		private readonly GlobalUserSettingsService _globalUserSettingsService;
+		private readonly GlobalUserSettingsRepository _globalUserSettingsRepository;
 		private readonly BeatSaverClientProvider _beatSaverClientProvider;
 
 		protected readonly ScoreSaberApiService ScoreSaberApiService;
@@ -32,7 +33,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 		private const int WIDTH = 1024;
 		private const int MARGIN = 35;
 
-		protected BaseSongCommand(ILogger<BaseSongCommand> logger, ScoreSaberApiService scoreSaberApiService, GlobalUserSettingsService globalUserSettingsService,
+		protected BaseSongCommand(ILogger<BaseSongCommand> logger, ScoreSaberApiService scoreSaberApiService, GlobalUserSettingsRepository globalUserSettingsRepository,
 			BeatSaverClientProvider beatSaverClientProvider, string backgroundImagePath, string erisSignaturePath, BeatSaviorApiService beatSaviorApiService)
 		{
 			_logger = logger;
@@ -40,7 +41,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 			ScoreSaberApiService = scoreSaberApiService;
 			BeatSaviorApiService = beatSaviorApiService;
 
-			_globalUserSettingsService = globalUserSettingsService;
+			_globalUserSettingsRepository = globalUserSettingsRepository;
 			_beatSaverClientProvider = beatSaverClientProvider;
 			_backgroundImagePath = backgroundImagePath;
 			_erisSignaturePath = erisSignaturePath;
@@ -644,7 +645,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 			{
 				try
 				{
-					var userSettings = await _globalUserSettingsService
+					var userSettings = await _globalUserSettingsRepository
 						.LookupSettingsByDiscordId(discordId)
 						.ConfigureAwait(false);
 					scoreSaberId = userSettings?.AccountLinks.ScoreSaberId;

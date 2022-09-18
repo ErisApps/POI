@@ -12,6 +12,7 @@ using POI.Core.Services;
 using POI.DiscordDotNet.Extensions;
 using POI.DiscordDotNet.Models.AccountLink;
 using POI.DiscordDotNet.Models.Database;
+using POI.DiscordDotNet.Repositories;
 using POI.DiscordDotNet.Services;
 using Quartz;
 
@@ -25,19 +26,19 @@ namespace POI.DiscordDotNet.Jobs
 		private readonly ILogger<RankUpFeedJob> _logger;
 		private readonly DiscordClient _discordClient;
 		private readonly ScoreSaberApiService _scoreSaberApiService;
-		private readonly GlobalUserSettingsService _globalUserSettingsService;
+		private readonly GlobalUserSettingsRepository _globalUserSettingsRepository;
 		private readonly MongoDbService _mongoDbService;
 
 		private readonly string[] _countryDefinition = { "BE" };
 		private readonly string[] _profileRefreshExclusions = Array.Empty<string>();
 
-		public RankUpFeedJob(ILogger<RankUpFeedJob> logger, DiscordClient discordClient, ScoreSaberApiService scoreSaberApiService, GlobalUserSettingsService globalUserSettingsService,
+		public RankUpFeedJob(ILogger<RankUpFeedJob> logger, DiscordClient discordClient, ScoreSaberApiService scoreSaberApiService, GlobalUserSettingsRepository globalUserSettingsRepository,
 			MongoDbService mongoDbService)
 		{
 			_logger = logger;
 			_discordClient = discordClient;
 			_scoreSaberApiService = scoreSaberApiService;
-			_globalUserSettingsService = globalUserSettingsService;
+			_globalUserSettingsRepository = globalUserSettingsRepository;
 			_mongoDbService = mongoDbService;
 		}
 
@@ -45,7 +46,7 @@ namespace POI.DiscordDotNet.Jobs
 		{
 			_logger.LogInformation("Executing RankUpFeed logic");
 
-			var allScoreSaberLinks = await _globalUserSettingsService.GetAllScoreSaberAccountLinks().ConfigureAwait(false);
+			var allScoreSaberLinks = await _globalUserSettingsRepository.GetAllScoreSaberAccountLinks().ConfigureAwait(false);
 			var guild = await _discordClient.GetGuildAsync(561207570669371402, true).ConfigureAwait(false);
 
 			var members = await guild.GetAllMembersAsync();

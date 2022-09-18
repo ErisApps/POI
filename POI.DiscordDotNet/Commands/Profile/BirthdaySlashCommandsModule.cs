@@ -2,6 +2,7 @@
 using DSharpPlus.SlashCommands;
 using JetBrains.Annotations;
 using NodaTime.Text;
+using POI.DiscordDotNet.Repositories;
 using POI.DiscordDotNet.Services;
 
 namespace POI.DiscordDotNet.Commands.Profile
@@ -11,13 +12,13 @@ namespace POI.DiscordDotNet.Commands.Profile
 		[SlashCommandGroup("birthday", "Commands related to managing your birthday"), UsedImplicitly]
 		public class BirthdaySlashCommandsModule : ApplicationCommandModule
 		{
-			private readonly GlobalUserSettingsService _globalUserSettingsService;
+			private readonly GlobalUserSettingsRepository _globalUserSettingsRepository;
 
 			private readonly LocalDatePattern _localDatePattern;
 
-			public BirthdaySlashCommandsModule(GlobalUserSettingsService globalUserSettingsService)
+			public BirthdaySlashCommandsModule(GlobalUserSettingsRepository globalUserSettingsRepository)
 			{
-				_globalUserSettingsService = globalUserSettingsService;
+				_globalUserSettingsRepository = globalUserSettingsRepository;
 
 				_localDatePattern = LocalDatePattern.CreateWithInvariantCulture("dd'-'MM'-'uuuu");
 			}
@@ -28,7 +29,7 @@ namespace POI.DiscordDotNet.Commands.Profile
 				var parseResult = _localDatePattern.Parse(birthdayDateRaw);
 				if (parseResult.Success)
 				{
-					await _globalUserSettingsService.UpdateBirthday(ctx.User.Id.ToString(), parseResult.Value).ConfigureAwait(false);
+					await _globalUserSettingsRepository.UpdateBirthday(ctx.User.Id.ToString(), parseResult.Value).ConfigureAwait(false);
 					await ctx.CreateResponseAsync("Birthday has been updated").ConfigureAwait(false);
 				}
 				else
@@ -40,7 +41,7 @@ namespace POI.DiscordDotNet.Commands.Profile
 			[SlashCommand("clear", "Unsets your birthday"), UsedImplicitly]
 			public async Task Clear(InteractionContext ctx)
 			{
-				await _globalUserSettingsService.UpdateBirthday(ctx.User.Id.ToString(), null).ConfigureAwait(false);
+				await _globalUserSettingsRepository.UpdateBirthday(ctx.User.Id.ToString(), null).ConfigureAwait(false);
 
 				await ctx.CreateResponseAsync("Birthday has been cleared").ConfigureAwait(false);
 			}

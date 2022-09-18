@@ -5,6 +5,7 @@ using DSharpPlus;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using NodaTime;
+using POI.DiscordDotNet.Repositories;
 using POI.DiscordDotNet.Services;
 using Quartz;
 
@@ -16,13 +17,13 @@ namespace POI.DiscordDotNet.Jobs
 		private const ulong DISCORD_BIRTHDAY_ROLE_ID = 728731698950307860;
 
 		private readonly ILogger<BirthdayGirlsJob> _logger;
-		private readonly GlobalUserSettingsService _globalUserSettingsService;
+		private readonly GlobalUserSettingsRepository _globalUserSettingsRepository;
 		private readonly DiscordClient _discordClient;
 
-		public BirthdayGirlsJob(ILogger<BirthdayGirlsJob> logger, GlobalUserSettingsService globalUserSettingsService, DiscordClient discordClient)
+		public BirthdayGirlsJob(ILogger<BirthdayGirlsJob> logger, GlobalUserSettingsRepository globalUserSettingsRepository, DiscordClient discordClient)
 		{
 			_logger = logger;
-			_globalUserSettingsService = globalUserSettingsService;
+			_globalUserSettingsRepository = globalUserSettingsRepository;
 			_discordClient = discordClient;
 		}
 
@@ -33,7 +34,7 @@ namespace POI.DiscordDotNet.Jobs
 
 			var localDate = LocalDate.FromDateTime(context.ScheduledFireTimeUtc?.LocalDateTime ?? DateTime.Today);
 			_logger.LogInformation("Looking up birthday party people using date: {Date}", localDate.ToString());
-			var currentBirthdayPartyPeople = await _globalUserSettingsService.GetAllBirthdayGirls(localDate);
+			var currentBirthdayPartyPeople = await _globalUserSettingsRepository.GetAllBirthdayGirls(localDate);
 
 			var allMembers = await guild.GetAllMembersAsync().ConfigureAwait(false);
 			foreach (var member in allMembers)

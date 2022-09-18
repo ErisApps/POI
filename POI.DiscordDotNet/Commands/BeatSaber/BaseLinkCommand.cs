@@ -12,6 +12,7 @@ using POI.Core.Models.ScoreSaber.Profile;
 using POI.Core.Services;
 using POI.DiscordDotNet.Commands.Modules.ChatCommands;
 using POI.DiscordDotNet.Extensions;
+using POI.DiscordDotNet.Repositories;
 using POI.DiscordDotNet.Services;
 
 namespace POI.DiscordDotNet.Commands.BeatSaber
@@ -35,14 +36,14 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 		private readonly ILogger<BaseLinkCommand> _logger;
 		private readonly ScoreSaberApiService _scoreSaberApiService;
 
-		protected readonly GlobalUserSettingsService GlobalUserSettingsService;
+		protected readonly GlobalUserSettingsRepository GlobalUserSettingsRepository;
 
-		protected BaseLinkCommand(ILogger<BaseLinkCommand> logger, ScoreSaberApiService scoreSaberApiService, GlobalUserSettingsService globalUserSettingsService)
+		protected BaseLinkCommand(ILogger<BaseLinkCommand> logger, ScoreSaberApiService scoreSaberApiService, GlobalUserSettingsRepository globalUserSettingsRepository)
 		{
 			_logger = logger;
 			_scoreSaberApiService = scoreSaberApiService;
 
-			GlobalUserSettingsService = globalUserSettingsService;
+			GlobalUserSettingsRepository = globalUserSettingsRepository;
 		}
 
 		public virtual async Task Handle(CommandContext ctx, string _)
@@ -127,7 +128,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 
 		protected Task CreateScoreLink(string discordId, string scoreSaberId)
 		{
-			return GlobalUserSettingsService.CreateOrUpdateScoreSaberLink(discordId, scoreSaberId);
+			return GlobalUserSettingsRepository.CreateOrUpdateScoreSaberLink(discordId, scoreSaberId);
 
 			// TODO: Role assignment logic (Preferably call into service)
 		}

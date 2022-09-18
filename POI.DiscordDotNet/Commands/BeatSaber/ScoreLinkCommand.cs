@@ -4,6 +4,7 @@ using DSharpPlus.CommandsNext.Attributes;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using POI.Core.Services;
+using POI.DiscordDotNet.Repositories;
 using POI.DiscordDotNet.Services;
 
 namespace POI.DiscordDotNet.Commands.BeatSaber
@@ -11,8 +12,8 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 	[UsedImplicitly]
 	public class ScoreLinkCommand : BaseLinkCommand
 	{
-		public ScoreLinkCommand(ILogger<ScoreLinkCommand> logger, ScoreSaberApiService scoreSaberApiService, GlobalUserSettingsService globalUserSettingsService)
-			: base(logger, scoreSaberApiService, globalUserSettingsService)
+		public ScoreLinkCommand(ILogger<ScoreLinkCommand> logger, ScoreSaberApiService scoreSaberApiService, GlobalUserSettingsRepository globalUserSettingsRepository)
+			: base(logger, scoreSaberApiService, globalUserSettingsRepository)
 		{
 		}
 
@@ -61,7 +62,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 		private async Task<bool> CheckScoreLinkConflicts(CommandContext ctx, string discordId, string scoreSaberId)
 		{
 			// Check discordId conflict
-			var userSettings = await GlobalUserSettingsService.LookupSettingsByDiscordId(discordId);
+			var userSettings = await GlobalUserSettingsRepository.LookupSettingsByDiscordId(discordId);
 			if (userSettings != null)
 			{
 				if (userSettings.AccountLinks.ScoreSaberId == scoreSaberId)
@@ -74,7 +75,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 			}
 
 			// Check scoreSaberId conflict
-			userSettings = await GlobalUserSettingsService.LookupSettingsByScoreSaberId(scoreSaberId);
+			userSettings = await GlobalUserSettingsRepository.LookupSettingsByScoreSaberId(scoreSaberId);
 			if (userSettings != null)
 			{
 				await ctx.Message.RespondAsync($"ScoreSaber account is already linked to <@!{userSettings.DiscordId}>! O.o").ConfigureAwait(false);

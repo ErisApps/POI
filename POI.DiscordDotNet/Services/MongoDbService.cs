@@ -9,7 +9,7 @@ using POI.DiscordDotNet.Services.Interfaces;
 
 namespace POI.DiscordDotNet.Services
 {
-	public class MongoDbService
+	public class MongoDbService : IMongoDbService
 	{
 		private readonly ILogger<MongoDbService> _logger;
 		private readonly ConfigProviderService _configProviderService;
@@ -30,13 +30,13 @@ namespace POI.DiscordDotNet.Services
 			_logger.LogInformation("Connecting to MongoDb instance");
 			_mongoClient = new MongoClient(mongoClientSettings);
 
-			_mongoDatabase = _mongoClient.GetDatabase("POINext");
+			_mongoDatabase = _mongoClient.GetDatabase("POINextV2");
 		}
 
-		internal IMongoCollection<T> GetCollection<T>(string? collectionName = null) where T : class
+		public IMongoCollection<T> GetCollection<T>(string? collectionName = null) where T : class
 			=> _mongoDatabase.GetCollection<T>(collectionName ?? typeof(T).Name);
 
-		internal async Task<bool> TestConnectivity()
+		public async Task<bool> TestConnectivity()
 		{
 			var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
 
