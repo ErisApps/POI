@@ -18,31 +18,23 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 {
 	public abstract class BaseLinkCommand : BeatSaberCommandsModule
 	{
-		// One day... this will be fetched dynamically from the database... one day...
-		private static readonly ulong[] ApproverUserIds =
-		{
-			261830384663134209 /* Eris */,
-			246209289444655105 /* Pyro */,
-			212220646732595200 /* Logius */,
-			299995209331113985 /* Arno */,
-			353308809931784204 /* Jestro */,
-			321354941589618698 /* GianniKoch */
-		};
-
 		private const string APPROVE_ACTION_ID = "approve";
 		private const string DENY_ACTION_ID = "deny";
 
 		private readonly ILogger<BaseLinkCommand> _logger;
 		private readonly ScoreSaberApiService _scoreSaberApiService;
+		private readonly ServerDependentUserSettingsRepository _serverDependentUserSettingsRepository;
 
 		protected readonly GlobalUserSettingsRepository GlobalUserSettingsRepository;
 
-		protected BaseLinkCommand(ILogger<BaseLinkCommand> logger, ScoreSaberApiService scoreSaberApiService, GlobalUserSettingsRepository globalUserSettingsRepository)
+		protected BaseLinkCommand(ILogger<BaseLinkCommand> logger, ScoreSaberApiService scoreSaberApiService, GlobalUserSettingsRepository globalUserSettingsRepository,
+			ServerDependentUserSettingsRepository serverDependentUserSettingsRepository)
 		{
 			_logger = logger;
 			_scoreSaberApiService = scoreSaberApiService;
 
 			GlobalUserSettingsRepository = globalUserSettingsRepository;
+			_serverDependentUserSettingsRepository = serverDependentUserSettingsRepository;
 		}
 
 		public virtual async Task Handle(CommandContext ctx, string _)
@@ -61,7 +53,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 			return playerInfo;
 		}
 
-		protected static async Task<bool?> WaitForScoreLinkConfirmation(CommandContext ctx, BasicProfile basicProfile, string title)
+		protected async Task<bool?> WaitForScoreLinkConfirmation(CommandContext ctx, BasicProfile basicProfile, string title)
 		{
 			var messageBuilder = new DiscordMessageBuilder();
 			var embedBuilder = new DiscordEmbedBuilder()
@@ -96,7 +88,10 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 				}
 
 				await interactivityResult.Value.Result.Interaction.CreateResponseAsync(InteractionResponseType.DeferredMessageUpdate);
-				hasResponded = ApproverUserIds.Contains(interactivityResult.Value.Result.User.Id);
+				var serverDependentUserSettings = await _serverDependentUserSettingsRepository
+					.FindOneById(interactivityResult.Value.Result.User.Id, interactivityResult.Value.Result.Guild.Id)
+					.ConfigureAwait(false);
+				hasResponded = serverDependentUserSettings != null && serverDependentUserSettings.Permissions.HasFlag(Models.Database.Permissions.LinkApproval);
 			} while (!hasResponded);
 
 			return (interactivityResult.Value.Result.Id == APPROVE_ACTION_ID);
