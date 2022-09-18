@@ -13,9 +13,9 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 	[UsedImplicitly]
 	public class RecentSongCommand : BaseSongCommand
 	{
-		public RecentSongCommand(ILogger<RecentSongCommand> logger, PathProvider pathProvider, ScoreSaberApiService scoreSaberApiService, UserSettingsService userSettingsService,
+		public RecentSongCommand(ILogger<RecentSongCommand> logger, PathProvider pathProvider, ScoreSaberApiService scoreSaberApiService, GlobalUserSettingsService globalUserSettingsService,
 			BeatSaverClientProvider beatSaverClientProvider, BeatSaviorApiService beatSaviorApiService)
-			: base(logger, scoreSaberApiService, userSettingsService, beatSaverClientProvider, Path.Combine(pathProvider.AssetsPath, "poinext1.png"),
+			: base(logger, scoreSaberApiService, globalUserSettingsService, beatSaverClientProvider, Path.Combine(pathProvider.AssetsPath, "poinext1.png"),
 				Path.Combine(pathProvider.AssetsPath, "Signature-Eris.png"), beatSaviorApiService)
 		{
 		}

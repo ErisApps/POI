@@ -25,19 +25,19 @@ namespace POI.DiscordDotNet.Jobs
 		private readonly ILogger<RankUpFeedJob> _logger;
 		private readonly DiscordClient _discordClient;
 		private readonly ScoreSaberApiService _scoreSaberApiService;
-		private readonly UserSettingsService _userSettingsService;
+		private readonly GlobalUserSettingsService _globalUserSettingsService;
 		private readonly MongoDbService _mongoDbService;
 
 		private readonly string[] _countryDefinition = { "BE" };
 		private readonly string[] _profileRefreshExclusions = Array.Empty<string>();
 
-		public RankUpFeedJob(ILogger<RankUpFeedJob> logger, DiscordClient discordClient, ScoreSaberApiService scoreSaberApiService, UserSettingsService userSettingsService,
+		public RankUpFeedJob(ILogger<RankUpFeedJob> logger, DiscordClient discordClient, ScoreSaberApiService scoreSaberApiService, GlobalUserSettingsService globalUserSettingsService,
 			MongoDbService mongoDbService)
 		{
 			_logger = logger;
 			_discordClient = discordClient;
 			_scoreSaberApiService = scoreSaberApiService;
-			_userSettingsService = userSettingsService;
+			_globalUserSettingsService = globalUserSettingsService;
 			_mongoDbService = mongoDbService;
 		}
 
@@ -45,7 +45,7 @@ namespace POI.DiscordDotNet.Jobs
 		{
 			_logger.LogInformation("Executing RankUpFeed logic");
 
-			var allScoreSaberLinks = await _userSettingsService.GetAllScoreSaberAccountLinks().ConfigureAwait(false);
+			var allScoreSaberLinks = await _globalUserSettingsService.GetAllScoreSaberAccountLinks().ConfigureAwait(false);
 			var guild = await _discordClient.GetGuildAsync(561207570669371402, true).ConfigureAwait(false);
 
 			var members = await guild.GetAllMembersAsync();
