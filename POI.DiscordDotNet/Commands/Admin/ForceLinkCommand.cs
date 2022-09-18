@@ -7,6 +7,7 @@ using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using POI.Core.Services;
 using POI.DiscordDotNet.Commands.BeatSaber;
+using POI.DiscordDotNet.Repositories;
 using POI.DiscordDotNet.Services;
 
 namespace POI.DiscordDotNet.Commands.Admin
@@ -15,8 +16,8 @@ namespace POI.DiscordDotNet.Commands.Admin
 	[RequireUserPermissions(Permissions.Administrator)]
 	public class ForceLinkCommand : BaseLinkCommand
 	{
-		public ForceLinkCommand(ILogger<ForceLinkCommand> logger, ScoreSaberApiService scoreSaberApiService, GlobalUserSettingsService globalUserSettingsService)
-			: base(logger, scoreSaberApiService, globalUserSettingsService)
+		public ForceLinkCommand(ILogger<ForceLinkCommand> logger, ScoreSaberApiService scoreSaberApiService, GlobalUserSettingsRepository globalUserSettingsRepository)
+			: base(logger, scoreSaberApiService, globalUserSettingsRepository)
 		{
 		}
 

@@ -6,6 +6,7 @@ using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using POI.Core.Models.ScoreSaber.Wrappers;
 using POI.Core.Services;
+using POI.DiscordDotNet.Repositories;
 using POI.DiscordDotNet.Services;
 
 namespace POI.DiscordDotNet.Commands.BeatSaber
@@ -13,9 +14,9 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 	[UsedImplicitly]
 	public class TopSongCommand : BaseSongCommand
 	{
-		public TopSongCommand(ILogger<TopSongCommand> logger, PathProvider pathProvider, ScoreSaberApiService scoreSaberApiService, GlobalUserSettingsService globalUserSettingsService,
+		public TopSongCommand(ILogger<TopSongCommand> logger, PathProvider pathProvider, ScoreSaberApiService scoreSaberApiService, GlobalUserSettingsRepository globalUserSettingsRepository,
 			BeatSaverClientProvider beatSaverClientProvider, BeatSaviorApiService beatSaviorApiService)
-			: base(logger, scoreSaberApiService, globalUserSettingsService, beatSaverClientProvider, Path.Combine(pathProvider.AssetsPath, "poinext1.png"),
+			: base(logger, scoreSaberApiService, globalUserSettingsRepository, beatSaverClientProvider, Path.Combine(pathProvider.AssetsPath, "poinext1.png"),
 				Path.Combine(pathProvider.AssetsPath, "Signature-Eris.png"), beatSaviorApiService)
 		{
 		}

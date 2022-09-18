@@ -88,10 +88,10 @@ namespace POI.DiscordDotNet
 					sc.AddSingleton(configProvider);
 					sc.AddSingleton(pathProvider);
 					sc.AddSingleton(_client);
-					sc.AddSingleton<MongoDbService>();
+					sc.AddSingleton<IMongoDbService, MongoDbService>();
 					sc.AddSingleton<UptimeManagementService>();
 					sc.AddSingleton<SlashCommandsManagementService>();
-					sc.AddSingleton<GlobalUserSettingsService>();
+					sc.AddSingleton<GlobalUserSettingsRepository>();
 
 					sc.AddSingleton<RankUpFeedJob>();
 
