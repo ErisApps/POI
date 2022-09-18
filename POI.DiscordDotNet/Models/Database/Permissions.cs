@@ -5,8 +5,8 @@ namespace POI.DiscordDotNet.Models.Database
 	[Flags]
 	public enum Permissions
 	{
-		None,
-		LinkApproval,
-		ForceLink
+		None = 0,
+		LinkApproval = 1 << 0,
+		ForceLink = 1 << 1
 	}
 }
