@@ -147,7 +147,7 @@ namespace POI.DiscordDotNet
 
 		private static async Task<bool> VerifyMongoDbConnection(IServiceProvider serviceProvider, Serilog.ILogger logger)
 		{
-			var mongoDbService = serviceProvider.GetRequiredService<MongoDbService>();
+			var mongoDbService = serviceProvider.GetRequiredService<IMongoDbService>();
 			if (await mongoDbService.TestConnectivity().ConfigureAwait(false))
 			{
 				logger.Information("Connected to MongoDb instance");
