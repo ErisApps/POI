@@ -2,7 +2,6 @@
 using System.Text.RegularExpressions;
 using BeatSaverSharp.Models;
 using ImageMagick;
-using POI.Core.Models.ScoreSaber.Scores;
 using POI.Core.Models.Shared;
 using POI.DiscordDotNet.Services;
 
