@@ -13,7 +13,6 @@ using POI.Core.Services;
 using POI.DiscordDotNet.Commands.Modules.ChatCommands;
 using POI.DiscordDotNet.Extensions;
 using POI.DiscordDotNet.Repositories;
-using POI.DiscordDotNet.Services;
 
 namespace POI.DiscordDotNet.Commands.BeatSaber
 {

@@ -5,7 +5,6 @@ using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using POI.Core.Services;
 using POI.DiscordDotNet.Repositories;
-using POI.DiscordDotNet.Services;
 
 namespace POI.DiscordDotNet.Commands.BeatSaber
 {

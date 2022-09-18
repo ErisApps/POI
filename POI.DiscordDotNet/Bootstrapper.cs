@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using POI.Core.Extensions;
 using POI.Core.Services.Interfaces;
 using POI.DiscordDotNet.Jobs;
+using POI.DiscordDotNet.Repositories;
 using POI.DiscordDotNet.Services;
 using POI.DiscordDotNet.Services.Interfaces;
 using Quartz;

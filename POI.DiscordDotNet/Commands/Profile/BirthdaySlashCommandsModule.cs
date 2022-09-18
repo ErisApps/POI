@@ -3,7 +3,6 @@ using DSharpPlus.SlashCommands;
 using JetBrains.Annotations;
 using NodaTime.Text;
 using POI.DiscordDotNet.Repositories;
-using POI.DiscordDotNet.Services;
 
 namespace POI.DiscordDotNet.Commands.Profile
 {
