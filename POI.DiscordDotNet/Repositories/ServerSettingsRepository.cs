@@ -11,12 +11,12 @@ namespace POI.DiscordDotNet.Repositories
 		{
 		}
 
-		public Task<ServerSettings?> FindOneById(string serverId)
+		public Task<ServerSettings?> FindOneById(ulong serverId)
 		{
 			return FindOne(settings => settings.ServerId == serverId);
 		}
 
-		private async Task CreateAndInsertIfNotExists(string userId, string serverId)
+		private async Task CreateAndInsertIfNotExists(ulong userId, ulong serverId)
 		{
 			var serverSettings = await FindOneById(serverId).ConfigureAwait(false);
 			if (serverSettings == null)

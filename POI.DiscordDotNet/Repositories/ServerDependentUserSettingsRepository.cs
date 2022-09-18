@@ -13,12 +13,12 @@ namespace POI.DiscordDotNet.Repositories
 		{
 		}
 
-		public Task<ServerDependentUserSettings?> FindOneById(string userId, string serverId)
+		public Task<ServerDependentUserSettings?> FindOneById(ulong userId, ulong serverId)
 		{
 			return FindOne(settings => settings.UserId == userId && settings.ServerId == serverId);
 		}
 
-		internal async Task UpdatePermissions(string userId, string serverId, Permissions newPermissions)
+		internal async Task UpdatePermissions(ulong userId, ulong serverId, Permissions newPermissions)
 		{
 			await CreateAndInsertIfNotExists(userId, serverId);
 
@@ -39,7 +39,7 @@ namespace POI.DiscordDotNet.Repositories
 				options => options.Unique = true);
 		}
 
-		private async Task CreateAndInsertIfNotExists(string userId, string serverId)
+		private async Task CreateAndInsertIfNotExists(ulong userId, ulong serverId)
 		{
 			var serverDependentUserSettings = await FindOneById(userId, serverId).ConfigureAwait(false);
 			if (serverDependentUserSettings == null)

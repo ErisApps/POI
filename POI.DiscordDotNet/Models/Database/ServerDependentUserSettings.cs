@@ -5,21 +5,21 @@ namespace POI.DiscordDotNet.Models.Database
 	[BsonNoId]
 	public class ServerDependentUserSettings
 	{
-		public string UserId { get; }
+		public ulong UserId { get; }
 
-		public string ServerId { get; }
+		public ulong ServerId { get; }
 
-		public Permissions Permissions { get; set; } = Permissions.None;
+		public Permissions Permissions { get; set; }
 
 		[BsonConstructor]
-		public ServerDependentUserSettings(string userId, string serverId, Permissions permissions)
+		public ServerDependentUserSettings(ulong userId, ulong serverId, Permissions permissions)
 		{
 			UserId = userId;
 			ServerId = serverId;
 			Permissions = permissions;
 		}
 
-		public static ServerDependentUserSettings CreateDefault(string userId, string serverId)
+		public static ServerDependentUserSettings CreateDefault(ulong userId, ulong serverId)
 		{
 			return new ServerDependentUserSettings(userId, serverId, Permissions.None);
 		}

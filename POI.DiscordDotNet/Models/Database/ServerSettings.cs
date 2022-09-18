@@ -5,21 +5,21 @@ namespace POI.DiscordDotNet.Models.Database
 	public class ServerSettings
 	{
 		[BsonId]
-		public string ServerId { get; }
+		public ulong ServerId { get; }
 
-		public string? RankUpFeedChannelId { get; set; }
+		public ulong? RankUpFeedChannelId { get; set; }
 
-		public string? BirthdayRoleId { get; set; }
+		public ulong? BirthdayRoleId { get; set; }
 
 		[BsonConstructor]
-		public ServerSettings(string serverId, string? rankUpFeedChannelId, string? birthdayRoleId)
+		public ServerSettings(ulong serverId, ulong? rankUpFeedChannelId, ulong? birthdayRoleId)
 		{
 			ServerId = serverId;
 			RankUpFeedChannelId = rankUpFeedChannelId;
 			BirthdayRoleId = birthdayRoleId;
 		}
 
-		public static ServerSettings CreateDefault(string serverId)
+		public static ServerSettings CreateDefault(ulong serverId)
 		{
 			return new ServerSettings(serverId, null, null);
 		}
