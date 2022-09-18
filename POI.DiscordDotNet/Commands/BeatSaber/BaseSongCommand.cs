@@ -23,7 +23,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 		private readonly ILogger<BaseSongCommand> _logger;
 		private readonly string _backgroundImagePath;
 		private readonly string _erisSignaturePath;
-		private readonly UserSettingsService _userSettingsService;
+		private readonly GlobalUserSettingsService _globalUserSettingsService;
 		private readonly BeatSaverClientProvider _beatSaverClientProvider;
 
 		protected readonly ScoreSaberApiService ScoreSaberApiService;
@@ -32,7 +32,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 		private const int WIDTH = 1024;
 		private const int MARGIN = 35;
 
-		protected BaseSongCommand(ILogger<BaseSongCommand> logger, ScoreSaberApiService scoreSaberApiService, UserSettingsService userSettingsService,
+		protected BaseSongCommand(ILogger<BaseSongCommand> logger, ScoreSaberApiService scoreSaberApiService, GlobalUserSettingsService globalUserSettingsService,
 			BeatSaverClientProvider beatSaverClientProvider, string backgroundImagePath, string erisSignaturePath, BeatSaviorApiService beatSaviorApiService)
 		{
 			_logger = logger;
@@ -40,7 +40,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 			ScoreSaberApiService = scoreSaberApiService;
 			BeatSaviorApiService = beatSaviorApiService;
 
-			_userSettingsService = userSettingsService;
+			_globalUserSettingsService = globalUserSettingsService;
 			_beatSaverClientProvider = beatSaverClientProvider;
 			_backgroundImagePath = backgroundImagePath;
 			_erisSignaturePath = erisSignaturePath;
@@ -644,7 +644,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 			{
 				try
 				{
-					var userSettings = await _userSettingsService
+					var userSettings = await _globalUserSettingsService
 						.LookupSettingsByDiscordId(discordId)
 						.ConfigureAwait(false);
 					scoreSaberId = userSettings?.AccountLinks.ScoreSaberId;

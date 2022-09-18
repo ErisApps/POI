@@ -16,13 +16,13 @@ namespace POI.DiscordDotNet.Jobs
 		private const ulong DISCORD_BIRTHDAY_ROLE_ID = 728731698950307860;
 
 		private readonly ILogger<BirthdayGirlsJob> _logger;
-		private readonly UserSettingsService _userSettingsService;
+		private readonly GlobalUserSettingsService _globalUserSettingsService;
 		private readonly DiscordClient _discordClient;
 
-		public BirthdayGirlsJob(ILogger<BirthdayGirlsJob> logger, UserSettingsService userSettingsService, DiscordClient discordClient)
+		public BirthdayGirlsJob(ILogger<BirthdayGirlsJob> logger, GlobalUserSettingsService globalUserSettingsService, DiscordClient discordClient)
 		{
 			_logger = logger;
-			_userSettingsService = userSettingsService;
+			_globalUserSettingsService = globalUserSettingsService;
 			_discordClient = discordClient;
 		}
 
@@ -33,7 +33,7 @@ namespace POI.DiscordDotNet.Jobs
 
 			var localDate = LocalDate.FromDateTime(context.ScheduledFireTimeUtc?.LocalDateTime ?? DateTime.Today);
 			_logger.LogInformation("Looking up birthday party people using date: {Date}", localDate.ToString());
-			var currentBirthdayPartyPeople = await _userSettingsService.GetAllBirthdayGirls(localDate);
+			var currentBirthdayPartyPeople = await _globalUserSettingsService.GetAllBirthdayGirls(localDate);
 
 			var allMembers = await guild.GetAllMembersAsync().ConfigureAwait(false);
 			foreach (var member in allMembers)

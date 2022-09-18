@@ -91,7 +91,7 @@ namespace POI.DiscordDotNet
 					sc.AddSingleton<UptimeManagementService>();
 					sc.AddSingleton<ScoreSaberLinkService>();
 					sc.AddSingleton<SlashCommandsManagementService>();
-					sc.AddSingleton<UserSettingsService>();
+					sc.AddSingleton<GlobalUserSettingsService>();
 
 					sc.AddSingleton<RankUpFeedJob>();
 

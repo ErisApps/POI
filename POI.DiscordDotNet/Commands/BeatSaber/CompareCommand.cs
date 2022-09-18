@@ -28,16 +28,16 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 		private const int RANK_HEIGHT = PFP_HEIGHT + 150 + SPACING;
 
 		private readonly ILogger<CompareCommand> _logger;
-		private readonly UserSettingsService _userSettingsService;
+		private readonly GlobalUserSettingsService _globalUserSettingsService;
 		private readonly PathProvider _pathProvider;
 		private readonly ScoreSaberApiService _scoreSaberService;
 
-		public CompareCommand(ILogger<CompareCommand> logger, ScoreSaberApiService scoreSaberService, UserSettingsService userSettingsService, PathProvider pathProvider)
+		public CompareCommand(ILogger<CompareCommand> logger, ScoreSaberApiService scoreSaberService, GlobalUserSettingsService globalUserSettingsService, PathProvider pathProvider)
 		{
 			_logger = logger;
 
 			_scoreSaberService = scoreSaberService;
-			_userSettingsService = userSettingsService;
+			_globalUserSettingsService = globalUserSettingsService;
 			_pathProvider = pathProvider;
 		}
 
@@ -246,7 +246,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 			{
 				try
 				{
-					var userScoreLinks = await _userSettingsService
+					var userScoreLinks = await _globalUserSettingsService
 						.LookupSettingsByDiscordId(discordId)
 						.ConfigureAwait(false);
 					return userScoreLinks?.AccountLinks.ScoreSaberId;

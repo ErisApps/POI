@@ -3,26 +3,26 @@ using NodaTime;
 
 namespace POI.DiscordDotNet.Models.Database
 {
-	public class UserSettings
+	public class GlobalUserSettings
 	{
 		[BsonId]
-		public string DiscordId { get; set; }
+		public string DiscordId { get; }
 
 		public LocalDate? Birthday { get; set; }
 
 		public AccountLinks AccountLinks { get; set; }
 
 		[BsonConstructor]
-		public UserSettings(string discordId, LocalDate? birthday, AccountLinks? accountLinks)
+		public GlobalUserSettings(string discordId, LocalDate? birthday = null, AccountLinks? accountLinks = null)
 		{
 			DiscordId = discordId;
 			Birthday = birthday;
 			AccountLinks = accountLinks ?? AccountLinks.CreateDefault();
 		}
 
-		public static UserSettings CreateDefault(string discordId)
+		public static GlobalUserSettings CreateDefault(string discordId)
 		{
-			return new UserSettings(discordId, null, null);
+			return new GlobalUserSettings(discordId);
 		}
 	}
 }

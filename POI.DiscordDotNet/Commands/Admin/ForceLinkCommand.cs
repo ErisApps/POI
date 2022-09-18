@@ -15,8 +15,8 @@ namespace POI.DiscordDotNet.Commands.Admin
 	[RequireUserPermissions(Permissions.Administrator)]
 	public class ForceLinkCommand : BaseLinkCommand
 	{
-		public ForceLinkCommand(ILogger<ForceLinkCommand> logger, ScoreSaberApiService scoreSaberApiService, UserSettingsService userSettingsService)
-			: base(logger, scoreSaberApiService, userSettingsService)
+		public ForceLinkCommand(ILogger<ForceLinkCommand> logger, ScoreSaberApiService scoreSaberApiService, GlobalUserSettingsService globalUserSettingsService)
+			: base(logger, scoreSaberApiService, globalUserSettingsService)
 		{
 		}
 

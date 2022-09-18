@@ -12,34 +12,33 @@ using POI.DiscordDotNet.Models.Database;
 
 namespace POI.DiscordDotNet.Services
 {
-	public class UserSettingsService
+	public class GlobalUserSettingsService
 	{
-		private readonly ILogger<UserSettingsService> _logger;
+		private readonly ILogger<GlobalUserSettingsService> _logger;
 		private readonly MongoDbService _mongoDbService;
 
-		public UserSettingsService(ILogger<UserSettingsService> logger, MongoDbService mongoDbService)
+		public GlobalUserSettingsService(ILogger<GlobalUserSettingsService> logger, MongoDbService mongoDbService)
 		{
 			_logger = logger;
 			_mongoDbService = mongoDbService;
 		}
 
-		internal Task<UserSettings?> LookupSettingsByDiscordId(string discordId) => LookupUserSettingsOne(settings => settings.DiscordId == discordId);
+		internal Task<GlobalUserSettings?> LookupSettingsByDiscordId(string discordId) => LookupUserSettingsOne(settings => settings.DiscordId == discordId);
 
-		internal Task<UserSettings?> LookupSettingsByScoreSaberId(string scoreSaberId) => LookupUserSettingsOne(settings => settings.AccountLinks.ScoreSaberId == scoreSaberId);
-
+		internal Task<GlobalUserSettings?> LookupSettingsByScoreSaberId(string scoreSaberId) => LookupUserSettingsOne(settings => settings.AccountLinks.ScoreSaberId == scoreSaberId);
 
 		internal Task<List<ScoreSaberAccountLink>> GetAllScoreSaberAccountLinks() => GetAllAccountLinksGeneric(
 			settings => settings.AccountLinks.ScoreSaberId != null,
 			settings => new ScoreSaberAccountLink(settings.DiscordId, settings.AccountLinks.ScoreSaberId!));
 
 		private async Task<List<TProjected>> GetAllAccountLinksGeneric<TProjected>(
-			Expression<Func<UserSettings, bool>> genericAccountFilter,
-			Expression<Func<UserSettings, TProjected>> genericAccountProjector) where TProjected : AccountLinkBase
+			Expression<Func<GlobalUserSettings, bool>> genericAccountFilter,
+			Expression<Func<GlobalUserSettings, TProjected>> genericAccountProjector) where TProjected : AccountLinkBase
 		{
-			var filterDefinition = Builders<UserSettings>.Filter.Where(genericAccountFilter);
-			var projectionDefinition = Builders<UserSettings>.Projection.Expression(genericAccountProjector);
+			var filterDefinition = Builders<GlobalUserSettings>.Filter.Where(genericAccountFilter);
+			var projectionDefinition = Builders<GlobalUserSettings>.Projection.Expression(genericAccountProjector);
 
-			var aggregationPipelineDefinition = new EmptyPipelineDefinition<UserSettings>()
+			var aggregationPipelineDefinition = new EmptyPipelineDefinition<GlobalUserSettings>()
 				.AppendStage(PipelineStageDefinitionBuilder.Match(filterDefinition))
 				.AppendStage(PipelineStageDefinitionBuilder.Project(projectionDefinition));
 
@@ -51,13 +50,13 @@ namespace POI.DiscordDotNet.Services
 		{
 			await CreateAndInsertUserSettingsIfNotExists(discordId);
 
-			var updateDefinition = Builders<UserSettings>.Update.Set(settings => settings.AccountLinks.ScoreSaberId, scoreSaberId);
+			var updateDefinition = Builders<GlobalUserSettings>.Update.Set(settings => settings.AccountLinks.ScoreSaberId, scoreSaberId);
 			await GetUserSettingsCollection().FindOneAndUpdateAsync(
 				link => link.DiscordId == discordId,
 				updateDefinition);
 		}
 
-		internal async Task<List<UserSettings>> GetAllBirthdayGirls(LocalDate birthdayDate)
+		internal async Task<List<GlobalUserSettings>> GetAllBirthdayGirls(LocalDate birthdayDate)
 		{
 			var peopleWithRegisteredBirthday = await LookupUserSettings(settings => settings.Birthday != null);
 			return peopleWithRegisteredBirthday
@@ -69,7 +68,7 @@ namespace POI.DiscordDotNet.Services
 		{
 			await CreateAndInsertUserSettingsIfNotExists(discordId);
 
-			var updateDefinition = Builders<UserSettings>.Update.Set(settings => settings.Birthday, birthday);
+			var updateDefinition = Builders<GlobalUserSettings>.Update.Set(settings => settings.Birthday, birthday);
 			await GetUserSettingsCollection().FindOneAndUpdateAsync(
 				link => link.DiscordId == discordId,
 				updateDefinition);
@@ -80,17 +79,17 @@ namespace POI.DiscordDotNet.Services
 			var userSettings = await LookupSettingsByDiscordId(discordId).ConfigureAwait(false);
 			if (userSettings == null)
 			{
-				userSettings = UserSettings.CreateDefault(discordId);
+				userSettings = GlobalUserSettings.CreateDefault(discordId);
 				await GetUserSettingsCollection().InsertOneAsync(userSettings).ConfigureAwait(false);
 			}
 		}
 
-		private async Task<UserSettings?> LookupUserSettingsOne(Expression<Func<UserSettings, bool>> predicate)
+		private async Task<GlobalUserSettings?> LookupUserSettingsOne(Expression<Func<GlobalUserSettings, bool>> predicate)
 		{
 			try
 			{
 				var userSettings = await GetUserSettingsCollection()
-					.FindAsync(new ExpressionFilterDefinition<UserSettings>(predicate))
+					.FindAsync(new ExpressionFilterDefinition<GlobalUserSettings>(predicate))
 					.ConfigureAwait(false);
 				return userSettings.FirstOrDefault();
 			}
@@ -100,24 +99,24 @@ namespace POI.DiscordDotNet.Services
 			}
 		}
 
-		private async Task<List<UserSettings>> LookupUserSettings(Expression<Func<UserSettings, bool>> predicate)
+		private async Task<List<GlobalUserSettings>> LookupUserSettings(Expression<Func<GlobalUserSettings, bool>> predicate)
 		{
 			try
 			{
 				return await (await GetUserSettingsCollection()
-						.FindAsync(new ExpressionFilterDefinition<UserSettings>(predicate))
+						.FindAsync(new ExpressionFilterDefinition<GlobalUserSettings>(predicate))
 						.ConfigureAwait(false))
 					.ToListAsync().ConfigureAwait(false);
 			}
 			catch (Exception)
 			{
-				return new List<UserSettings>();
+				return new List<GlobalUserSettings>();
 			}
 		}
 
-		private IMongoCollection<UserSettings> GetUserSettingsCollection()
+		private IMongoCollection<GlobalUserSettings> GetUserSettingsCollection()
 		{
-			return _mongoDbService.GetCollection<UserSettings>();
+			return _mongoDbService.GetCollection<GlobalUserSettings>();
 		}
 
 		internal async Task EnsureIndexes()
@@ -126,12 +125,12 @@ namespace POI.DiscordDotNet.Services
 			await EnsureIndexNonUnique("Birthday", settings => settings.Birthday!);
 		}
 
-		private Task EnsureIndexNonUnique(string indexName, Expression<Func<UserSettings, object>> fieldSelector)
+		private Task EnsureIndexNonUnique(string indexName, Expression<Func<GlobalUserSettings, object>> fieldSelector)
 		{
 			return EnsureSingleIndexInternal(indexName, fieldSelector);
 		}
 
-		private Task EnsureIndexUnique(string indexName, Expression<Func<UserSettings, object>> fieldSelector)
+		private Task EnsureIndexUnique(string indexName, Expression<Func<GlobalUserSettings, object>> fieldSelector)
 		{
 			return EnsureSingleIndexInternal(indexName, fieldSelector, options =>
 			{
@@ -139,17 +138,17 @@ namespace POI.DiscordDotNet.Services
 			});
 		}
 
-		private Task EnsureIndexUniqueNullable(string indexName, Expression<Func<UserSettings, object>> fieldSelector, BsonType bsonFieldType)
+		private Task EnsureIndexUniqueNullable(string indexName, Expression<Func<GlobalUserSettings, object>> fieldSelector, BsonType bsonFieldType)
 		{
 			return EnsureSingleIndexInternal(indexName, fieldSelector, options =>
 			{
 				options.Unique = true;
-				options.PartialFilterExpression = Builders<UserSettings>.Filter.Type(fieldSelector, bsonFieldType);
+				options.PartialFilterExpression = Builders<GlobalUserSettings>.Filter.Type(fieldSelector, bsonFieldType);
 			});
 		}
 
-		private async Task EnsureSingleIndexInternal(string indexName, Expression<Func<UserSettings, object>> fieldSelector,
-			Action<CreateIndexOptions<UserSettings>>? indexCreationOptionsExtension = null)
+		private async Task EnsureSingleIndexInternal(string indexName, Expression<Func<GlobalUserSettings, object>> fieldSelector,
+			Action<CreateIndexOptions<GlobalUserSettings>>? indexCreationOptionsExtension = null)
 		{
 			var collectionIndexManager = GetUserSettingsCollection().Indexes;
 			var collectionIndexesCursor = await collectionIndexManager.ListAsync().ConfigureAwait(false);
@@ -159,11 +158,11 @@ namespace POI.DiscordDotNet.Services
 				await collectionIndexManager.DropOneAsync(indexName).ConfigureAwait(false);
 			}
 
-			var indexKeysDefinition = Builders<UserSettings>.IndexKeys.Ascending(fieldSelector);
-			var indexCreationOptions = new CreateIndexOptions<UserSettings> { Name = indexName };
+			var indexKeysDefinition = Builders<GlobalUserSettings>.IndexKeys.Ascending(fieldSelector);
+			var indexCreationOptions = new CreateIndexOptions<GlobalUserSettings> { Name = indexName };
 			indexCreationOptionsExtension?.Invoke(indexCreationOptions);
 
-			await collectionIndexManager.CreateOneAsync(new CreateIndexModel<UserSettings>(indexKeysDefinition, indexCreationOptions));
+			await collectionIndexManager.CreateOneAsync(new CreateIndexModel<GlobalUserSettings>(indexKeysDefinition, indexCreationOptions));
 		}
 	}
 }
