@@ -62,7 +62,7 @@ namespace POI.Core.Services
 
 			_scoreSaberApiInternalServerErrorRetryPolicy = Policy
 				.HandleResult<HttpResponseMessage>(resp => resp.StatusCode == HttpStatusCode.InternalServerError)
-				.RetryAsync(3, (_, attempt, _) => _logger.LogInformation("Received Internal Server Error, retry attempt {Attempt} / 3", attempt));
+				.RetryAsync(3, (response, attempt, context) => _logger.LogInformation("Received Internal Server Error for {Url}, retry attempt {Attempt} / 3", response.Result?.RequestMessage?.RequestUri, attempt));
 
 			_scoreSaberApiRateLimitPolicy = Policy
 				.HandleResult<HttpResponseMessage>(resp => resp.StatusCode == HttpStatusCode.TooManyRequests)
