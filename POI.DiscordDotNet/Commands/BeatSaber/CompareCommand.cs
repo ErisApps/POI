@@ -6,6 +6,7 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using ImageMagick;
+using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using NodaTime;
 using POI.Core.Services;
@@ -15,6 +16,7 @@ using POI.DiscordDotNet.Services;
 
 namespace POI.DiscordDotNet.Commands.BeatSaber
 {
+	[UsedImplicitly]
 	public class CompareCommand : BeatSaberCommandsModule
 	{
 		private const int WIDTH = 1000;

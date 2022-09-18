@@ -1,12 +1,14 @@
 using System;
 using System.Threading.Tasks;
 using DSharpPlus.SlashCommands;
+using JetBrains.Annotations;
 using NodaTime.Extensions;
 using POI.DiscordDotNet.Commands.Modules.SlashCommands;
 using POI.DiscordDotNet.Services;
 
 namespace POI.DiscordDotNet.Commands.Utils
 {
+	[UsedImplicitly]
     public class UptimeCommand : UtilSlashCommandsModule
     {
 	    private readonly UptimeManagementService _uptimeManagementService;
@@ -16,7 +18,7 @@ namespace POI.DiscordDotNet.Commands.Utils
 	        _uptimeManagementService = uptimeManagementService;
         }
 
-        [SlashCommand("uppy", "Shows how long I've been online already 😅")]
+        [SlashCommand("uppy", "Shows how long I've been online already 😅"), UsedImplicitly]
         public async Task Handle(InteractionContext ctx)
         {
 	        string message;
