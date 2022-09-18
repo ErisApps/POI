@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using DSharpPlus;
 using JetBrains.Annotations;
@@ -30,8 +31,8 @@ namespace POI.DiscordDotNet.Jobs
 			var guild = await _discordClient.GetGuildAsync(561207570669371402, true).ConfigureAwait(false);
 			var birthdayRole = guild.GetRole(DISCORD_BIRTHDAY_ROLE_ID);
 
-			var localDate = LocalDate.FromDateTime(context.ScheduledFireTimeUtc.Value.LocalDateTime);
-			_logger.LogInformation("Looking up birthday party people using date: {date}", localDate.ToString());
+			var localDate = LocalDate.FromDateTime(context.ScheduledFireTimeUtc?.LocalDateTime ?? DateTime.Today);
+			_logger.LogInformation("Looking up birthday party people using date: {Date}", localDate.ToString());
 			var currentBirthdayPartyPeople = await _userSettingsService.GetAllBirthdayGirls(localDate);
 
 			var allMembers = await guild.GetAllMembersAsync().ConfigureAwait(false);
