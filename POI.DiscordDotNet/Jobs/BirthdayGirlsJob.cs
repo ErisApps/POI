@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using DSharpPlus;
+using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using NodaTime;
 using POI.DiscordDotNet.Services;
@@ -8,6 +9,7 @@ using Quartz;
 
 namespace POI.DiscordDotNet.Jobs
 {
+	[UsedImplicitly]
 	public class BirthdayGirlsJob : IJob
 	{
 		private const ulong DISCORD_BIRTHDAY_ROLE_ID = 728731698950307860;

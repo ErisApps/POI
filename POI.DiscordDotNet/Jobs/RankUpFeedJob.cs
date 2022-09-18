@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.Entities;
+using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using POI.Core.Models.ScoreSaber.Profile;
@@ -16,6 +17,7 @@ using Quartz;
 
 namespace POI.DiscordDotNet.Jobs
 {
+	[DisallowConcurrentExecution, UsedImplicitly]
 	public class RankUpFeedJob : IJob
 	{
 		private const int TOP = 1000;

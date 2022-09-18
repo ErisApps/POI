@@ -3,6 +3,7 @@ using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
+using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using POI.Core.Services;
 using POI.DiscordDotNet.Commands.BeatSaber;
@@ -10,6 +11,7 @@ using POI.DiscordDotNet.Services;
 
 namespace POI.DiscordDotNet.Commands.Admin
 {
+	[UsedImplicitly]
 	[RequireUserPermissions(Permissions.Administrator)]
 	public class ForceLinkCommand : BaseLinkCommand
 	{

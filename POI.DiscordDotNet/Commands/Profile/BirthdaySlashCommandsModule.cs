@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using DSharpPlus.SlashCommands;
+using JetBrains.Annotations;
 using NodaTime.Text;
 using POI.DiscordDotNet.Services;
 
@@ -7,7 +8,7 @@ namespace POI.DiscordDotNet.Commands.Profile
 {
 	public partial class ProfileSlashCommandsModule
 	{
-		[SlashCommandGroup("birthday", "Commands related to managing your birthday")]
+		[SlashCommandGroup("birthday", "Commands related to managing your birthday"), UsedImplicitly]
 		public class BirthdaySlashCommandsModule : ApplicationCommandModule
 		{
 			private readonly UserSettingsService _userSettingsService;
@@ -21,7 +22,7 @@ namespace POI.DiscordDotNet.Commands.Profile
 				_localDatePattern = LocalDatePattern.CreateWithInvariantCulture("dd'-'MM'-'uuuu");
 			}
 
-			[SlashCommand("set", "Sets your birthday")]
+			[SlashCommand("set", "Sets your birthday"), UsedImplicitly]
 			public async Task Set(InteractionContext ctx, [Option("date", "The date of your birthday. Format: dd-MM-yyyy Example: 31-10-1998")] string birthdayDateRaw)
 			{
 				var parseResult = _localDatePattern.Parse(birthdayDateRaw);
@@ -36,7 +37,7 @@ namespace POI.DiscordDotNet.Commands.Profile
 				}
 			}
 
-			[SlashCommand("clear", "Unsets your birthday")]
+			[SlashCommand("clear", "Unsets your birthday"), UsedImplicitly]
 			public async Task Clear(InteractionContext ctx)
 			{
 				await _userSettingsService.UpdateBirthday(ctx.User.Id.ToString(), null).ConfigureAwait(false);

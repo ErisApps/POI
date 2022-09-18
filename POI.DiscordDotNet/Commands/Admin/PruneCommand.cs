@@ -3,10 +3,12 @@ using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
+using JetBrains.Annotations;
 using POI.DiscordDotNet.Commands.Modules.ChatCommands;
 
 namespace POI.DiscordDotNet.Commands.Admin
 {
+	[UsedImplicitly]
 	[RequireUserPermissions(Permissions.Administrator)]
 	public class PruneCommand : AdminCommandsModule
 	{
