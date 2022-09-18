@@ -63,6 +63,7 @@ namespace POI.DiscordDotNet
 				Token = configProvider.Discord.Token,
 				TokenType = TokenType.Bot,
 				LoggerFactory = seriFactory,
+				Intents = DiscordIntents.DirectMessages | DiscordIntents.Guilds | DiscordIntents.GuildMessages | DiscordIntents.GuildVoiceStates,
 				// This is apparently a bad idea according to the documentation... but I'm going to enable it regardless...
 				ReconnectIndefinitely = true
 			});
