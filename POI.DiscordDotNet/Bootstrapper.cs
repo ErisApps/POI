@@ -90,7 +90,6 @@ namespace POI.DiscordDotNet
 					sc.AddSingleton(_client);
 					sc.AddSingleton<MongoDbService>();
 					sc.AddSingleton<UptimeManagementService>();
-					sc.AddSingleton<ScoreSaberLinkService>();
 					sc.AddSingleton<SlashCommandsManagementService>();
 					sc.AddSingleton<GlobalUserSettingsService>();
 
