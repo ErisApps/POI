@@ -1,0 +1,29 @@
+﻿using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using POI.DiscordDotNet.Models.Database;
+using POI.DiscordDotNet.Services.Interfaces;
+
+namespace POI.DiscordDotNet.Repositories
+{
+	public class ServerSettingsRepository : BaseRepository<ServerSettings>
+	{
+		public ServerSettingsRepository(ILogger<ServerSettingsRepository> logger, IMongoDbService mongoDbService) : base(logger, mongoDbService)
+		{
+		}
+
+		public Task<ServerSettings?> FindOneById(string serverId)
+		{
+			return FindOne(settings => settings.ServerId == serverId);
+		}
+
+		private async Task CreateAndInsertIfNotExists(string userId, string serverId)
+		{
+			var serverSettings = await FindOneById(serverId).ConfigureAwait(false);
+			if (serverSettings == null)
+			{
+				serverSettings = ServerSettings.CreateDefault(serverId);
+				await GetCollection().InsertOneAsync(serverSettings).ConfigureAwait(false);
+			}
+		}
+	}
+}

@@ -23,8 +23,9 @@ namespace POI.DiscordDotNet.Repositories
 
 		protected IMongoCollection<TDatabaseModel> GetCollection() => MongoDbService.GetCollection<TDatabaseModel>();
 
-		protected internal virtual async Task EnsureIndexes()
+		protected internal virtual Task EnsureIndexes()
 		{
+			return Task.CompletedTask;
 		}
 
 		public async Task<TDatabaseModel?> FindOne(Expression<Func<TDatabaseModel, bool>> predicate)
@@ -49,7 +50,24 @@ namespace POI.DiscordDotNet.Repositories
 				return await (await GetCollection()
 						.FindAsync(new ExpressionFilterDefinition<TDatabaseModel>(predicate))
 						.ConfigureAwait(false))
-					.ToListAsync().ConfigureAwait(false);
+					.ToListAsync()
+					.ConfigureAwait(false);
+			}
+			catch (Exception)
+			{
+				return new List<TDatabaseModel>();
+			}
+		}
+
+		public async Task<List<TDatabaseModel>> FindAll()
+		{
+			try
+			{
+				return await (await GetCollection()
+						.FindAsync(new ExpressionFilterDefinition<TDatabaseModel>(_ => true))
+						.ConfigureAwait(false))
+					.ToListAsync()
+					.ConfigureAwait(false);
 			}
 			catch (Exception)
 			{
@@ -79,7 +97,7 @@ namespace POI.DiscordDotNet.Repositories
 			});
 		}
 
-		private async Task EnsureSingleIndexInternal(string indexName, Expression<Func<TDatabaseModel, object>> fieldSelector,
+		protected async Task EnsureSingleIndex(string indexName, Func<IndexKeysDefinition<TDatabaseModel>> indexKeysDefinitionBuilder,
 			Action<CreateIndexOptions<TDatabaseModel>>? indexCreationOptionsExtension = null)
 		{
 			var collectionIndexManager = GetCollection().Indexes;
@@ -90,11 +108,17 @@ namespace POI.DiscordDotNet.Repositories
 				await collectionIndexManager.DropOneAsync(indexName).ConfigureAwait(false);
 			}
 
-			var indexKeysDefinition = Builders<TDatabaseModel>.IndexKeys.Ascending(fieldSelector);
+			var indexKeysDefinition = indexKeysDefinitionBuilder();
 			var indexCreationOptions = new CreateIndexOptions<TDatabaseModel> { Name = indexName };
 			indexCreationOptionsExtension?.Invoke(indexCreationOptions);
 
 			await collectionIndexManager.CreateOneAsync(new CreateIndexModel<TDatabaseModel>(indexKeysDefinition, indexCreationOptions));
+		}
+
+		private Task EnsureSingleIndexInternal(string indexName, Expression<Func<TDatabaseModel, object>> fieldSelector,
+			Action<CreateIndexOptions<TDatabaseModel>>? indexCreationOptionsExtension = null)
+		{
+			return EnsureSingleIndex(indexName, () => Builders<TDatabaseModel>.IndexKeys.Ascending(fieldSelector), indexCreationOptionsExtension);
 		}
 	}
 }
