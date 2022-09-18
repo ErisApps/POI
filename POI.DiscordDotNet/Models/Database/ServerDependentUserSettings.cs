@@ -1,19 +1,23 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace POI.DiscordDotNet.Models.Database
 {
-	[BsonNoId]
 	public class ServerDependentUserSettings
 	{
-		public ulong UserId { get; }
+		[BsonId]
+		public ObjectId Id { get; init; }
 
-		public ulong ServerId { get; }
+		public ulong UserId { get; init; }
+
+		public ulong ServerId { get; init; }
 
 		public Permissions Permissions { get; set; }
 
 		[BsonConstructor]
-		public ServerDependentUserSettings(ulong userId, ulong serverId, Permissions permissions)
+		public ServerDependentUserSettings(ObjectId id, ulong userId, ulong serverId, Permissions permissions)
 		{
+			Id = id;
 			UserId = userId;
 			ServerId = serverId;
 			Permissions = permissions;
@@ -21,7 +25,7 @@ namespace POI.DiscordDotNet.Models.Database
 
 		public static ServerDependentUserSettings CreateDefault(ulong userId, ulong serverId)
 		{
-			return new ServerDependentUserSettings(userId, serverId, Permissions.None);
+			return new ServerDependentUserSettings(ObjectId.GenerateNewId(),  userId, serverId, Permissions.None);
 		}
 	}
 }

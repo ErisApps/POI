@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
@@ -7,16 +6,18 @@ using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using POI.Core.Services;
 using POI.DiscordDotNet.Commands.BeatSaber;
+using POI.DiscordDotNet.Commands.Helpers;
 using POI.DiscordDotNet.Repositories;
 
 namespace POI.DiscordDotNet.Commands.Admin
 {
 	[UsedImplicitly]
-	[RequireUserPermissions(Permissions.Administrator)]
+	[RequiresUserSettingsPermission(Models.Database.Permissions.ForceLink)]
 	public class ForceLinkCommand : BaseLinkCommand
 	{
-		public ForceLinkCommand(ILogger<ForceLinkCommand> logger, ScoreSaberApiService scoreSaberApiService, GlobalUserSettingsRepository globalUserSettingsRepository)
-			: base(logger, scoreSaberApiService, globalUserSettingsRepository)
+		public ForceLinkCommand(ILogger<ForceLinkCommand> logger, ScoreSaberApiService scoreSaberApiService, GlobalUserSettingsRepository globalUserSettingsRepository,
+			ServerDependentUserSettingsRepository serverDependentUserSettingsRepository)
+			: base(logger, scoreSaberApiService, globalUserSettingsRepository, serverDependentUserSettingsRepository)
 		{
 		}
 
