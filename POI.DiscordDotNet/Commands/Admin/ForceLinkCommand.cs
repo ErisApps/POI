@@ -7,12 +7,13 @@ using Microsoft.Extensions.Logging;
 using POI.Core.Services;
 using POI.DiscordDotNet.Commands.BeatSaber;
 using POI.DiscordDotNet.Commands.Helpers;
+using POI.DiscordDotNet.Models;
 using POI.DiscordDotNet.Repositories;
 
 namespace POI.DiscordDotNet.Commands.Admin
 {
 	[UsedImplicitly]
-	[RequiresUserSettingsPermission(Models.Database.Permissions.ForceLink)]
+	[RequiresUserSettingsPermission(Permissions.ForceLink)]
 	public class ForceLinkCommand : BaseLinkCommand
 	{
 		public ForceLinkCommand(ILogger<ForceLinkCommand> logger, ScoreSaberApiService scoreSaberApiService, GlobalUserSettingsRepository globalUserSettingsRepository,

@@ -13,6 +13,7 @@ using POI.Core.Services;
 using POI.DiscordDotNet.Commands.Modules.ChatCommands;
 using POI.DiscordDotNet.Extensions;
 using POI.DiscordDotNet.Repositories;
+using Permissions = POI.DiscordDotNet.Models.Permissions;
 
 namespace POI.DiscordDotNet.Commands.BeatSaber
 {
@@ -91,7 +92,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 				var serverDependentUserSettings = await _serverDependentUserSettingsRepository
 					.FindOneById(interactivityResult.Value.Result.User.Id, interactivityResult.Value.Result.Guild.Id)
 					.ConfigureAwait(false);
-				hasResponded = serverDependentUserSettings != null && serverDependentUserSettings.Permissions.HasFlag(Models.Database.Permissions.LinkApproval);
+				hasResponded = serverDependentUserSettings != null && serverDependentUserSettings.Permissions.HasFlag(Permissions.LinkApproval);
 			} while (!hasResponded);
 
 			return (interactivityResult.Value.Result.Id == APPROVE_ACTION_ID);

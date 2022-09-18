@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace POI.DiscordDotNet.Models.Database
+namespace POI.DiscordDotNet.Models
 {
 	[Flags]
 	public enum Permissions

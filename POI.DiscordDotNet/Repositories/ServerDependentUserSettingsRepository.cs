@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
+using POI.DiscordDotNet.Models;
 using POI.DiscordDotNet.Models.Database;
 using POI.DiscordDotNet.Services.Interfaces;
 

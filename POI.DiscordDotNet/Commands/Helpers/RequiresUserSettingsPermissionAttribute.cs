@@ -2,6 +2,7 @@
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using Microsoft.Extensions.DependencyInjection;
+using POI.DiscordDotNet.Models;
 using POI.DiscordDotNet.Models.Database;
 using POI.DiscordDotNet.Repositories;
 
