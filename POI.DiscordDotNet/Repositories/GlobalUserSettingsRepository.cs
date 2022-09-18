@@ -44,7 +44,7 @@ namespace POI.DiscordDotNet.Repositories
 
 		internal async Task CreateOrUpdateScoreSaberLink(string discordId, string scoreSaberId)
 		{
-			await CreateAndInsertUserSettingsIfNotExists(discordId);
+			await CreateAndInsertIfNotExists(discordId);
 
 			var updateDefinition = Builders<GlobalUserSettings>.Update.Set(settings => settings.AccountLinks.ScoreSaberId, scoreSaberId);
 			await GetCollection().FindOneAndUpdateAsync(
@@ -62,7 +62,7 @@ namespace POI.DiscordDotNet.Repositories
 
 		internal async Task UpdateBirthday(string discordId, LocalDate? birthday)
 		{
-			await CreateAndInsertUserSettingsIfNotExists(discordId);
+			await CreateAndInsertIfNotExists(discordId);
 
 			var updateDefinition = Builders<GlobalUserSettings>.Update.Set(settings => settings.Birthday, birthday);
 			await GetCollection().FindOneAndUpdateAsync(
@@ -70,7 +70,7 @@ namespace POI.DiscordDotNet.Repositories
 				updateDefinition);
 		}
 
-		private async Task CreateAndInsertUserSettingsIfNotExists(string discordId)
+		private async Task CreateAndInsertIfNotExists(string discordId)
 		{
 			var userSettings = await LookupSettingsByDiscordId(discordId).ConfigureAwait(false);
 			if (userSettings == null)
