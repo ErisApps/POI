@@ -8,7 +8,7 @@ namespace POI.DiscordDotNet.Commands.Utils
 	[UsedImplicitly]
 	public class PingCommand : UtilSlashCommandsModule
 	{
-		[SlashCommand("ping", "Shows how response I am ^^"), UsedImplicitly]
+		[SlashCommand("ping", "Shows how responsive I am ^^"), UsedImplicitly]
 		public async Task Handle(InteractionContext ctx)
 		{
 			await ctx
