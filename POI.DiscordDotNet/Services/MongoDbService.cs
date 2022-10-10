@@ -30,7 +30,7 @@ namespace POI.DiscordDotNet.Services
 			_logger.LogInformation("Connecting to MongoDb instance");
 			_mongoClient = new MongoClient(mongoClientSettings);
 
-			_mongoDatabase = _mongoClient.GetDatabase("POINextV2");
+			_mongoDatabase = _mongoClient.GetDatabase("POINext");
 		}
 
 		public IMongoCollection<T> GetCollection<T>(string? collectionName = null) where T : class
