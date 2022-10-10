@@ -13,7 +13,7 @@ using POI.DiscordDotNet.Extensions;
 using POI.DiscordDotNet.Models.AccountLink;
 using POI.DiscordDotNet.Models.Database;
 using POI.DiscordDotNet.Repositories;
-using POI.DiscordDotNet.Services;
+using POI.DiscordDotNet.Services.Interfaces;
 using Quartz;
 
 namespace POI.DiscordDotNet.Jobs
@@ -27,13 +27,13 @@ namespace POI.DiscordDotNet.Jobs
 		private readonly DiscordClient _discordClient;
 		private readonly ScoreSaberApiService _scoreSaberApiService;
 		private readonly GlobalUserSettingsRepository _globalUserSettingsRepository;
-		private readonly MongoDbService _mongoDbService;
+		private readonly IMongoDbService _mongoDbService;
 
 		private readonly string[] _countryDefinition = { "BE" };
 		private readonly string[] _profileRefreshExclusions = Array.Empty<string>();
 
 		public RankUpFeedJob(ILogger<RankUpFeedJob> logger, DiscordClient discordClient, ScoreSaberApiService scoreSaberApiService, GlobalUserSettingsRepository globalUserSettingsRepository,
-			MongoDbService mongoDbService)
+			IMongoDbService mongoDbService)
 		{
 			_logger = logger;
 			_discordClient = discordClient;
