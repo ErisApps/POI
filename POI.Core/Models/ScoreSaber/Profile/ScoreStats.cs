@@ -5,10 +5,10 @@ namespace POI.Core.Models.ScoreSaber.Profile
 	public readonly struct ScoreStats
 	{
 		[JsonPropertyName("totalScore")]
-		public ulong TotalScore { get; }
+		public long TotalScore { get; }
 
 		[JsonPropertyName("totalRankedScore")]
-		public ulong TotalRankedScore { get; }
+		public long TotalRankedScore { get; }
 
 		[JsonPropertyName("averageRankedAccuracy")]
 		public double AverageRankedAccuracy { get; }
@@ -23,7 +23,7 @@ namespace POI.Core.Models.ScoreSaber.Profile
 		public uint ReplaysWatched { get; }
 
 		[JsonConstructor]
-		public ScoreStats(ulong totalScore, ulong totalRankedScore, double averageRankedAccuracy, uint totalPlayCount, uint totalRankedCount, uint replaysWatched)
+		public ScoreStats(long totalScore, long totalRankedScore, double averageRankedAccuracy, uint totalPlayCount, uint totalRankedCount, uint replaysWatched)
 		{
 			TotalScore = totalScore;
 			TotalRankedScore = totalRankedScore;
