@@ -64,12 +64,14 @@ namespace POI.DiscordDotNet.Jobs
 			}
 
 			var roles = OrderTopRoles(guild.Roles.Where(x => x.Value.Name.Contains("(Top ", StringComparison.Ordinal)));
-			var players = playersWrappers.SelectMany(x => x!.Players).ToList();
+			var players = playersWrappers
+				.SelectMany(x => x!.Players)
+				.Where(x => x.Pp > 0)
+				.ToList();
 			foreach (var player in players)
 			{
 				await HandlePlayer(player, allScoreSaberLinks, members, roles);
 			}
-
 
 			var leaderboardEntriesCollection = _mongoDbService.GetCollection<LeaderboardEntry>();
 			var originalLeaderboardEntries = await (await leaderboardEntriesCollection.FindAsync(_ => true).ConfigureAwait(false)).ToListAsync().ConfigureAwait(false);
