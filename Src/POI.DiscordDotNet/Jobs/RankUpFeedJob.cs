@@ -7,13 +7,13 @@ using DSharpPlus.Entities;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
-using POI.Core.Models.ScoreSaber.Profile;
-using POI.Core.Services;
 using POI.DiscordDotNet.Extensions;
 using POI.DiscordDotNet.Models.AccountLink;
 using POI.DiscordDotNet.Models.Database;
 using POI.DiscordDotNet.Repositories;
 using POI.DiscordDotNet.Services.Interfaces;
+using POI.ThirdParty.ScoreSaber.Models.Profile;
+using POI.ThirdParty.ScoreSaber.Services;
 using Quartz;
 
 namespace POI.DiscordDotNet.Jobs
@@ -25,14 +25,14 @@ namespace POI.DiscordDotNet.Jobs
 
 		private readonly ILogger<RankUpFeedJob> _logger;
 		private readonly DiscordClient _discordClient;
-		private readonly ScoreSaberApiService _scoreSaberApiService;
+		private readonly IScoreSaberApiService _scoreSaberApiService;
 		private readonly GlobalUserSettingsRepository _globalUserSettingsRepository;
 		private readonly IMongoDbService _mongoDbService;
 
 		private readonly string[] _countryDefinition = { "BE" };
 		private readonly string[] _profileRefreshExclusions = Array.Empty<string>();
 
-		public RankUpFeedJob(ILogger<RankUpFeedJob> logger, DiscordClient discordClient, ScoreSaberApiService scoreSaberApiService, GlobalUserSettingsRepository globalUserSettingsRepository,
+		public RankUpFeedJob(ILogger<RankUpFeedJob> logger, DiscordClient discordClient, IScoreSaberApiService scoreSaberApiService, GlobalUserSettingsRepository globalUserSettingsRepository,
 			IMongoDbService mongoDbService)
 		{
 			_logger = logger;

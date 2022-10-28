@@ -8,11 +8,11 @@ using DSharpPlus.EventArgs;
 using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Extensions;
 using Microsoft.Extensions.Logging;
-using POI.Core.Models.ScoreSaber.Profile;
-using POI.Core.Services;
 using POI.DiscordDotNet.Commands.Modules.ChatCommands;
 using POI.DiscordDotNet.Extensions;
 using POI.DiscordDotNet.Repositories;
+using POI.ThirdParty.ScoreSaber.Models.Profile;
+using POI.ThirdParty.ScoreSaber.Services;
 using Permissions = POI.DiscordDotNet.Models.Permissions;
 
 namespace POI.DiscordDotNet.Commands.BeatSaber
@@ -23,12 +23,12 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 		private const string DENY_ACTION_ID = "deny";
 
 		private readonly ILogger<BaseLinkCommand> _logger;
-		private readonly ScoreSaberApiService _scoreSaberApiService;
+		private readonly IScoreSaberApiService _scoreSaberApiService;
 		private readonly ServerDependentUserSettingsRepository _serverDependentUserSettingsRepository;
 
 		protected readonly GlobalUserSettingsRepository GlobalUserSettingsRepository;
 
-		protected BaseLinkCommand(ILogger<BaseLinkCommand> logger, ScoreSaberApiService scoreSaberApiService, GlobalUserSettingsRepository globalUserSettingsRepository,
+		protected BaseLinkCommand(ILogger<BaseLinkCommand> logger, IScoreSaberApiService scoreSaberApiService, GlobalUserSettingsRepository globalUserSettingsRepository,
 			ServerDependentUserSettingsRepository serverDependentUserSettingsRepository)
 		{
 			_logger = logger;

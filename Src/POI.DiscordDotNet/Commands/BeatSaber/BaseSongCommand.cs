@@ -7,14 +7,17 @@ using DSharpPlus.Entities;
 using ImageMagick;
 using Microsoft.Extensions.Logging;
 using NodaTime;
-using POI.Core.Models.BeatSavior;
-using POI.Core.Models.ScoreSaber.Profile;
-using POI.Core.Models.ScoreSaber.Scores;
-using POI.Core.Models.ScoreSaber.Wrappers;
-using POI.Core.Services;
 using POI.DiscordDotNet.Commands.Modules.ChatCommands;
 using POI.DiscordDotNet.Extensions;
 using POI.DiscordDotNet.Repositories;
+using POI.ThirdParty.BeatSaver.Services;
+using POI.ThirdParty.BeatSavior.Models;
+using POI.ThirdParty.BeatSavior.Services;
+using POI.ThirdParty.ScoreSaber;
+using POI.ThirdParty.ScoreSaber.Models.Profile;
+using POI.ThirdParty.ScoreSaber.Models.Scores;
+using POI.ThirdParty.ScoreSaber.Models.Wrappers;
+using POI.ThirdParty.ScoreSaber.Services;
 
 namespace POI.DiscordDotNet.Commands.BeatSaber
 {
@@ -24,16 +27,16 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 		private readonly string _backgroundImagePath;
 		private readonly string _erisSignaturePath;
 		private readonly GlobalUserSettingsRepository _globalUserSettingsRepository;
-		private readonly BeatSaverClientProvider _beatSaverClientProvider;
+		private readonly IBeatSaverClientProvider _beatSaverClientProvider;
 
-		protected readonly ScoreSaberApiService ScoreSaberApiService;
-		protected readonly BeatSaviorApiService BeatSaviorApiService;
+		protected readonly IScoreSaberApiService ScoreSaberApiService;
+		protected readonly IBeatSaviorApiService BeatSaviorApiService;
 
 		private const int WIDTH = 1024;
 		private const int MARGIN = 35;
 
-		protected BaseSongCommand(ILogger<BaseSongCommand> logger, ScoreSaberApiService scoreSaberApiService, GlobalUserSettingsRepository globalUserSettingsRepository,
-			BeatSaverClientProvider beatSaverClientProvider, string backgroundImagePath, string erisSignaturePath, BeatSaviorApiService beatSaviorApiService)
+		protected BaseSongCommand(ILogger<BaseSongCommand> logger, IScoreSaberApiService scoreSaberApiService, GlobalUserSettingsRepository globalUserSettingsRepository,
+			IBeatSaverClientProvider beatSaverClientProvider, string backgroundImagePath, string erisSignaturePath, IBeatSaviorApiService beatSaviorApiService)
 		{
 			_logger = logger;
 
@@ -69,7 +72,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 				return;
 			}
 
-			var songPageNumber = (uint) Math.Ceiling((double) nthSong / ScoreSaberApiService.PLAYS_PER_PAGE);
+			var songPageNumber = (uint) Math.Ceiling((double) nthSong / Constants.DEFAULT_PLAYS_PER_PAGE);
 			var songPage = await FetchScorePage(profile.Id, songPageNumber).ConfigureAwait(false);
 			if (songPage == null)
 			{
@@ -78,7 +81,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 			}
 
 			PlayerScore requestedSong;
-			var localSongIndex = --nthSong % ScoreSaberApiService.PLAYS_PER_PAGE;
+			var localSongIndex = --nthSong % Constants.DEFAULT_PLAYS_PER_PAGE;
 			if (songPage.PlayerScores.Count > localSongIndex)
 			{
 				requestedSong = songPage.PlayerScores[localSongIndex];
