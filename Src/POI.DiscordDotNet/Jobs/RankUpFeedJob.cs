@@ -65,8 +65,8 @@ namespace POI.DiscordDotNet.Jobs
 
 			var roles = OrderTopRoles(guild.Roles.Where(x => x.Value.Name.Contains("(Top ", StringComparison.Ordinal)));
 			var players = playersWrappers
-				.SelectMany(x => x!.Players)
-				.Where(x => x.Pp > 0)
+				.SelectMany(wrapper => wrapper!.Players)
+				.Where(player => player.Pp > 0 && player.Rank > 0)
 				.ToList();
 			foreach (var player in players)
 			{
