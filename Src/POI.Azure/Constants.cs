@@ -3,10 +3,10 @@ using POI.Core.Services;
 
 namespace POI.Azure
 {
-	internal class Constants : ConstantsCore
+	internal class Constants : IConstantsCore
 	{
-		public override string Name { get; }
-		public override Version Version { get; }
+		public string Name { get; }
+		public Version Version { get; }
 
 		public Constants()
 		{

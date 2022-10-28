@@ -10,12 +10,14 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using POI.Core.Extensions;
-using POI.Core.Services.Interfaces;
+using POI.Core.Services;
 using POI.DiscordDotNet.Jobs;
 using POI.DiscordDotNet.Repositories;
 using POI.DiscordDotNet.Services;
 using POI.DiscordDotNet.Services.Interfaces;
+using POI.ThirdParty.BeatSaver.Extensions;
+using POI.ThirdParty.BeatSavior.Extensions;
+using POI.ThirdParty.ScoreSaber.Extensions;
 using Quartz;
 using Serilog;
 using Serilog.Events;
@@ -82,19 +84,21 @@ namespace POI.DiscordDotNet
 				})
 				.ConfigureServices(sc =>
 				{
-					sc.AddSingleton<Constants>();
-					sc.AddSingleton<IConstantsCore>(provider => provider.GetRequiredService<Constants>());
-					sc.AddSingleton<IConstants>(provider => provider.GetRequiredService<Constants>());
-					sc.AddCoreServices();
-					sc.AddSingleton(configProvider);
-					sc.AddSingleton(pathProvider);
-					sc.AddSingleton(_client);
-					sc.AddSingleton<IMongoDbService, MongoDbService>();
-					sc.AddSingleton<UptimeManagementService>();
-					sc.AddSingleton<SlashCommandsManagementService>();
-					sc.AddSingleton<GlobalUserSettingsRepository>();
-					sc.AddSingleton<ServerDependentUserSettingsRepository>();
-					sc.AddSingleton<ServerSettingsRepository>();
+					sc.AddSingleton<Constants>()
+					.AddSingleton<IConstantsCore>(provider => provider.GetRequiredService<Constants>())
+					.AddSingleton<IConstants>(provider => provider.GetRequiredService<Constants>())
+					.AddBeatSaver()
+					.AddBeatSavior()
+					.AddScoreSaber()
+					.AddSingleton(configProvider)
+					.AddSingleton(pathProvider)
+					.AddSingleton(_client)
+					.AddSingleton<IMongoDbService, MongoDbService>()
+					.AddSingleton<UptimeManagementService>()
+					.AddSingleton<SlashCommandsManagementService>()
+					.AddSingleton<GlobalUserSettingsRepository>()
+					.AddSingleton<ServerDependentUserSettingsRepository>()
+					.AddSingleton<ServerSettingsRepository>();
 
 					sc.AddSingleton<RankUpFeedJob>();
 

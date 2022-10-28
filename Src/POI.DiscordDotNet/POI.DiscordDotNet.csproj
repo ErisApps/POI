@@ -28,12 +28,16 @@
         <PackageReference Include="Quartz" Version="3.5.0" />
         <PackageReference Include="Quartz.Extensions.DependencyInjection" Version="3.5.0" />
         <PackageReference Include="Serilog.AspNetCore" Version="6.0.1" />
+        <PackageReference Include="Serilog.Extensions.Logging" Version="3.1.1-dev-10301" />
         <PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
         <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
         <PackageReference Include="Serilog.Sinks.File" Version="5.0.1-dev-00947" />
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\POI.ThirdParty.BeatSaver\POI.ThirdParty.BeatSaver.csproj" />
+      <ProjectReference Include="..\POI.ThirdParty.BeatSavior\POI.ThirdParty.BeatSavior.csproj" />
+      <ProjectReference Include="..\POI.ThirdParty.ScoreSaber\POI.ThirdParty.ScoreSaber.csproj" />
       <ProjectReference Include="..\POI.Core\POI.Core.csproj" />
     </ItemGroup>
 

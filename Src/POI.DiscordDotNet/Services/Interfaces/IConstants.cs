@@ -1,4 +1,4 @@
-using POI.Core.Services.Interfaces;
+using POI.Core.Services;
 
 namespace POI.DiscordDotNet.Services.Interfaces
 {

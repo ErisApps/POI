@@ -9,6 +9,7 @@ using POI.DiscordDotNet.Commands.BeatSaber;
 using POI.DiscordDotNet.Commands.Helpers;
 using POI.DiscordDotNet.Models;
 using POI.DiscordDotNet.Repositories;
+using POI.ThirdParty.ScoreSaber.Services;
 
 namespace POI.DiscordDotNet.Commands.Admin
 {
@@ -16,7 +17,7 @@ namespace POI.DiscordDotNet.Commands.Admin
 	[RequiresUserSettingsPermission(Permissions.ForceLink)]
 	public class ForceLinkCommand : BaseLinkCommand
 	{
-		public ForceLinkCommand(ILogger<ForceLinkCommand> logger, ScoreSaberApiService scoreSaberApiService, GlobalUserSettingsRepository globalUserSettingsRepository,
+		public ForceLinkCommand(ILogger<ForceLinkCommand> logger, IScoreSaberApiService scoreSaberApiService, GlobalUserSettingsRepository globalUserSettingsRepository,
 			ServerDependentUserSettingsRepository serverDependentUserSettingsRepository)
 			: base(logger, scoreSaberApiService, globalUserSettingsRepository, serverDependentUserSettingsRepository)
 		{

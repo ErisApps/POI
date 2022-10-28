@@ -4,18 +4,20 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
-using POI.Core.Models.ScoreSaber.Wrappers;
-using POI.Core.Services;
 using POI.DiscordDotNet.Repositories;
 using POI.DiscordDotNet.Services;
+using POI.ThirdParty.BeatSaver.Services;
+using POI.ThirdParty.BeatSavior.Services;
+using POI.ThirdParty.ScoreSaber.Models.Wrappers;
+using POI.ThirdParty.ScoreSaber.Services;
 
 namespace POI.DiscordDotNet.Commands.BeatSaber
 {
 	[UsedImplicitly]
 	public class RecentSongCommand : BaseSongCommand
 	{
-		public RecentSongCommand(ILogger<RecentSongCommand> logger, PathProvider pathProvider, ScoreSaberApiService scoreSaberApiService, GlobalUserSettingsRepository globalUserSettingsRepository,
-			BeatSaverClientProvider beatSaverClientProvider, BeatSaviorApiService beatSaviorApiService)
+		public RecentSongCommand(ILogger<RecentSongCommand> logger, PathProvider pathProvider, IScoreSaberApiService scoreSaberApiService, GlobalUserSettingsRepository globalUserSettingsRepository,
+			IBeatSaverClientProvider beatSaverClientProvider, IBeatSaviorApiService beatSaviorApiService)
 			: base(logger, scoreSaberApiService, globalUserSettingsRepository, beatSaverClientProvider, Path.Combine(pathProvider.AssetsPath, "poinext1.png"),
 				Path.Combine(pathProvider.AssetsPath, "Signature-Eris.png"), beatSaviorApiService)
 		{

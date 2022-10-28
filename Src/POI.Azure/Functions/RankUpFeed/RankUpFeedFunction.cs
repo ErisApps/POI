@@ -6,8 +6,8 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using POI.Core.Models.ScoreSaber.Profile;
-using POI.Core.Services;
+using POI.ThirdParty.ScoreSaber.Models.Profile;
+using POI.ThirdParty.ScoreSaber.Services;
 
 namespace POI.Azure.Functions.RankUpFeed
 {
@@ -29,7 +29,7 @@ namespace POI.Azure.Functions.RankUpFeed
 		{
 			var logger = context.GetLogger(nameof(RankUpFeedFunction));
 
-			var scoreSaberApiService = context.InstanceServices.GetService<ScoreSaberApiService>()!;
+			var scoreSaberApiService = context.InstanceServices.GetService<IScoreSaberApiService>()!;
 
 			await FetchPlayers(logger, scoreSaberApiService).ConfigureAwait(false);
 
@@ -42,7 +42,7 @@ namespace POI.Azure.Functions.RankUpFeed
 #endif
 		}
 
-		private static async Task FetchPlayers(ILogger logger, ScoreSaberApiService scoreSaberApiService)
+		private static async Task FetchPlayers(ILogger logger, IScoreSaberApiService scoreSaberApiService)
 		{
 			// Temp
 			var players = new List<BasicProfile>();

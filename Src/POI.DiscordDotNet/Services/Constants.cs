@@ -1,14 +1,13 @@
 ﻿using System;
 using ImageMagick;
-using POI.Core.Services;
 using POI.DiscordDotNet.Services.Interfaces;
 
 namespace POI.DiscordDotNet.Services
 {
-	public class Constants : ConstantsCore, IConstants
+	public class Constants : IConstants
 	{
-		public override string Name { get; }
-		public override Version Version { get; }
+		public string Name { get; }
+		public Version Version { get; }
 
 		public Constants()
 		{

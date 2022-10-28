@@ -8,6 +8,9 @@ namespace POI.DiscordDotNet.Api.Middlewares
 {
 	public class ApiKeyMiddleware
 	{
+		// TODO: Move this to another project (probably a datacontracts project) so it can be shared between the API and other consuming projects
+		public const string API_KEY_HEADER_NAME = "X-API-Key";
+
 		private readonly RequestDelegate _next;
 
 		public ApiKeyMiddleware(RequestDelegate next)
@@ -17,7 +20,7 @@ namespace POI.DiscordDotNet.Api.Middlewares
 
 		public async Task InvokeAsync(HttpContext context)
 		{
-			if (!context.Request.Headers.TryGetValue(ConstantsCore.API_KEY_HEADER_NAME, out var extractedApiKey))
+			if (!context.Request.Headers.TryGetValue(API_KEY_HEADER_NAME, out var extractedApiKey))
 			{
 				context.Response.StatusCode = 401;
 				await context.Response.WriteAsync("Api Key was not provided.");

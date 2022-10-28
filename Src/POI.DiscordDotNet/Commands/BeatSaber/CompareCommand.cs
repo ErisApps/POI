@@ -9,11 +9,11 @@ using ImageMagick;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using NodaTime;
-using POI.Core.Services;
 using POI.DiscordDotNet.Commands.Modules.ChatCommands;
 using POI.DiscordDotNet.Extensions;
 using POI.DiscordDotNet.Repositories;
 using POI.DiscordDotNet.Services;
+using POI.ThirdParty.ScoreSaber.Services;
 
 namespace POI.DiscordDotNet.Commands.BeatSaber
 {
@@ -31,9 +31,9 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 		private readonly ILogger<CompareCommand> _logger;
 		private readonly GlobalUserSettingsRepository _globalUserSettingsRepository;
 		private readonly PathProvider _pathProvider;
-		private readonly ScoreSaberApiService _scoreSaberService;
+		private readonly IScoreSaberApiService _scoreSaberService;
 
-		public CompareCommand(ILogger<CompareCommand> logger, ScoreSaberApiService scoreSaberService, GlobalUserSettingsRepository globalUserSettingsRepository, PathProvider pathProvider)
+		public CompareCommand(ILogger<CompareCommand> logger, IScoreSaberApiService scoreSaberService, GlobalUserSettingsRepository globalUserSettingsRepository, PathProvider pathProvider)
 		{
 			_logger = logger;
 
