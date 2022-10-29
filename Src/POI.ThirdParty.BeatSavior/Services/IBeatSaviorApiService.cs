@@ -1,9 +1,8 @@
 ﻿using POI.ThirdParty.BeatSavior.Models;
 
-namespace POI.ThirdParty.BeatSavior.Services
+namespace POI.ThirdParty.BeatSavior.Services;
+
+public interface IBeatSaviorApiService
 {
-	public interface IBeatSaviorApiService
-	{
-		Task<List<SongData>?> FetchBeatSaviorPlayerData(string scoreSaberId);
-	}
+	Task<List<SongData>?> FetchBeatSaviorPlayerData(string scoreSaberId);
 }

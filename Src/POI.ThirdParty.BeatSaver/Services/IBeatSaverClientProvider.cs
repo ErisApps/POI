@@ -1,7 +1,6 @@
-namespace POI.ThirdParty.BeatSaver.Services
+namespace POI.ThirdParty.BeatSaver.Services;
+
+public interface IBeatSaverClientProvider
 {
-	public interface IBeatSaverClientProvider
-	{
-		BeatSaverSharp.BeatSaver GetClientInstance();
-	}
+	BeatSaverSharp.BeatSaver GetClientInstance();
 }

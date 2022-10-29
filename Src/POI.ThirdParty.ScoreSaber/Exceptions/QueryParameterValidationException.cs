@@ -1,12 +1,11 @@
-﻿namespace POI.ThirdParty.ScoreSaber.Exceptions
-{
-	public class QueryParameterValidationException : Exception
-	{
-		public string QueryParameter { get; }
+﻿namespace POI.ThirdParty.ScoreSaber.Exceptions;
 
-		public QueryParameterValidationException(string queryParameter)
-		{
-			QueryParameter = queryParameter;
-		}
+public class QueryParameterValidationException : Exception
+{
+	public string QueryParameter { get; }
+
+	public QueryParameterValidationException(string queryParameter)
+	{
+		QueryParameter = queryParameter;
 	}
 }
