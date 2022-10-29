@@ -17,7 +17,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\POI.ThirdParty.ScoreSaber\POI.ThirdParty.ScoreSaber.csproj" />
+		<ProjectReference Include="..\POI.ThirdParty.ScoreSaber\POI.ThirdParty.ScoreSaber.csproj" />
 		<ProjectReference Include="..\POI.Core\POI.Core.csproj" />
 	</ItemGroup>
 
