@@ -1,13 +1,12 @@
 ﻿using System.Runtime.Serialization;
 
-namespace POI.ThirdParty.ScoreSaber.Models.Profile
-{
-	public enum SortType
-	{
-		[EnumMember(Value = "recent")]
-		Recent,
+namespace POI.ThirdParty.ScoreSaber.Models.Profile;
 
-		[EnumMember(Value = "top")]
-		Top
-	}
+public enum SortType
+{
+	[EnumMember(Value = "recent")]
+	Recent,
+
+	[EnumMember(Value = "top")]
+	Top
 }
