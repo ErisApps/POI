@@ -66,7 +66,7 @@ internal class BeatSaviorApiService : IBeatSaviorApiService
 				},
 				(_, timespan, _, _) =>
 				{
-					_logger.LogInformation("Hit ScoreSaber rate limit. Retrying in {TimeTillReset}", timespan.ToString("g"));
+					_logger.LogInformation("Hit BeatSavior rate limit. Retrying in {TimeTillReset}", timespan.ToString("g"));
 
 					return Task.CompletedTask;
 				});
