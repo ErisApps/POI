@@ -45,7 +45,7 @@ namespace POI.Azure.Functions.RankUpFeed
 		private static async Task FetchPlayers(ILogger logger, IScoreSaberApiService scoreSaberApiService)
 		{
 			// Temp
-			var players = new List<BasicProfile>();
+			var players = new List<BasicProfileDto>();
 			for (uint i = 0; i < 4; i++)
 			{
 				var internalPage = i + 1;

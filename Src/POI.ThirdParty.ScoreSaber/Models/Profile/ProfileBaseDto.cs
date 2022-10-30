@@ -3,7 +3,7 @@ using POI.ThirdParty.ScoreSaber.Models.Shared;
 
 namespace POI.ThirdParty.ScoreSaber.Models.Profile;
 
-public class ProfileBase : PlayerInfoBase
+public class ProfileBaseDto : PlayerInfoBaseDto
 {
 	[JsonPropertyName("rank")]
 	public uint Rank { get; }
@@ -20,7 +20,7 @@ public class ProfileBase : PlayerInfoBase
 	[JsonIgnore]
 	public List<uint> History => HistoryRaw.Split(',').Where(entry => entry != "999999").Select(uint.Parse).ToList();
 
-	public ProfileBase(string id, string name, string profilePicture, string country, uint rank, uint countryRank, double pp, string historyRaw)
+	public ProfileBaseDto(string id, string name, string profilePicture, string country, uint rank, uint countryRank, double pp, string historyRaw)
 		: base(id, name, profilePicture, country)
 	{
 		Rank = rank;

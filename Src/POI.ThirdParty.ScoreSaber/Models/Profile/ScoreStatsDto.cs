@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace POI.ThirdParty.ScoreSaber.Models.Profile;
 
-public readonly struct ScoreStats
+public readonly struct ScoreStatsDto
 {
 	[JsonPropertyName("totalScore")]
 	public long TotalScore { get; }
@@ -23,7 +23,7 @@ public readonly struct ScoreStats
 	public uint ReplaysWatched { get; }
 
 	[JsonConstructor]
-	public ScoreStats(long totalScore, long totalRankedScore, double averageRankedAccuracy, uint totalPlayCount, uint totalRankedCount, uint replaysWatched)
+	public ScoreStatsDto(long totalScore, long totalRankedScore, double averageRankedAccuracy, uint totalPlayCount, uint totalRankedCount, uint replaysWatched)
 	{
 		TotalScore = totalScore;
 		TotalRankedScore = totalRankedScore;

@@ -30,7 +30,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 			await GenerateScoreImageAndSendInternal(ctx);
 		}
 
-		protected override Task<PlayerScoresWrapper?> FetchScorePage(string playerId, uint page)
+		protected override Task<PlayerScoresWrapperDto?> FetchScorePage(string playerId, uint page)
 		{
 			return ScoreSaberApiService.FetchRecentSongsScorePage(playerId, page);
 		}

@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace POI.ThirdParty.ScoreSaber.Models.Profile;
 
-public readonly struct Badge
+public readonly struct BadgeDto
 {
 	[JsonPropertyName("image")]
 	public string ImageUrl { get; }
@@ -11,7 +11,7 @@ public readonly struct Badge
 	public string Description { get; }
 
 	[JsonConstructor]
-	public Badge(string imageUrl, string description)
+	public BadgeDto(string imageUrl, string description)
 	{
 		ImageUrl = imageUrl;
 		Description = description;

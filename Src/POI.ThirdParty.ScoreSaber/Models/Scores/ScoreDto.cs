@@ -3,7 +3,7 @@ using NodaTime;
 
 namespace POI.ThirdParty.ScoreSaber.Models.Scores;
 
-public class Score
+public class ScoreDto
 {
 	[JsonPropertyName("id")]
 	public uint Id { get; }
@@ -52,7 +52,7 @@ public class Score
 	public bool HasReplay { get; }
 
 	[JsonConstructor]
-	public Score(uint id, uint rank, int baseScore, int modifiedScore, double pp, double weight, string modifiers, double multiplier, uint badCuts, uint missedNotes, uint maxCombo,
+	public ScoreDto(uint id, uint rank, int baseScore, int modifiedScore, double pp, double weight, string modifiers, double multiplier, uint badCuts, uint missedNotes, uint maxCombo,
 		bool fullCombo, HMD hmd, Instant timeSet, bool hasReplay)
 	{
 		Id = id;

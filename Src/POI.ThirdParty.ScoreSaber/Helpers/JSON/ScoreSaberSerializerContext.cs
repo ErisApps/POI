@@ -4,13 +4,13 @@ using POI.ThirdParty.ScoreSaber.Models.Wrappers;
 
 namespace POI.ThirdParty.ScoreSaber.Helpers.JSON;
 
-[JsonSerializable(typeof(Refresh))]
-[JsonSerializable(typeof(BasicProfile))]
-[JsonSerializable(typeof(FullProfile))]
-[JsonSerializable(typeof(LeaderboardsWrapper))]
-[JsonSerializable(typeof(PlayerScoresWrapper))]
-[JsonSerializable(typeof(PlayersWrapper))]
-[JsonSerializable(typeof(ScoresWrapper))]
+[JsonSerializable(typeof(RefreshDto))]
+[JsonSerializable(typeof(BasicProfileDto))]
+[JsonSerializable(typeof(FullProfileDto))]
+[JsonSerializable(typeof(LeaderboardsWrapperDto))]
+[JsonSerializable(typeof(PlayerScoresWrapperDto))]
+[JsonSerializable(typeof(PlayersWrapperDto))]
+[JsonSerializable(typeof(ScoresWrapperDto))]
 internal partial class ScoreSaberSerializerContext : JsonSerializerContext
 {
 }

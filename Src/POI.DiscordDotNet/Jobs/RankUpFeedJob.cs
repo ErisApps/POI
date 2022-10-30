@@ -81,7 +81,7 @@ namespace POI.DiscordDotNet.Jobs
 			await leaderboardEntriesCollection.InsertManyAsync(players.Select(p => new LeaderboardEntry(p.Id, p.Name, p.CountryRank, p.Pp))).ConfigureAwait(false);
 		}
 
-		private async Task HandlePlayer(ProfileBase player,
+		private async Task HandlePlayer(ProfileBaseDto player,
 			IEnumerable<ScoreSaberAccountLink> scoreSaberLinks,
 			IEnumerable<DiscordMember> members,
 			IReadOnlyCollection<(uint? RankThreshold, DiscordRole Role)> roles)
@@ -123,7 +123,7 @@ namespace POI.DiscordDotNet.Jobs
 			}
 		}
 
-		private async Task TriggerProfileRefreshIfNeeded(ProfileBase player)
+		private async Task TriggerProfileRefreshIfNeeded(ProfileBaseDto player)
 		{
 			if (player.ProfilePicture.EndsWith("steam.png") && player.Id.Length == 17 && player.Id.StartsWith("7"))
 			{
@@ -172,7 +172,7 @@ namespace POI.DiscordDotNet.Jobs
 			return applicableRole;
 		}
 
-		private static async Task PostChangesOnDiscord(DiscordGuild guild, IReadOnlyCollection<LeaderboardEntry> originalLeaderboardEntries, List<ExtendedBasicProfile> players)
+		private static async Task PostChangesOnDiscord(DiscordGuild guild, IReadOnlyCollection<LeaderboardEntry> originalLeaderboardEntries, List<ExtendedBasicProfileDto> players)
 		{
 			var rankedUpPlayers = DetermineRankedUpPlayers(originalLeaderboardEntries, players);
 
@@ -194,9 +194,9 @@ namespace POI.DiscordDotNet.Jobs
 			}
 		}
 
-		private static List<ExtendedBasicProfile> DetermineRankedUpPlayers(IReadOnlyCollection<LeaderboardEntry> originalLeaderboard, List<ExtendedBasicProfile> currentLeaderboard)
+		private static List<ExtendedBasicProfileDto> DetermineRankedUpPlayers(IReadOnlyCollection<LeaderboardEntry> originalLeaderboard, List<ExtendedBasicProfileDto> currentLeaderboard)
 		{
-			var playersWithRankUp = new List<ExtendedBasicProfile>();
+			var playersWithRankUp = new List<ExtendedBasicProfileDto>();
 			foreach (var player in currentLeaderboard)
 			{
 				var oldEntry = originalLeaderboard.FirstOrDefault(x => x.ScoreSaberId == player.Id);

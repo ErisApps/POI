@@ -2,13 +2,13 @@
 
 namespace POI.ThirdParty.ScoreSaber.Models.Profile;
 
-public readonly struct Refresh
+public readonly struct RefreshDto
 {
 	[JsonPropertyName("result")]
 	public bool Result { get; }
 
 	[JsonConstructor]
-	public Refresh(bool result)
+	public RefreshDto(bool result)
 	{
 		Result = result;
 	}

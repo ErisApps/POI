@@ -3,7 +3,7 @@ using POI.ThirdParty.ScoreSaber.Models.Shared;
 
 namespace POI.ThirdParty.ScoreSaber.Models.Scores;
 
-public class LeaderboardPlayer : PlayerInfoBase
+public class LeaderboardPlayerDto : PlayerInfoBaseDto
 {
 	[JsonPropertyName("role")]
 	public string Role { get; }
@@ -12,7 +12,7 @@ public class LeaderboardPlayer : PlayerInfoBase
 	public uint Permissions { get; }
 
 	[JsonConstructor]
-	public LeaderboardPlayer(string id, string name, string profilePicture, string country, string role, uint permissions)
+	public LeaderboardPlayerDto(string id, string name, string profilePicture, string country, string role, uint permissions)
 		: base(id, name, profilePicture, country)
 	{
 		Role = role;

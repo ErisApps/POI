@@ -2,12 +2,12 @@
 
 namespace POI.ThirdParty.ScoreSaber.Models.Wrappers;
 
-public abstract class BaseWrapper
+public abstract class BaseWrapperDto
 {
 	[JsonPropertyName("metadata")]
-	public MetaData MetaData { get; }
+	public MetaDataDto MetaData { get; }
 
-	protected BaseWrapper(MetaData metaData)
+	protected BaseWrapperDto(MetaDataDto metaData)
 	{
 		MetaData = metaData;
 	}

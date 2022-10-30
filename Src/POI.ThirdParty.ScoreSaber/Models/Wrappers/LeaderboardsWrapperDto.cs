@@ -6,13 +6,13 @@ namespace POI.ThirdParty.ScoreSaber.Models.Wrappers;
 /// <remark>
 /// This class matches the LeaderboardInfoCollection object in the swagger documentation
 /// </remark>
-public class LeaderboardsWrapper : BaseWrapper
+public class LeaderboardsWrapperDto : BaseWrapperDto
 {
 	[JsonPropertyName("leaderboards")]
-	public List<LeaderboardInfo> Leaderboards { get; }
+	public List<LeaderboardInfoDto> Leaderboards { get; }
 
 	[JsonConstructor]
-	public LeaderboardsWrapper(List<LeaderboardInfo> leaderboards, MetaData metaData) : base(metaData)
+	public LeaderboardsWrapperDto(List<LeaderboardInfoDto> leaderboards, MetaDataDto metaData) : base(metaData)
 	{
 		Leaderboards = leaderboards;
 	}

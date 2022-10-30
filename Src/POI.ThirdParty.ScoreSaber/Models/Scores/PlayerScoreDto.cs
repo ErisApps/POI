@@ -2,16 +2,16 @@
 
 namespace POI.ThirdParty.ScoreSaber.Models.Scores;
 
-public readonly struct PlayerScore
+public readonly struct PlayerScoreDto
 {
 	[JsonPropertyName("score")]
-	public Score Score { get; }
+	public ScoreDto Score { get; }
 
 	[JsonPropertyName("leaderboard")]
-	public LeaderboardInfo Leaderboard { get; }
+	public LeaderboardInfoDto Leaderboard { get; }
 
 	[JsonConstructor]
-	public PlayerScore(Score score, LeaderboardInfo leaderboard)
+	public PlayerScoreDto(ScoreDto score, LeaderboardInfoDto leaderboard)
 	{
 		Score = score;
 		Leaderboard = leaderboard;

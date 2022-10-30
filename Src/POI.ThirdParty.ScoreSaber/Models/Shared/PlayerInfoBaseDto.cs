@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace POI.ThirdParty.ScoreSaber.Models.Shared;
 
-public class PlayerInfoBase
+public class PlayerInfoBaseDto
 {
 	[JsonPropertyName("id")]
 	public string Id { get; }
@@ -17,7 +17,7 @@ public class PlayerInfoBase
 	public string Country { get; }
 
 	[JsonConstructor]
-	public PlayerInfoBase(string id, string name, string profilePicture, string country)
+	public PlayerInfoBaseDto(string id, string name, string profilePicture, string country)
 	{
 		Id = id;
 		Name = name;
