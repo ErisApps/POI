@@ -233,6 +233,19 @@ internal class ScoreSaberApiService : IScoreSaberApiService
 		}
 	}
 
+	public async Task<byte[]?> FetchImageFromCdn(string url, CancellationToken cancellationToken = default)
+	{
+		try
+		{
+			return await _scoreSaberImageRetryPolicy.ExecuteAsync(ct => _scoreSaberApiClient.GetByteArrayAsync(url, ct), cancellationToken);
+		}
+		catch (Exception e)
+		{
+			_logger.LogError("{Exception}", e.ToString());
+			return null;
+		}
+	}
+
 	private async Task<TResponse?> FetchDataClass<TResponse>(string url, JsonTypeInfo<TResponse> jsonResponseTypeInfo, CancellationToken cancellationToken = default) where TResponse : class
 	{
 		return (await FetchData(url, jsonResponseTypeInfo, cancellationToken).ConfigureAwait(false)).response;
@@ -266,33 +279,4 @@ internal class ScoreSaberApiService : IScoreSaberApiService
 
 		return (false, default);
 	}
-
-	public async Task<byte[]?> FetchImageFromCdn(string url, CancellationToken cancellationToken = default)
-	{
-		try
-		{
-			return await _scoreSaberImageRetryPolicy.ExecuteAsync(ct => _scoreSaberApiClient.GetByteArrayAsync(url, ct), cancellationToken);
-		}
-		catch (Exception e)
-		{
-			_logger.LogError("{Exception}", e.ToString());
-			return null;
-		}
-	}
-
-	/*private void TestRateLimitPolicy()
-	{
-		for (var i = 0; i < 200; i++)
-		{
-			_logger.LogInformation($"Fetching page {i + 1:000} of 200");
-			var internalI = i;
-			_scoreSaberApiChainedRateLimitPolicy.ExecuteAsync(() =>
-					_scoreSaberApiClient.GetAsync(
-						$"https://new.scoresaber.com/api/player/76561198333869741/scores/top/{internalI}"))
-				.ContinueWith(_ => _logger.LogInformation($"Finished fetching page {internalI}\n" +
-				                                          "Bulkhead stats:\n" +
-				                                          $"Bulkhead queue size: {MaxBulkheadQueueSize}\n" +
-				                                          $"Bulkhead queued count: {MaxBulkheadQueueSize - _scoreSaberBulkheadPolicy.QueueAvailableCount}"));
-		}
-	}*/
 }
