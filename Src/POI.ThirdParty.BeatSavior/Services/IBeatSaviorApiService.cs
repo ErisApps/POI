@@ -4,5 +4,5 @@ namespace POI.ThirdParty.BeatSavior.Services;
 
 public interface IBeatSaviorApiService
 {
-	Task<List<SongData>?> FetchBeatSaviorPlayerData(string scoreSaberId);
+	Task<List<SongDataDto>?> FetchBeatSaviorPlayerData(string scoreSaberId);
 }

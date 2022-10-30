@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace POI.ThirdParty.BeatSavior.Models.Trackers;
 
-public readonly struct HitTracker
+public readonly struct HitTrackerDto
 {
 	[JsonPropertyName("leftNoteHit")]
 	public int LeftNoteHit { get; }
@@ -41,7 +41,7 @@ public readonly struct HitTracker
 	public int RightBadCuts { get; }
 
 	[JsonConstructor]
-	public HitTracker(int leftNoteHit, int rightNoteHit, int bombHit, int maxCombo, int nbOfWallHit, int miss, int missedNotes, int badCuts, int leftMiss, int leftBadCuts, int rightMiss,
+	public HitTrackerDto(int leftNoteHit, int rightNoteHit, int bombHit, int maxCombo, int nbOfWallHit, int miss, int missedNotes, int badCuts, int leftMiss, int leftBadCuts, int rightMiss,
 		int rightBadCuts)
 	{
 		LeftNoteHit = leftNoteHit;

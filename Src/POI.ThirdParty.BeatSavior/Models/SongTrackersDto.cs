@@ -3,29 +3,29 @@ using POI.ThirdParty.BeatSavior.Models.Trackers;
 
 namespace POI.ThirdParty.BeatSavior.Models;
 
-public readonly struct SongTrackers
+public readonly struct SongTrackersDto
 {
 	[JsonPropertyName("hitTracker")]
-	public HitTracker HitTracker { get; }
+	public HitTrackerDto HitTracker { get; }
 
 	[JsonPropertyName("accuracyTracker")]
-	public AccuracyTracker AccuracyTracker { get; }
+	public AccuracyTrackerDto AccuracyTracker { get; }
 
 	[JsonPropertyName("scoreTracker")]
-	public ScoreTracker ScoreTracker { get; }
+	public ScoreTrackerDto ScoreTracker { get; }
 
 	[JsonPropertyName("winTracker")]
-	public WinTracker WinTracker { get; }
+	public WinTrackerDto WinTracker { get; }
 
 	[JsonPropertyName("distanceTracker")]
-	public DistanceTracker DistanceTracker { get; }
+	public DistanceTrackerDto DistanceTracker { get; }
 
 	[JsonPropertyName("scoreGraphTracker")]
-	public ScoreGraphTracker ScoreGraphTracker { get; }
+	public ScoreGraphTrackerDto ScoreGraphTracker { get; }
 
 	[JsonConstructor]
-	public SongTrackers(HitTracker hitTracker, AccuracyTracker accuracyTracker, ScoreTracker scoreTracker, WinTracker winTracker, DistanceTracker distanceTracker,
-		ScoreGraphTracker scoreGraphTracker)
+	public SongTrackersDto(HitTrackerDto hitTracker, AccuracyTrackerDto accuracyTracker, ScoreTrackerDto scoreTracker, WinTrackerDto winTracker, DistanceTrackerDto distanceTracker,
+		ScoreGraphTrackerDto scoreGraphTracker)
 	{
 		HitTracker = hitTracker;
 		AccuracyTracker = accuracyTracker;

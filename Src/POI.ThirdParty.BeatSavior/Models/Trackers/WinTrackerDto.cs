@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace POI.ThirdParty.BeatSavior.Models.Trackers;
 
-public readonly struct WinTracker
+public readonly struct WinTrackerDto
 {
 	[JsonPropertyName("won")]
 	public bool Won { get; }
@@ -17,7 +17,7 @@ public readonly struct WinTracker
 	public int NumberOfPauses { get; }
 
 	[JsonConstructor]
-	public WinTracker(bool won, string rank, double endTime, int numberOfPauses)
+	public WinTrackerDto(bool won, string rank, double endTime, int numberOfPauses)
 	{
 		Won = won;
 		Rank = rank;

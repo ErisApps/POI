@@ -5,7 +5,7 @@ using POI.ThirdParty.BeatSavior.Models.Trackers;
 
 namespace POI.ThirdParty.BeatSavior.Models;
 
-public readonly struct SongData
+public readonly struct SongDataDto
 {
 	[JsonPropertyName("_id")]
 	public string Id { get; }
@@ -47,17 +47,17 @@ public readonly struct SongData
 	public double SongDuration { get; }
 
 	[JsonPropertyName("trackers")]
-	public SongTrackers Trackers { get; }
+	public SongTrackersDto Trackers { get; }
 
 	[JsonPropertyName("deepTrackers")]
-	public DeepTrackers? DeepTrackers { get; }
+	public DeepTrackersDto? DeepTrackers { get; }
 
 	[JsonPropertyName("timeSet")]
 	public Instant TimeSet { get; }
 
 	[JsonConstructor]
-	public SongData(string id, int songDataType, string playerId, string songId, string songDifficulty, string songName, string songArtist, string songMapper, string gameMode,
-		Difficulty songDifficultyRank, double songSpeed, double songStartTime, double songDuration, SongTrackers trackers, DeepTrackers? deepTrackers, Instant timeSet)
+	public SongDataDto(string id, int songDataType, string playerId, string songId, string songDifficulty, string songName, string songArtist, string songMapper, string gameMode,
+		Difficulty songDifficultyRank, double songSpeed, double songStartTime, double songDuration, SongTrackersDto trackers, DeepTrackersDto? deepTrackers, Instant timeSet)
 	{
 		Id = id;
 		SongDataType = songDataType;

@@ -2,13 +2,13 @@ using System.Text.Json.Serialization;
 
 namespace POI.ThirdParty.BeatSavior.Models.Trackers;
 
-public readonly struct DeepTrackers
+public readonly struct DeepTrackersDto
 {
 	[JsonPropertyName("noteTracker")]
-	public NoteTracker NoteTracker { get; }
+	public NoteTrackerDto NoteTracker { get; }
 
 	[JsonConstructor]
-	public DeepTrackers(NoteTracker noteTracker)
+	public DeepTrackersDto(NoteTrackerDto noteTracker)
 	{
 		NoteTracker = noteTracker;
 	}

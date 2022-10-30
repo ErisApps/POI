@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace POI.ThirdParty.BeatSavior.Models.Trackers;
 
-public readonly struct AccuracyTracker
+public readonly struct AccuracyTrackerDto
 {
 	[JsonPropertyName("accRight")]
 	public double AccRight { get; }
@@ -71,7 +71,7 @@ public readonly struct AccuracyTracker
 	public List<int>? GridCut { get; }
 
 	[JsonConstructor]
-	public AccuracyTracker(double accRight, double accLeft, double averageAcc, double leftSpeed, double rightSpeed, double averageSpeed, double leftHighestSpeed, double rightHighestSpeed,
+	public AccuracyTrackerDto(double accRight, double accLeft, double averageAcc, double leftSpeed, double rightSpeed, double averageSpeed, double leftHighestSpeed, double rightHighestSpeed,
 		double leftPreswing, double rightPreswing, double averagePreswing, double leftPostswing, double rightPostswing, double averagePostswing, double leftTimeDependence,
 		double rightTimeDependence, double averageTimeDependence, List<double>? leftAverageCut, List<double>? rightAverageCut, List<double>? averageCut, List<double>? gridAcc, List<int>? gridCut)
 	{

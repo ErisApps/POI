@@ -379,7 +379,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 			}
 		}
 
-		private async Task SendBeatSaviorMemoryStream(CommandContext ctx, BasicProfileDto profile, SongData beatSaviorSongData)
+		private async Task SendBeatSaviorMemoryStream(CommandContext ctx, BasicProfileDto profile, SongDataDto beatSaviorSongData)
 		{
 			await using var memoryStream = new MemoryStream();
 
