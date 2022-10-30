@@ -6,13 +6,13 @@ namespace POI.ThirdParty.ScoreSaber.Models.Wrappers;
 /// <remark>
 /// This class matches the PlayerCollection object in the swagger documentation
 /// </remark>
-public class PlayersWrapper : BaseWrapper
+public class PlayersWrapperDto : BaseWrapperDto
 {
 	[JsonPropertyName("players")]
-	public List<ExtendedBasicProfile> Players { get; }
+	public List<ExtendedBasicProfileDto> Players { get; }
 
 	[JsonConstructor]
-	public PlayersWrapper(List<ExtendedBasicProfile> players, MetaData metaData) : base(metaData)
+	public PlayersWrapperDto(List<ExtendedBasicProfileDto> players, MetaDataDto metaData) : base(metaData)
 	{
 		Players = players;
 	}

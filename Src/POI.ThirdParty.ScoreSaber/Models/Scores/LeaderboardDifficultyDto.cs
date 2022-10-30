@@ -3,7 +3,7 @@ using POI.Core.Models.Shared;
 
 namespace POI.ThirdParty.ScoreSaber.Models.Scores;
 
-public readonly struct LeaderboardDifficulty
+public readonly struct LeaderboardDifficultyDto
 {
 	[JsonPropertyName("leaderboardId")]
 	public int LeaderboardId { get; }
@@ -18,7 +18,7 @@ public readonly struct LeaderboardDifficulty
 	public string DifficultyRaw { get; }
 
 	[JsonConstructor]
-	public LeaderboardDifficulty(int leaderboardId, string gameMode, Difficulty difficulty, string difficultyRaw)
+	public LeaderboardDifficultyDto(int leaderboardId, string gameMode, Difficulty difficulty, string difficultyRaw)
 	{
 		LeaderboardId = leaderboardId;
 		GameMode = gameMode;

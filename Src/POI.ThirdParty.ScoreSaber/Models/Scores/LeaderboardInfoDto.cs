@@ -3,7 +3,7 @@ using NodaTime;
 
 namespace POI.ThirdParty.ScoreSaber.Models.Scores;
 
-public class LeaderboardInfo
+public class LeaderboardInfoDto
 {
 	[JsonPropertyName("id")]
 	public uint Id { get; }
@@ -24,7 +24,7 @@ public class LeaderboardInfo
 	public string LevelAuthorName { get; }
 
 	[JsonPropertyName("difficulty")]
-	public LeaderboardDifficulty DifficultyInfo { get; }
+	public LeaderboardDifficultyDto DifficultyInfo { get; }
 
 	[JsonPropertyName("maxScore")]
 	public uint MaxScore { get; }
@@ -71,7 +71,7 @@ public class LeaderboardInfo
 	public string CoverImageUrl { get; }
 
 	[JsonConstructor]
-	public LeaderboardInfo(uint id, string songHash, string songName, string songSubName, string songAuthorName, string levelAuthorName, LeaderboardDifficulty difficultyInfo, uint maxScore,
+	public LeaderboardInfoDto(uint id, string songHash, string songName, string songSubName, string songAuthorName, string levelAuthorName, LeaderboardDifficultyDto difficultyInfo, uint maxScore,
 		Instant createdDate, Instant? rankedDate, Instant? qualifiedDate, Instant? lovedDate, bool ranked, bool qualified, bool loved, double stars, uint plays, uint dailyPlays,
 		bool positiveModifiers, string coverImageUrl)
 	{

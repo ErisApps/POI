@@ -2,7 +2,7 @@
 
 namespace POI.ThirdParty.ScoreSaber.Models;
 
-public readonly struct MetaData
+public readonly struct MetaDataDto
 {
 	[JsonPropertyName("total")]
 	public uint Total { get; }
@@ -14,7 +14,7 @@ public readonly struct MetaData
 	public uint ItemsPerPage { get; }
 
 	[JsonConstructor]
-	public MetaData(uint total, uint page, uint itemsPerPage)
+	public MetaDataDto(uint total, uint page, uint itemsPerPage)
 	{
 		Total = total;
 		Page = page;

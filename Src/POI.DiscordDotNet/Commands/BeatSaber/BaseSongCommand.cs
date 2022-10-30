@@ -51,7 +51,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 			_erisSignaturePath = erisSignaturePath;
 		}
 
-		protected abstract Task<PlayerScoresWrapper?> FetchScorePage(string playerId, uint page);
+		protected abstract Task<PlayerScoresWrapperDto?> FetchScorePage(string playerId, uint page);
 
 		// ReSharper disable once CognitiveComplexity
 		protected async Task GenerateScoreImageAndSendInternal(CommandContext ctx)
@@ -82,7 +82,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 				return;
 			}
 
-			PlayerScore requestedSong;
+			PlayerScoreDto requestedSong;
 			var localSongIndex = --nthSong % Constants.DEFAULT_PLAYS_PER_PAGE;
 			if (songPage.PlayerScores.Count > localSongIndex)
 			{
@@ -379,7 +379,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 			}
 		}
 
-		private async Task SendBeatSaviorMemoryStream(CommandContext ctx, BasicProfile profile, SongData beatSaviorSongData)
+		private async Task SendBeatSaviorMemoryStream(CommandContext ctx, BasicProfileDto profile, SongData beatSaviorSongData)
 		{
 			await using var memoryStream = new MemoryStream();
 

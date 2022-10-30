@@ -43,7 +43,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 			await ctx.TriggerTypingAsync().ConfigureAwait(false);
 		}
 
-		protected async Task<BasicProfile?> FetchScoreSaberProfile(CommandContext ctx, string scoreSaberId)
+		protected async Task<BasicProfileDto?> FetchScoreSaberProfile(CommandContext ctx, string scoreSaberId)
 		{
 			var playerInfo = await _scoreSaberApiService.FetchBasicPlayerProfile(scoreSaberId);
 			if (playerInfo == null)
@@ -54,7 +54,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 			return playerInfo;
 		}
 
-		protected async Task<bool?> WaitForScoreLinkConfirmation(CommandContext ctx, BasicProfile basicProfile, string title)
+		protected async Task<bool?> WaitForScoreLinkConfirmation(CommandContext ctx, BasicProfileDto basicProfile, string title)
 		{
 			var messageBuilder = new DiscordMessageBuilder();
 			var embedBuilder = new DiscordEmbedBuilder()
