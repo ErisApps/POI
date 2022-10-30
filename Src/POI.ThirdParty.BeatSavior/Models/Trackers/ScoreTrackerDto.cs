@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace POI.ThirdParty.BeatSavior.Models.Trackers;
 
-public readonly struct ScoreTracker
+public readonly struct ScoreTrackerDto
 {
 	[JsonPropertyName("rawScore")]
 	public int RawScore { get; }
@@ -32,7 +32,7 @@ public readonly struct ScoreTracker
 	public List<string>? Modifiers { get; }
 
 	[JsonConstructor]
-	public ScoreTracker(int rawScore, uint score, int personalBest, double rawRatio, double modifiedRatio, double personalBestRawRatio, double personalBestModifiedRatio,
+	public ScoreTrackerDto(int rawScore, uint score, int personalBest, double rawRatio, double modifiedRatio, double personalBestRawRatio, double personalBestModifiedRatio,
 		double modifiersMultiplier, List<string>? modifiers)
 	{
 		RawScore = rawScore;

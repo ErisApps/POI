@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace POI.ThirdParty.BeatSavior.Models.Trackers;
 
-public readonly struct NoteTracker
+public readonly struct NoteTrackerDto
 {
 	[JsonPropertyName("noteType")]
 	public int NoteType { get; }
@@ -62,7 +62,7 @@ public readonly struct NoteTracker
 	public float TimeDependence { get; }
 
 	[JsonConstructor]
-	public NoteTracker(int noteType, int noteDirection, int index, int id, float time, int cutType, int multiplier, List<int> score, List<float> noteCenter, List<float> noteRotation,
+	public NoteTrackerDto(int noteType, int noteDirection, int index, int id, float time, int cutType, int multiplier, List<int> score, List<float> noteCenter, List<float> noteRotation,
 		float timeDeviation, float speed, float preswing, float postswing, float distanceToCenter, List<float> cutPoint, List<float> saberDir, List<float> cutNormal, float timeDependence)
 	{
 		NoteType = noteType;

@@ -87,9 +87,9 @@ internal class BeatSaviorApiService : IBeatSaviorApiService
 			_beatSaviorApiRateLimitPolicy);
 	}
 
-	public Task<List<SongData>?> FetchBeatSaviorPlayerData(string scoreSaberId)
+	public Task<List<SongDataDto>?> FetchBeatSaviorPlayerData(string scoreSaberId)
 	{
-		return FetchData($"{BEATSAVIOR_API_BASEURL}livescores/player/{scoreSaberId}", _beatSaviorSerializerContext.ListSongData);
+		return FetchData($"{BEATSAVIOR_API_BASEURL}livescores/player/{scoreSaberId}", _beatSaviorSerializerContext.ListSongDataDto);
 	}
 
 	private async Task<TResponse?> FetchData<TResponse>(string url, JsonTypeInfo<TResponse> jsonResponseTypeInfo) where TResponse : class
