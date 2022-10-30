@@ -10,10 +10,12 @@ using NodaTime;
 using POI.DiscordDotNet.Commands.Modules.ChatCommands;
 using POI.DiscordDotNet.Extensions;
 using POI.DiscordDotNet.Repositories;
+using POI.ThirdParty.BeatSaver.Extensions;
 using POI.ThirdParty.BeatSaver.Services;
 using POI.ThirdParty.BeatSavior.Models;
 using POI.ThirdParty.BeatSavior.Services;
 using POI.ThirdParty.ScoreSaber;
+using POI.ThirdParty.ScoreSaber.Extensions;
 using POI.ThirdParty.ScoreSaber.Models.Profile;
 using POI.ThirdParty.ScoreSaber.Models.Scores;
 using POI.ThirdParty.ScoreSaber.Models.Wrappers;
@@ -103,8 +105,8 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 			{
 				var beatmap = await _beatSaverClientProvider.GetClientInstance().BeatmapByHash(requestedSong.Leaderboard.SongHash, skipCacheCheck: true).ConfigureAwait(false);
 
-				var mappedCharacteristic = BeatmapExtensions.MapToBeatmapCharacteristic(characteristic!);
-				var mappedDifficulty = BeatmapExtensions.MapToBeatSaverBeatmapDifficulty(difficulty!);
+				var mappedCharacteristic = characteristic!.MapToBeatmapCharacteristic();
+				var mappedDifficulty = difficulty!.MapToBeatSaverBeatmapDifficulty();
 
 				maxScore = beatmap?.Versions
 					.FirstOrDefault(x => x.Hash == requestedSong.Leaderboard.SongHash.ToLower())?.Difficulties
