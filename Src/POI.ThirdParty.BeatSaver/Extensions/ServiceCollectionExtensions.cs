@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using POI.Core.Services;
 using POI.ThirdParty.BeatSaver.Services;
 using POI.ThirdParty.BeatSaver.Services.Implementations;
@@ -17,7 +18,7 @@ public static class ServiceCollectionExtensions
 	///  </remark>
 	public static IServiceCollection AddBeatSaver(this IServiceCollection serviceCollection)
 	{
-		serviceCollection.AddSingleton<IBeatSaverClientProvider, BeatSaverClientProvider>();
+		serviceCollection.TryAddSingleton<IBeatSaverClientProvider, BeatSaverClientProvider>();
 
 		return serviceCollection;
 	}
