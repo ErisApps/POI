@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using POI.Core.Services;
 using POI.ThirdParty.ScoreSaber.Services;
 using POI.ThirdParty.ScoreSaber.Services.Implementations;
@@ -17,7 +18,7 @@ public static class ServiceCollectionExtensions
 	///  </remark>
 	public static IServiceCollection AddScoreSaber(this IServiceCollection serviceCollection)
 	{
-		serviceCollection.AddSingleton<IScoreSaberApiService, ScoreSaberApiService>();
+		serviceCollection.TryAddSingleton<IScoreSaberApiService, ScoreSaberApiService>();
 
 		return serviceCollection;
 	}
