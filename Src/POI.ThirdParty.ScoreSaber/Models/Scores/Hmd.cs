@@ -18,11 +18,3 @@ public enum HMD
 	ValveIndex = 64,
 	ViveCosmos = 128
 }
-
-public static class HmdExtensions
-{
-	public static bool HasFlagFast(this HMD value, HMD flag)
-	{
-		return (value & flag) != 0;
-	}
-}
