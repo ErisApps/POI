@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POI.ThirdParty.BeatSaver", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POI.DiscordDotNet.Persistence.Domain", "Src\POI.DiscordDotNet.Persistence.Domain\POI.DiscordDotNet.Persistence.Domain.csproj", "{C25DE066-96B0-4494-88DA-578CAA9EF26B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POI.DiscordDotNet.Persistence", "Src\POI.DiscordDotNet.Persistence\POI.DiscordDotNet.Persistence.csproj", "{5B67861B-527C-432E-BE6B-249C9AE5238E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,5 +50,9 @@ Global
 		{C25DE066-96B0-4494-88DA-578CAA9EF26B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C25DE066-96B0-4494-88DA-578CAA9EF26B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C25DE066-96B0-4494-88DA-578CAA9EF26B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B67861B-527C-432E-BE6B-249C9AE5238E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B67861B-527C-432E-BE6B-249C9AE5238E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B67861B-527C-432E-BE6B-249C9AE5238E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B67861B-527C-432E-BE6B-249C9AE5238E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
