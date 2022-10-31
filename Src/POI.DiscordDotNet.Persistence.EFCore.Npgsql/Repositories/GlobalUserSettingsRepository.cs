@@ -2,6 +2,7 @@
 using NodaTime;
 using POI.DiscordDotNet.Persistence.Domain;
 using POI.DiscordDotNet.Persistence.EFCore.Npgsql.Infrastructure;
+using POI.DiscordDotNet.Persistence.Models.AccountLink;
 using POI.DiscordDotNet.Persistence.Repositories;
 
 namespace POI.DiscordDotNet.Persistence.EFCore.Npgsql.Repositories;
@@ -37,6 +38,36 @@ internal class GlobalUserSettingsRepository : IGlobalUserSettingsRepository
 			.AsQueryable()
 			.FirstOrDefaultAsync(x => x.AccountLinks.ScoreSaberId == scoreSaberId, cts)
 			.ConfigureAwait(false);
+	}
+
+	public async Task<List<ScoreSaberAccountLink>> GetAllScoreSaberAccountLinks(CancellationToken cts)
+	{
+		await using var context = await _appDbContextFactory.CreateDbContextAsync(cts).ConfigureAwait(false);
+		return await context.AccountLinks
+			.AsNoTracking()
+			.AsQueryable()
+			.Where(x => x.ScoreSaberId != null)
+			.Select(x => new ScoreSaberAccountLink(x.DiscordId, x.ScoreSaberId!))
+			.ToListAsync(cts)
+			.ConfigureAwait(false);
+	}
+
+	public async Task CreateOrUpdateScoreSaberLink(ulong discordId, string scoreSaberId, CancellationToken cts = default)
+	{
+		await using var context = await _appDbContextFactory.CreateDbContextAsync(cts).ConfigureAwait(false);
+		var globalUserSettings = await context.GlobalUserSettings
+			.FirstOrDefaultAsync(x => x.UserId == discordId, cts)
+			.ConfigureAwait(false);
+
+		if (globalUserSettings == null)
+		{
+			globalUserSettings = GlobalUserSettings.CreateDefault(discordId);
+			await context.GlobalUserSettings.AddAsync(globalUserSettings, cts).ConfigureAwait(false);
+		}
+
+		globalUserSettings.AccountLinks.ScoreSaberId = scoreSaberId;
+
+		await context.SaveChangesAsync(cts).ConfigureAwait(false);
 	}
 
 	public async Task<List<GlobalUserSettings>> GetAllBirthdayGirls(LocalDate birthdayDate, CancellationToken cts)

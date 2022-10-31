@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 using NodaTime;
 using POI.DiscordDotNet.Commands.Modules.ChatCommands;
 using POI.DiscordDotNet.Extensions;
-using POI.DiscordDotNet.Repositories;
+using POI.DiscordDotNet.Persistence.Repositories;
 using POI.ThirdParty.BeatSaver.Extensions;
 using POI.ThirdParty.BeatSaver.Services;
 using POI.ThirdParty.BeatSavior.Models;
@@ -28,7 +28,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 		private readonly ILogger<BaseSongCommand> _logger;
 		private readonly string _backgroundImagePath;
 		private readonly string _erisSignaturePath;
-		private readonly GlobalUserSettingsRepository _globalUserSettingsRepository;
+		private readonly IGlobalUserSettingsRepository _globalUserSettingsRepository;
 		private readonly IBeatSaverClientProvider _beatSaverClientProvider;
 
 		protected readonly IScoreSaberApiService ScoreSaberApiService;
@@ -37,7 +37,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 		private const int WIDTH = 1024;
 		private const int MARGIN = 35;
 
-		protected BaseSongCommand(ILogger<BaseSongCommand> logger, IScoreSaberApiService scoreSaberApiService, GlobalUserSettingsRepository globalUserSettingsRepository,
+		protected BaseSongCommand(ILogger<BaseSongCommand> logger, IScoreSaberApiService scoreSaberApiService, IGlobalUserSettingsRepository globalUserSettingsRepository,
 			IBeatSaverClientProvider beatSaverClientProvider, string backgroundImagePath, string erisSignaturePath, IBeatSaviorApiService beatSaviorApiService)
 		{
 			_logger = logger;
@@ -645,7 +645,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 		{
 			string? scoreSaberId = null;
 
-			async Task LookupScoreSaberLink(string discordId)
+			async Task LookupScoreSaberLink(ulong discordId)
 			{
 				try
 				{
@@ -678,11 +678,11 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 				if (ctx.Message.MentionedUsers.Any())
 				{
 					var mentionedUser = ctx.Message.MentionedUsers.First();
-					await LookupScoreSaberLink(mentionedUser.Id.ToString()).ConfigureAwait(false);
+					await LookupScoreSaberLink(mentionedUser.Id).ConfigureAwait(false);
 				}
 				else
 				{
-					await LookupScoreSaberLink(ctx.User.Id.ToString()).ConfigureAwait(false);
+					await LookupScoreSaberLink(ctx.User.Id).ConfigureAwait(false);
 				}
 			}
 

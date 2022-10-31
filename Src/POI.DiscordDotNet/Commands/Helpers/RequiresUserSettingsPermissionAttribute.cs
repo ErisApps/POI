@@ -2,9 +2,8 @@
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using Microsoft.Extensions.DependencyInjection;
-using POI.DiscordDotNet.Models;
-using POI.DiscordDotNet.Models.Database;
-using POI.DiscordDotNet.Repositories;
+using POI.DiscordDotNet.Persistence.Domain;
+using POI.DiscordDotNet.Persistence.Repositories;
 
 namespace POI.DiscordDotNet.Commands.Helpers
 {
@@ -27,7 +26,7 @@ namespace POI.DiscordDotNet.Commands.Helpers
 				return false;
 			}
 
-			var serverDependentUserSettingsRepository = ctx.Services.GetRequiredService<ServerDependentUserSettingsRepository>();
+			var serverDependentUserSettingsRepository = ctx.Services.GetRequiredService<IServerDependentUserSettingsRepository>();
 			var serverDependentUserSettings = await serverDependentUserSettingsRepository.FindOneById(ctx.Member!.Id, ctx.Guild.Id);
 			return serverDependentUserSettings != null && serverDependentUserSettings.Permissions.HasFlag(_requiredPermission);
 		}

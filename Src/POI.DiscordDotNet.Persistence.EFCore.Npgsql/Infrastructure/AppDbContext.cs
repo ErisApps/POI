@@ -22,7 +22,7 @@ internal class AppDbContext : DbContext
 		base.OnModelCreating(modelBuilder);
 
 		var serverSettingsModelBuilder = modelBuilder.Entity<ServerSettings>();
-		serverSettingsModelBuilder.HasIndex(x => x.ServerId);
+		serverSettingsModelBuilder.HasKey(x => x.ServerId);
 
 		var globalUserSettingsModelBuilder = modelBuilder.Entity<GlobalUserSettings>();
 		globalUserSettingsModelBuilder.HasKey(x => x.UserId);

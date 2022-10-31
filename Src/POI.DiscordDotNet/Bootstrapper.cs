@@ -12,7 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using POI.Core.Services;
 using POI.DiscordDotNet.Jobs;
-using POI.DiscordDotNet.Repositories;
+using POI.DiscordDotNet.Persistence.EFCore.Npgsql.Extensions;
 using POI.DiscordDotNet.Services;
 using POI.DiscordDotNet.Services.Interfaces;
 using POI.ThirdParty.BeatSaver.Extensions;
@@ -85,20 +85,19 @@ namespace POI.DiscordDotNet
 				.ConfigureServices(sc =>
 				{
 					sc.AddSingleton<Constants>()
-					.AddSingleton<IConstantsCore>(provider => provider.GetRequiredService<Constants>())
-					.AddSingleton<IConstants>(provider => provider.GetRequiredService<Constants>())
-					.AddBeatSaver()
-					.AddBeatSavior()
-					.AddScoreSaber()
-					.AddSingleton(configProvider)
-					.AddSingleton(pathProvider)
-					.AddSingleton(_client)
-					.AddSingleton<IMongoDbService, MongoDbService>()
-					.AddSingleton<UptimeManagementService>()
-					.AddSingleton<SlashCommandsManagementService>()
-					.AddSingleton<GlobalUserSettingsRepository>()
-					.AddSingleton<ServerDependentUserSettingsRepository>()
-					.AddSingleton<ServerSettingsRepository>();
+						.AddSingleton<IConstantsCore>(provider => provider.GetRequiredService<Constants>())
+						.AddSingleton<IConstants>(provider => provider.GetRequiredService<Constants>())
+						.AddBeatSaver()
+						.AddBeatSavior()
+						.AddScoreSaber()
+						// This is actually a PostgreSQL connectino string
+						// TODO: Refactor naming, maybe just switch over to Microsoft.Extensions.* stuff
+						.AddPersistence(configProvider.MongoDb.MongoDbConnectionString!)
+						.AddSingleton(configProvider)
+						.AddSingleton(pathProvider)
+						.AddSingleton(_client)
+						.AddSingleton<UptimeManagementService>()
+						.AddSingleton<SlashCommandsManagementService>();
 
 					sc.AddSingleton<RankUpFeedJob>();
 
@@ -127,12 +126,6 @@ namespace POI.DiscordDotNet
 					});
 				}).Build();
 
-			// Verify mongoDbConnection
-			if (!await VerifyMongoDbConnection(hostBuilder.Services, logger))
-			{
-				return;
-			}
-
 			SetupCommandsNext(hostBuilder.Services, logger, configProvider);
 
 			_client.UseInteractivity();
@@ -145,23 +138,9 @@ namespace POI.DiscordDotNet
 			await _client.ConnectAsync(new DiscordActivity("POI for mod? (pretty please)", ActivityType.Playing)).ConfigureAwait(false);
 
 			var scheduler = await hostBuilder.Services.GetRequiredService<ISchedulerFactory>().GetScheduler();
-			await scheduler.Start();
+			// await scheduler.Start();
 
 			await hostBuilder.RunAsync().ConfigureAwait(false);
-		}
-
-		private static async Task<bool> VerifyMongoDbConnection(IServiceProvider serviceProvider, Serilog.ILogger logger)
-		{
-			var mongoDbService = serviceProvider.GetRequiredService<IMongoDbService>();
-			if (await mongoDbService.TestConnectivity().ConfigureAwait(false))
-			{
-				logger.Information("Connected to MongoDb instance");
-
-				return true;
-			}
-
-			logger.Fatal("Couldn't connect to database. Exiting...");
-			return false;
 		}
 
 		// TODO: Deprecate in due time...

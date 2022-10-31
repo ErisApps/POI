@@ -10,4 +10,8 @@
       <ProjectReference Include="..\POI.DiscordDotNet.Persistence.Domain\POI.DiscordDotNet.Persistence.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Models" />
+    </ItemGroup>
+
 </Project>

@@ -4,11 +4,10 @@ using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
-using POI.Core.Services;
 using POI.DiscordDotNet.Commands.BeatSaber;
 using POI.DiscordDotNet.Commands.Helpers;
-using POI.DiscordDotNet.Models;
-using POI.DiscordDotNet.Repositories;
+using POI.DiscordDotNet.Persistence.Domain;
+using POI.DiscordDotNet.Persistence.Repositories;
 using POI.ThirdParty.ScoreSaber.Services;
 
 namespace POI.DiscordDotNet.Commands.Admin
@@ -17,8 +16,8 @@ namespace POI.DiscordDotNet.Commands.Admin
 	[RequiresUserSettingsPermission(Permissions.ForceLink)]
 	public class ForceLinkCommand : BaseLinkCommand
 	{
-		public ForceLinkCommand(ILogger<ForceLinkCommand> logger, IScoreSaberApiService scoreSaberApiService, GlobalUserSettingsRepository globalUserSettingsRepository,
-			ServerDependentUserSettingsRepository serverDependentUserSettingsRepository)
+		public ForceLinkCommand(ILogger<ForceLinkCommand> logger, IScoreSaberApiService scoreSaberApiService, IGlobalUserSettingsRepository globalUserSettingsRepository,
+			IServerDependentUserSettingsRepository serverDependentUserSettingsRepository)
 			: base(logger, scoreSaberApiService, globalUserSettingsRepository, serverDependentUserSettingsRepository)
 		{
 		}
@@ -30,7 +29,7 @@ namespace POI.DiscordDotNet.Commands.Admin
 			await base.Handle(ctx, _).ConfigureAwait(false);
 
 			DiscordUser user;
-			string discordId;
+			ulong discordId;
 			switch (ctx.Message.MentionedUsers.Count)
 			{
 				case 0:
@@ -41,7 +40,7 @@ namespace POI.DiscordDotNet.Commands.Admin
 					return;
 				default:
 					user = ctx.Message.MentionedUsers[0];
-					discordId = user.Id.ToString();
+					discordId = user.Id;
 					break;
 			}
 

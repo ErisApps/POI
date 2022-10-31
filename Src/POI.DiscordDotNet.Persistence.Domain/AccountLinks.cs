@@ -5,9 +5,12 @@
 		public ulong DiscordId { get; set; }
 		public string? ScoreSaberId { get; set; }
 
-		public static AccountLinks CreateDefault()
+		public static AccountLinks CreateDefault(ulong discordId)
 		{
-			return new AccountLinks();
+			return new AccountLinks
+			{
+				DiscordId = discordId
+			};
 		}
 	}
 }
