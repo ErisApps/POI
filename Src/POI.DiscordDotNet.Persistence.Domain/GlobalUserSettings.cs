@@ -1,12 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-using NodaTime;
+﻿using NodaTime;
 
 namespace POI.DiscordDotNet.Persistence.Domain
 {
 	public class GlobalUserSettings
 	{
-		[Key]
-		public ulong DiscordId { get; set; }
+		public ulong UserId { get; set; }
 
 		public LocalDate? Birthday { get; set; }
 
@@ -16,7 +14,7 @@ namespace POI.DiscordDotNet.Persistence.Domain
 		{
 			return new GlobalUserSettings
 			{
-				DiscordId = discordId
+				UserId = discordId
 			};
 		}
 	}

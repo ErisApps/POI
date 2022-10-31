@@ -1,10 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace POI.DiscordDotNet.Persistence.Domain
+﻿namespace POI.DiscordDotNet.Persistence.Domain
 {
 	public class ServerSettings
 	{
-		[Key]
 		public ulong ServerId { get; init; }
 
 		public ulong? RankUpFeedChannelId { get; set; }

@@ -1,10 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace POI.DiscordDotNet.Persistence.Domain
+﻿namespace POI.DiscordDotNet.Persistence.Domain
 {
 	public class LeaderboardEntry
 	{
-		[Key] public string ScoreSaberId { get; set; }
+		public string ScoreSaberId { get; set; }
 
 		public string Name { get; set; }
 
