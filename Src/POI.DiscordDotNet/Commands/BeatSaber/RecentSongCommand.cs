@@ -4,7 +4,7 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
-using POI.DiscordDotNet.Repositories;
+using POI.DiscordDotNet.Persistence.Repositories;
 using POI.DiscordDotNet.Services;
 using POI.ThirdParty.BeatSaver.Services;
 using POI.ThirdParty.BeatSavior.Services;
@@ -16,7 +16,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 	[UsedImplicitly]
 	public class RecentSongCommand : BaseSongCommand
 	{
-		public RecentSongCommand(ILogger<RecentSongCommand> logger, PathProvider pathProvider, IScoreSaberApiService scoreSaberApiService, GlobalUserSettingsRepository globalUserSettingsRepository,
+		public RecentSongCommand(ILogger<RecentSongCommand> logger, PathProvider pathProvider, IScoreSaberApiService scoreSaberApiService, IGlobalUserSettingsRepository globalUserSettingsRepository,
 			IBeatSaverClientProvider beatSaverClientProvider, IBeatSaviorApiService beatSaviorApiService)
 			: base(logger, scoreSaberApiService, globalUserSettingsRepository, beatSaverClientProvider, Path.Combine(pathProvider.AssetsPath, "poinext1.png"),
 				Path.Combine(pathProvider.AssetsPath, "Signature-Eris.png"), beatSaviorApiService)

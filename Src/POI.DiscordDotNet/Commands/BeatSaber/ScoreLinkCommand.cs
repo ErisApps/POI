@@ -3,7 +3,7 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
-using POI.DiscordDotNet.Repositories;
+using POI.DiscordDotNet.Persistence.Repositories;
 using POI.ThirdParty.ScoreSaber.Services;
 
 namespace POI.DiscordDotNet.Commands.BeatSaber
@@ -11,8 +11,8 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 	[UsedImplicitly]
 	public class ScoreLinkCommand : BaseLinkCommand
 	{
-		public ScoreLinkCommand(ILogger<ScoreLinkCommand> logger, IScoreSaberApiService scoreSaberApiService, GlobalUserSettingsRepository globalUserSettingsRepository,
-			ServerDependentUserSettingsRepository serverDependentUserSettingsRepository)
+		public ScoreLinkCommand(ILogger<ScoreLinkCommand> logger, IScoreSaberApiService scoreSaberApiService, IGlobalUserSettingsRepository globalUserSettingsRepository,
+			IServerDependentUserSettingsRepository serverDependentUserSettingsRepository)
 			: base(logger, scoreSaberApiService, globalUserSettingsRepository, serverDependentUserSettingsRepository)
 		{
 		}
@@ -29,7 +29,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 				return;
 			}
 
-			var discordId = ctx.Message.Author.Id.ToString();
+			var discordId = ctx.Message.Author.Id;
 			if (await CheckScoreLinkConflicts(ctx, discordId, scoreSaberId).ConfigureAwait(false))
 			{
 				return;
@@ -59,7 +59,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 			}
 		}
 
-		private async Task<bool> CheckScoreLinkConflicts(CommandContext ctx, string discordId, string scoreSaberId)
+		private async Task<bool> CheckScoreLinkConflicts(CommandContext ctx, ulong discordId, string scoreSaberId)
 		{
 			// Check discordId conflict
 			var userSettings = await GlobalUserSettingsRepository.LookupSettingsByDiscordId(discordId);
@@ -78,7 +78,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 			userSettings = await GlobalUserSettingsRepository.LookupSettingsByScoreSaberId(scoreSaberId);
 			if (userSettings != null)
 			{
-				await ctx.Message.RespondAsync($"ScoreSaber account is already linked to <@!{userSettings.DiscordId}>! O.o").ConfigureAwait(false);
+				await ctx.Message.RespondAsync($"ScoreSaber account is already linked to <@!{userSettings.UserId}>! O.o").ConfigureAwait(false);
 				return true;
 			}
 

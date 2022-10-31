@@ -7,8 +7,8 @@ using DSharpPlus.Entities;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using NodaTime;
-using POI.DiscordDotNet.Models.Database;
-using POI.DiscordDotNet.Repositories;
+using POI.DiscordDotNet.Persistence.Domain;
+using POI.DiscordDotNet.Persistence.Repositories;
 using Quartz;
 
 namespace POI.DiscordDotNet.Jobs
@@ -17,11 +17,11 @@ namespace POI.DiscordDotNet.Jobs
 	public class BirthdayGirlsJob : IJob
 	{
 		private readonly ILogger<BirthdayGirlsJob> _logger;
-		private readonly GlobalUserSettingsRepository _globalUserSettingsRepository;
-		private readonly ServerSettingsRepository _serverSettingsRepository;
+		private readonly IGlobalUserSettingsRepository _globalUserSettingsRepository;
+		private readonly IServerSettingsRepository _serverSettingsRepository;
 		private readonly DiscordClient _discordClient;
 
-		public BirthdayGirlsJob(ILogger<BirthdayGirlsJob> logger, GlobalUserSettingsRepository globalUserSettingsRepository, ServerSettingsRepository serverSettingsRepository,
+		public BirthdayGirlsJob(ILogger<BirthdayGirlsJob> logger, IGlobalUserSettingsRepository globalUserSettingsRepository, IServerSettingsRepository serverSettingsRepository,
 			DiscordClient discordClient)
 		{
 			_logger = logger;
@@ -62,7 +62,7 @@ namespace POI.DiscordDotNet.Jobs
 			var allMembers = await server.GetAllMembersAsync().ConfigureAwait(false);
 			foreach (var member in allMembers)
 			{
-				var isBirthdayPartyPeep = currentBirthdayPartyPeople.Any(x => x.DiscordId == member.Id.ToString());
+				var isBirthdayPartyPeep = currentBirthdayPartyPeople.Any(x => x.UserId == member.Id);
 				var hasBirthdayRole = member.Roles.Any(x => x.Id == birthdayRole.Id);
 
 				if (isBirthdayPartyPeep && !hasBirthdayRole)

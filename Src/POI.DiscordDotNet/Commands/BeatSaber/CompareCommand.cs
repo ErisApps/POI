@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 using NodaTime;
 using POI.DiscordDotNet.Commands.Modules.ChatCommands;
 using POI.DiscordDotNet.Extensions;
-using POI.DiscordDotNet.Repositories;
+using POI.DiscordDotNet.Persistence.Repositories;
 using POI.DiscordDotNet.Services;
 using POI.ThirdParty.ScoreSaber.Services;
 
@@ -29,11 +29,11 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 		private const int RANK_HEIGHT = PFP_HEIGHT + 150 + SPACING;
 
 		private readonly ILogger<CompareCommand> _logger;
-		private readonly GlobalUserSettingsRepository _globalUserSettingsRepository;
+		private readonly IGlobalUserSettingsRepository _globalUserSettingsRepository;
 		private readonly PathProvider _pathProvider;
 		private readonly IScoreSaberApiService _scoreSaberService;
 
-		public CompareCommand(ILogger<CompareCommand> logger, IScoreSaberApiService scoreSaberService, GlobalUserSettingsRepository globalUserSettingsRepository, PathProvider pathProvider)
+		public CompareCommand(ILogger<CompareCommand> logger, IScoreSaberApiService scoreSaberService, IGlobalUserSettingsRepository globalUserSettingsRepository, PathProvider pathProvider)
 		{
 			_logger = logger;
 
@@ -243,7 +243,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 			string? compareScoreSaberId = null;
 
 			//lookup sender ScoreSaber in mongoDB via discord
-			async Task<string?> LookupScoreSaberLink(string discordId)
+			async Task<string?> LookupScoreSaberLink(ulong discordId)
 			{
 				try
 				{
@@ -273,7 +273,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 					switch (args.Count)
 					{
 						case 1 when args[0].ExtractScoreSaberId(out compareScoreSaberId):
-							scoreSaberId = await LookupScoreSaberLink(ctx.Message.Author.Id.ToString()).ConfigureAwait(false);
+							scoreSaberId = await LookupScoreSaberLink(ctx.Message.Author.Id).ConfigureAwait(false);
 							break;
 						case 2:
 							args[0].ExtractScoreSaberId(out scoreSaberId);
@@ -288,18 +288,18 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 					switch (args.Count)
 					{
 						case 0:
-							scoreSaberId = await LookupScoreSaberLink(ctx.Message.Author.Id.ToString()).ConfigureAwait(false);
-							compareScoreSaberId = await LookupScoreSaberLink(ctx.Message.MentionedUsers[0].Id.ToString()).ConfigureAwait(false);
+							scoreSaberId = await LookupScoreSaberLink(ctx.Message.Author.Id).ConfigureAwait(false);
+							compareScoreSaberId = await LookupScoreSaberLink(ctx.Message.MentionedUsers[0].Id).ConfigureAwait(false);
 							break;
 						case 1 when args[0].ExtractScoreSaberId(out compareScoreSaberId):
-							scoreSaberId = await LookupScoreSaberLink(ctx.Message.MentionedUsers[0].Id.ToString()).ConfigureAwait(false);
+							scoreSaberId = await LookupScoreSaberLink(ctx.Message.MentionedUsers[0].Id).ConfigureAwait(false);
 							break;
 					}
 
 					break;
 				case 2:
-					scoreSaberId = await LookupScoreSaberLink(ctx.Message.MentionedUsers[0].Id.ToString()).ConfigureAwait(false);
-					compareScoreSaberId = await LookupScoreSaberLink(ctx.Message.MentionedUsers[1].Id.ToString()).ConfigureAwait(false);
+					scoreSaberId = await LookupScoreSaberLink(ctx.Message.MentionedUsers[0].Id).ConfigureAwait(false);
+					compareScoreSaberId = await LookupScoreSaberLink(ctx.Message.MentionedUsers[1].Id).ConfigureAwait(false);
 					break;
 				default:
 					return null;

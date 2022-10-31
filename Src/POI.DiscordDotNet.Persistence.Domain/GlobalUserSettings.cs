@@ -8,13 +8,14 @@ namespace POI.DiscordDotNet.Persistence.Domain
 
 		public LocalDate? Birthday { get; set; }
 
-		public AccountLinks AccountLinks { get; set; } = AccountLinks.CreateDefault();
+		public AccountLinks AccountLinks { get; set; }
 
 		public static GlobalUserSettings CreateDefault(ulong discordId)
 		{
 			return new GlobalUserSettings
 			{
-				UserId = discordId
+				UserId = discordId,
+				AccountLinks = AccountLinks.CreateDefault(discordId)
 			};
 		}
 	}

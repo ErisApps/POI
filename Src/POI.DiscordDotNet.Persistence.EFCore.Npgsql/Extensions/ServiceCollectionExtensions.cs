@@ -16,6 +16,7 @@ public static class ServiceCollectionExtensions
 			o => o.UseNodaTime()));
 
 		services.TryAddScoped<IGlobalUserSettingsRepository, GlobalUserSettingsRepository>();
+		services.TryAddScoped<ILeaderboardEntriesRepository, LeaderboardEntriesRepository>();
 		services.TryAddScoped<IServerDependentUserSettingsRepository, ServerDependentUserSettingsRepository>();
 		services.TryAddScoped<ServerSettingsRepository, ServerSettingsRepository>();
 

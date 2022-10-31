@@ -6,12 +6,10 @@ using DSharpPlus;
 using DSharpPlus.Entities;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
-using MongoDB.Driver;
 using POI.DiscordDotNet.Extensions;
-using POI.DiscordDotNet.Models.AccountLink;
-using POI.DiscordDotNet.Models.Database;
-using POI.DiscordDotNet.Repositories;
-using POI.DiscordDotNet.Services.Interfaces;
+using POI.DiscordDotNet.Persistence.Domain;
+using POI.DiscordDotNet.Persistence.Models.AccountLink;
+using POI.DiscordDotNet.Persistence.Repositories;
 using POI.ThirdParty.ScoreSaber.Models.Profile;
 using POI.ThirdParty.ScoreSaber.Services;
 using Quartz;
@@ -26,20 +24,20 @@ namespace POI.DiscordDotNet.Jobs
 		private readonly ILogger<RankUpFeedJob> _logger;
 		private readonly DiscordClient _discordClient;
 		private readonly IScoreSaberApiService _scoreSaberApiService;
-		private readonly GlobalUserSettingsRepository _globalUserSettingsRepository;
-		private readonly IMongoDbService _mongoDbService;
+		private readonly IGlobalUserSettingsRepository _globalUserSettingsRepository;
+		private readonly ILeaderboardEntriesRepository _leaderboardEntriesRepository;
 
 		private readonly string[] _countryDefinition = { "BE" };
 		private readonly string[] _profileRefreshExclusions = Array.Empty<string>();
 
-		public RankUpFeedJob(ILogger<RankUpFeedJob> logger, DiscordClient discordClient, IScoreSaberApiService scoreSaberApiService, GlobalUserSettingsRepository globalUserSettingsRepository,
-			IMongoDbService mongoDbService)
+		public RankUpFeedJob(ILogger<RankUpFeedJob> logger, DiscordClient discordClient, IScoreSaberApiService scoreSaberApiService, IGlobalUserSettingsRepository globalUserSettingsRepository,
+			ILeaderboardEntriesRepository leaderboardEntriesRepository)
 		{
 			_logger = logger;
 			_discordClient = discordClient;
 			_scoreSaberApiService = scoreSaberApiService;
 			_globalUserSettingsRepository = globalUserSettingsRepository;
-			_mongoDbService = mongoDbService;
+			_leaderboardEntriesRepository = leaderboardEntriesRepository;
 		}
 
 		public async Task Execute(IJobExecutionContext context)
@@ -73,12 +71,12 @@ namespace POI.DiscordDotNet.Jobs
 				await HandlePlayer(player, allScoreSaberLinks, members, roles);
 			}
 
-			var leaderboardEntriesCollection = _mongoDbService.GetCollection<LeaderboardEntry>();
-			var originalLeaderboardEntries = await (await leaderboardEntriesCollection.FindAsync(_ => true).ConfigureAwait(false)).ToListAsync().ConfigureAwait(false);
+
+			var originalLeaderboardEntries = await _leaderboardEntriesRepository.GetAll().ConfigureAwait(false);
 			await PostChangesOnDiscord(guild, originalLeaderboardEntries, players);
 
-			_ = await leaderboardEntriesCollection.DeleteManyAsync(_ => true).ConfigureAwait(false);
-			await leaderboardEntriesCollection.InsertManyAsync(players.Select(p => new LeaderboardEntry(p.Id, p.Name, p.CountryRank, p.Pp))).ConfigureAwait(false);
+			await _leaderboardEntriesRepository.DeleteAll().ConfigureAwait(false);
+			await _leaderboardEntriesRepository.Insert(players.Select(p => new LeaderboardEntry(p.Id, p.Name, p.CountryRank, p.Pp))).ConfigureAwait(false);
 		}
 
 		private async Task HandlePlayer(ProfileBaseDto player,
@@ -96,7 +94,7 @@ namespace POI.DiscordDotNet.Jobs
 				return;
 			}
 
-			var member = members.FirstOrDefault(x => string.Equals(x.Id.ToString(), discordId, StringComparison.Ordinal));
+			var member = members.FirstOrDefault(x => x.Id == discordId);
 			if (member == null)
 			{
 				// _logger.LogWarning("ScoreLink exists for non-Discord-member. ScoreSaber name: {PlayerName}, ScoreSaberId: {PlayerId}", player.Name, player.Id);
