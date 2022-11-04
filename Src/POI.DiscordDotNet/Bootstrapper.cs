@@ -138,7 +138,7 @@ namespace POI.DiscordDotNet
 			await _client.ConnectAsync(new DiscordActivity("POI for mod? (pretty please)", ActivityType.Playing)).ConfigureAwait(false);
 
 			var scheduler = await hostBuilder.Services.GetRequiredService<ISchedulerFactory>().GetScheduler();
-			// await scheduler.Start();
+			await scheduler.Start();
 
 			await hostBuilder.RunAsync().ConfigureAwait(false);
 		}
