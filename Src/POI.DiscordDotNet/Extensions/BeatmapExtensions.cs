@@ -1,5 +1,4 @@
-﻿using System;
-using ImageMagick;
+﻿using ImageMagick;
 using POI.Core.Models.Shared;
 using POI.DiscordDotNet.Services.Implementations;
 

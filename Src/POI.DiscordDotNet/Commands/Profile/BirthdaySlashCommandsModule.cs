@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using DSharpPlus.SlashCommands;
+﻿using DSharpPlus.SlashCommands;
 using JetBrains.Annotations;
 using NodaTime.Text;
 using POI.DiscordDotNet.Persistence.Repositories;

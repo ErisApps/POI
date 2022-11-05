@@ -1,5 +1,3 @@
-using System.IO;
-using System.Threading.Tasks;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using JetBrains.Annotations;

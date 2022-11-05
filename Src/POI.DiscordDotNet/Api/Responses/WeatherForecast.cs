@@ -1,5 +1,3 @@
-using System;
-
 namespace POI.DiscordDotNet.Api.Responses
 {
 	public class WeatherForecast

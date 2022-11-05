@@ -1,10 +1,7 @@
-using System;
-using System.Threading.Tasks;
 using DSharpPlus.SlashCommands;
 using JetBrains.Annotations;
 using NodaTime.Extensions;
 using POI.DiscordDotNet.Commands.Modules.SlashCommands;
-using POI.DiscordDotNet.Services;
 using POI.DiscordDotNet.Services.Implementations;
 
 namespace POI.DiscordDotNet.Commands.Utils
