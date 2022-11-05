@@ -14,7 +14,7 @@ using POI.Core.Services;
 using POI.DiscordDotNet.Jobs;
 using POI.DiscordDotNet.Persistence.EFCore.Npgsql.Extensions;
 using POI.DiscordDotNet.Services;
-using POI.DiscordDotNet.Services.Interfaces;
+using POI.DiscordDotNet.Services.Implementations;
 using POI.ThirdParty.BeatSaver.Extensions;
 using POI.ThirdParty.BeatSavior.Extensions;
 using POI.ThirdParty.ScoreSaber.Extensions;

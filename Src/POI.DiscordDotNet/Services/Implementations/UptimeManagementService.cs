@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 using NodaTime;
 using NodaTime.Extensions;
 
-namespace POI.DiscordDotNet.Services
+namespace POI.DiscordDotNet.Services.Implementations
 {
 	public class UptimeManagementService
     {
