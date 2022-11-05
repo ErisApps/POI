@@ -5,7 +5,7 @@ using DSharpPlus.CommandsNext.Attributes;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using POI.DiscordDotNet.Persistence.Repositories;
-using POI.DiscordDotNet.Services;
+using POI.DiscordDotNet.Services.Implementations;
 using POI.ThirdParty.BeatSaver.Services;
 using POI.ThirdParty.BeatSavior.Services;
 using POI.ThirdParty.ScoreSaber.Models.Wrappers;

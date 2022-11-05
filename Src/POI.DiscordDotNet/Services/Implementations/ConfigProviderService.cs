@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using POI.DiscordDotNet.Models.Configuration;
 using Serilog;
 
-namespace POI.DiscordDotNet.Services
+namespace POI.DiscordDotNet.Services.Implementations
 {
 	public class ConfigProviderService
 	{

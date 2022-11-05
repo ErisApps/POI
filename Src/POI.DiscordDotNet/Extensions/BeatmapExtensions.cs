@@ -1,7 +1,7 @@
 ﻿using System;
 using ImageMagick;
 using POI.Core.Models.Shared;
-using POI.DiscordDotNet.Services;
+using POI.DiscordDotNet.Services.Implementations;
 
 namespace POI.DiscordDotNet.Extensions
 {

@@ -1,8 +1,7 @@
 ﻿using System;
 using ImageMagick;
-using POI.DiscordDotNet.Services.Interfaces;
 
-namespace POI.DiscordDotNet.Services
+namespace POI.DiscordDotNet.Services.Implementations
 {
 	public class Constants : IConstants
 	{

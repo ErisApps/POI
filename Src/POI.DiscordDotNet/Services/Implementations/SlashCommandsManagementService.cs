@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 using POI.DiscordDotNet.Commands.Profile;
 using POI.DiscordDotNet.Commands.Utils;
 
-namespace POI.DiscordDotNet.Services
+namespace POI.DiscordDotNet.Services.Implementations
 {
 	public class SlashCommandsManagementService : IDisposable
 	{
