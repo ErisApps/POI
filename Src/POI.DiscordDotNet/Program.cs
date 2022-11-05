@@ -31,9 +31,6 @@ var host = Host.CreateDefaultBuilder()
 
 		configuration
 			.ReadFrom.Configuration(context.Configuration)
-			// .MinimumLevel.Verbose()
-			/*.MinimumLevel.Override(nameof(DSharpPlus), LogEventLevel.Information)
-			.MinimumLevel.Override(nameof(Microsoft), LogEventLevel.Information)*/
 			.Enrich.FromLogContext()
 			.WriteTo.Console(theme: SystemConsoleTheme.Colored, outputTemplate: logOutputTemplate)
 			.WriteTo.Async(writeToInternal => writeToInternal.File(
