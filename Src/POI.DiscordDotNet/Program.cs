@@ -1,5 +1,6 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
+using System.Globalization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -20,7 +21,16 @@ using Serilog.Sinks.SystemConsole.Themes;
 Console.WriteLine("Hello to POI.HostingTest, World!");
 
 var host = Host.CreateDefaultBuilder()
-	.ConfigureAppConfiguration(builder => { builder.AddCommandLine(args); })
+	.ConfigureAppConfiguration(builder =>
+	{
+		builder.AddCommandLine(args);
+
+		// Set culture to en-GB to ensure that the decimal separator is always a dot, while keeping the correct date format
+		var cultureInfo = new CultureInfo("en-GB");
+
+		CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+		CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
+	})
 	.UseSerilog((context, configuration) =>
 	{
 		const string logOutputTemplate =
