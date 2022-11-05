@@ -11,6 +11,11 @@ public static class ServiceCollectionExtensions
 {
 	public static IServiceCollection AddPersistence(this IServiceCollection services, string connectionString)
 	{
+		if (string.IsNullOrWhiteSpace(connectionString))
+		{
+			throw new InvalidDataException("Connection string cannot be null or empty.");
+		}
+
 		services.AddDbContextFactory<AppDbContext>(options => options.UseNpgsql(
 			connectionString,
 			o => o.UseNodaTime()));
