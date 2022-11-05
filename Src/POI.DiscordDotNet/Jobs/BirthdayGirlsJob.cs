@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DSharpPlus;
-using DSharpPlus.Entities;
+﻿using DSharpPlus.Entities;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using NodaTime;
 using POI.DiscordDotNet.Persistence.Domain;
 using POI.DiscordDotNet.Persistence.Repositories;
+using POI.DiscordDotNet.Services;
 using Quartz;
 
 namespace POI.DiscordDotNet.Jobs
@@ -19,24 +15,30 @@ namespace POI.DiscordDotNet.Jobs
 		private readonly ILogger<BirthdayGirlsJob> _logger;
 		private readonly IGlobalUserSettingsRepository _globalUserSettingsRepository;
 		private readonly IServerSettingsRepository _serverSettingsRepository;
-		private readonly DiscordClient _discordClient;
+		private readonly IDiscordClientProvider _discordClientProvider;
 
 		public BirthdayGirlsJob(ILogger<BirthdayGirlsJob> logger, IGlobalUserSettingsRepository globalUserSettingsRepository, IServerSettingsRepository serverSettingsRepository,
-			DiscordClient discordClient)
+			IDiscordClientProvider discordClientProviderProvider)
 		{
 			_logger = logger;
 			_globalUserSettingsRepository = globalUserSettingsRepository;
 			_serverSettingsRepository = serverSettingsRepository;
-			_discordClient = discordClient;
+			_discordClientProvider = discordClientProviderProvider;
 		}
 
 		public async Task Execute(IJobExecutionContext context)
 		{
+			if (_discordClientProvider.Client == null)
+			{
+				_logger.LogWarning("Discord client is not initialized, can't execute");
+				return;
+			}
+
 			var localDate = LocalDate.FromDateTime(context.ScheduledFireTimeUtc?.LocalDateTime ?? DateTime.Today);
 			_logger.LogInformation("Looking up birthday party people using date: {Date}", localDate.ToString());
 			var currentBirthdayPartyPeople = await _globalUserSettingsRepository.GetAllBirthdayGirls(localDate);
 
-			foreach (var (serverId, server) in _discordClient.Guilds)
+			foreach (var (serverId, server) in _discordClientProvider.Client.Guilds)
 			{
 				await HandleServer(serverId, server, currentBirthdayPartyPeople);
 			}
