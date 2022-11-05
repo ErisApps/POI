@@ -1,7 +1,5 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Reflection;
-using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
@@ -20,7 +18,6 @@ using POI.ThirdParty.BeatSavior.Extensions;
 using POI.ThirdParty.ScoreSaber.Extensions;
 using Quartz;
 using Serilog;
-using Serilog.Events;
 using Serilog.Sinks.SystemConsole.Themes;
 
 namespace POI.DiscordDotNet
@@ -39,12 +36,9 @@ namespace POI.DiscordDotNet
 			CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
 
 			var dockerized = Environment.GetEnvironmentVariable("DOTNET_RUNNING_IN_CONTAINER") == "true";
-			var pathProvider = new PathProvider(dockerized, args?.Length >= 1 ? args[0] : null);
+			var pathProvider = new PathProvider(null);
 
 			var logger = new LoggerConfiguration()
-				.MinimumLevel.Verbose()
-				.MinimumLevel.Override(nameof(DSharpPlus), LogEventLevel.Information)
-				.MinimumLevel.Override(nameof(Microsoft), LogEventLevel.Information)
 				.Enrich.FromLogContext()
 				.WriteTo.Console(theme: SystemConsoleTheme.Colored, outputTemplate: LOG_OUTPUT_TEMPLATE)
 				.WriteTo.Conditional(_ => dockerized,
@@ -53,7 +47,7 @@ namespace POI.DiscordDotNet
 					)))
 				.CreateLogger();
 
-			var configProvider = new ConfigProviderService(logger.ForContext<ConfigProviderService>(), pathProvider.ConfigPath);
+			var configProvider = new ConfigProviderService(logger.ForContext<ConfigProviderService>(), null);
 			if (!await configProvider.LoadConfig())
 			{
 				logger.Fatal("Exiting... Please ensure the config is correct");
@@ -131,7 +125,7 @@ namespace POI.DiscordDotNet
 			_client.UseInteractivity();
 
 			var slashCommandsManagementService = hostBuilder.Services.GetRequiredService<SlashCommandsManagementService>()!;
-			slashCommandsManagementService.Setup();
+			// slashCommandsManagementService.Setup();
 
 			_ = hostBuilder.Services.GetRequiredService<UptimeManagementService>();
 

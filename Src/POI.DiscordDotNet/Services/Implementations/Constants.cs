@@ -1,5 +1,4 @@
-﻿using System;
-using ImageMagick;
+﻿using ImageMagick;
 
 namespace POI.DiscordDotNet.Services.Implementations
 {

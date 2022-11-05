@@ -1,5 +1,3 @@
-using System;
-using System.Threading.Tasks;
 using DSharpPlus;
 using DSharpPlus.EventArgs;
 using Microsoft.Extensions.Logging;
@@ -8,25 +6,33 @@ using NodaTime.Extensions;
 
 namespace POI.DiscordDotNet.Services.Implementations
 {
-	public class UptimeManagementService
-    {
-        private readonly ILogger<UptimeManagementService> _logger;
+	public class UptimeManagementService : IAddDiscordClientFunctionality
+	{
+		private readonly ILogger<UptimeManagementService> _logger;
 
-        public Instant? UpSince { get; private set; }
+		public Instant? UpSince { get; private set; }
 
-        public UptimeManagementService(ILogger<UptimeManagementService> logger, DiscordClient client)
-        {
-            _logger = logger;
+		public UptimeManagementService(ILogger<UptimeManagementService> logger)
+		{
+			_logger = logger;
+		}
 
-            client.Ready += ClientOnReady;
-        }
+		public Task Setup(IDiscordClientProvider clientProvider)
+		{
+			var client = clientProvider.Client!;
 
-        private Task ClientOnReady(DiscordClient sender, ReadyEventArgs e)
-        {
-            _logger.LogDebug("Client OnReady event received. (Re)setting time since start");
-            UpSince = DateTimeOffset.Now.ToInstant();
+			client.Ready -= ClientOnReady;
+			client.Ready += ClientOnReady;
 
-            return Task.CompletedTask;
-        }
-    }
+			return Task.CompletedTask;
+		}
+
+		private Task ClientOnReady(DiscordClient sender, ReadyEventArgs e)
+		{
+			_logger.LogDebug("Client OnReady event received. (Re)setting time since start");
+			UpSince = DateTimeOffset.Now.ToInstant();
+
+			return Task.CompletedTask;
+		}
+	}
 }

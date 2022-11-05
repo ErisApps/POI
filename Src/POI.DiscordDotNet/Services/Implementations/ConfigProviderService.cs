@@ -1,7 +1,4 @@
-using System;
-using System.IO;
 using System.Text.Json;
-using System.Threading.Tasks;
 using POI.DiscordDotNet.Models.Configuration;
 using Serilog;
 
@@ -14,7 +11,7 @@ namespace POI.DiscordDotNet.Services.Implementations
 		private readonly ILogger _logger;
 		private readonly string _configPath;
 
-		private Configuration? _configuration;
+		private Models.Configuration.Configuration? _configuration;
 
 		internal DiscordConfig Discord => _configuration!.DiscordConfig!;
 		internal MongoDbConfig MongoDb => _configuration!.MongoDbConfig!;
@@ -35,7 +32,7 @@ namespace POI.DiscordDotNet.Services.Implementations
 				await using var utf8Stream = File.OpenRead(_configPath);
 				try
 				{
-					_configuration = await JsonSerializer.DeserializeAsync<Configuration>(utf8Stream).ConfigureAwait(false);
+					// _configuration = await JsonSerializer.DeserializeAsync<Configuration>(utf8Stream).ConfigureAwait(false);
 					return ValidateConfig();
 				}
 				catch (NotSupportedException)

@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using DSharpPlus;
 using DSharpPlus.Entities;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
@@ -10,6 +5,7 @@ using POI.DiscordDotNet.Extensions;
 using POI.DiscordDotNet.Persistence.Domain;
 using POI.DiscordDotNet.Persistence.Models.AccountLink;
 using POI.DiscordDotNet.Persistence.Repositories;
+using POI.DiscordDotNet.Services;
 using POI.ThirdParty.ScoreSaber.Models.Profile;
 using POI.ThirdParty.ScoreSaber.Services;
 using Quartz;
@@ -22,7 +18,7 @@ namespace POI.DiscordDotNet.Jobs
 		private const int TOP = 1000;
 
 		private readonly ILogger<RankUpFeedJob> _logger;
-		private readonly DiscordClient _discordClient;
+		private readonly IDiscordClientProvider _discordClientProvider;
 		private readonly IScoreSaberApiService _scoreSaberApiService;
 		private readonly IGlobalUserSettingsRepository _globalUserSettingsRepository;
 		private readonly ILeaderboardEntriesRepository _leaderboardEntriesRepository;
@@ -30,11 +26,11 @@ namespace POI.DiscordDotNet.Jobs
 		private readonly string[] _countryDefinition = { "BE" };
 		private readonly string[] _profileRefreshExclusions = Array.Empty<string>();
 
-		public RankUpFeedJob(ILogger<RankUpFeedJob> logger, DiscordClient discordClient, IScoreSaberApiService scoreSaberApiService, IGlobalUserSettingsRepository globalUserSettingsRepository,
-			ILeaderboardEntriesRepository leaderboardEntriesRepository)
+		public RankUpFeedJob(ILogger<RankUpFeedJob> logger, IDiscordClientProvider discordClientProviderProvider, IScoreSaberApiService scoreSaberApiService,
+			IGlobalUserSettingsRepository globalUserSettingsRepository, ILeaderboardEntriesRepository leaderboardEntriesRepository)
 		{
 			_logger = logger;
-			_discordClient = discordClient;
+			_discordClientProvider = discordClientProviderProvider;
 			_scoreSaberApiService = scoreSaberApiService;
 			_globalUserSettingsRepository = globalUserSettingsRepository;
 			_leaderboardEntriesRepository = leaderboardEntriesRepository;
@@ -43,9 +39,14 @@ namespace POI.DiscordDotNet.Jobs
 		public async Task Execute(IJobExecutionContext context)
 		{
 			_logger.LogInformation("Executing RankUpFeed logic");
+			if (_discordClientProvider.Client == null)
+			{
+				_logger.LogWarning("Discord client is not initialized, can't execute");
+				return;
+			}
 
 			var allScoreSaberLinks = await _globalUserSettingsRepository.GetAllScoreSaberAccountLinks().ConfigureAwait(false);
-			var guild = await _discordClient.GetGuildAsync(561207570669371402, true).ConfigureAwait(false);
+			var guild = await _discordClientProvider.Client.GetGuildAsync(561207570669371402, true).ConfigureAwait(false);
 
 			var members = await guild.GetAllMembersAsync();
 			if (members == null)

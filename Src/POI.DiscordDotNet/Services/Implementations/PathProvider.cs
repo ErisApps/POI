@@ -1,30 +1,18 @@
-using System;
-using System.IO;
+using Microsoft.Extensions.Options;
+using POI.DiscordDotNet.Configuration;
 
 namespace POI.DiscordDotNet.Services.Implementations
 {
 	public class PathProvider
 	{
-		private readonly string _baseDataPath;
-
-		public PathProvider(bool dockerized, string? baseDataPath)
+		public PathProvider(IOptions<PathConfigurationOptions> options)
 		{
-			if (dockerized)
-			{
-				_baseDataPath = "/Data";
-			}
-			else if (!string.IsNullOrWhiteSpace(baseDataPath) && baseDataPath.Length >= 1)
-			{
-				_baseDataPath = baseDataPath;
-			}
-			else
-			{
-				throw new ArgumentException("When running in the non-containerized mode. Please ensure that you're passing a dataPath as a launch argument.", nameof(baseDataPath));
-			}
+			var baseDataPath = options.Value.DataFolderPath;
+			AssetsPath = options.Value.AssetsFolderPath ?? Path.Combine(baseDataPath, "Assets");
+			LogsPath = options.Value.LogsFolderPath ?? Path.Combine(baseDataPath, "Logs", "logs.txt");
 		}
 
-		public string AssetsPath => Path.Combine(_baseDataPath, "Assets");
-		public string ConfigPath => Path.Combine(_baseDataPath, ConfigProviderService.CONFIG_FILE_NAME);
-		public string LogsPath => Path.Combine(_baseDataPath, "Logs", "logs.txt");
+		public string AssetsPath { get; }
+		public string LogsPath { get; }
 	}
 }
