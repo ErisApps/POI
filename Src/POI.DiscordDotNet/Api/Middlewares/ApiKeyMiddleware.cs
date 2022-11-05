@@ -1,8 +1,5 @@
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using POI.Core.Services;
-using POI.DiscordDotNet.Services;
 using POI.DiscordDotNet.Services.Implementations;
 
 namespace POI.DiscordDotNet.Api.Middlewares

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using DSharpPlus.CommandsNext;
+﻿using DSharpPlus.CommandsNext;
 using Microsoft.Extensions.Logging;
 
 namespace POI.DiscordDotNet.Extensions
