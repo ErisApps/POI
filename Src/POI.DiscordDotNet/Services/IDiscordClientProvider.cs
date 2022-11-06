@@ -1,9 +1,8 @@
 using DSharpPlus;
 
-namespace POI.DiscordDotNet.Services
+namespace POI.DiscordDotNet.Services;
+
+public interface IDiscordClientProvider
 {
-    public interface IDiscordClientProvider
-    {
-        DiscordClient? Client { get; }
-    }
+	DiscordClient? Client { get; }
 }

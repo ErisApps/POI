@@ -1,7 +1,6 @@
-namespace POI.DiscordDotNet.Services
+namespace POI.DiscordDotNet.Services;
+
+public interface IInitializableDiscordClientProvider : IDiscordClientProvider
 {
-    public interface IInitializableDiscordClientProvider : IDiscordClientProvider
-    {
-        Task Initialize();
-    }
+	Task Initialize();
 }
