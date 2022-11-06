@@ -5,7 +5,7 @@ using POI.DiscordDotNet.Configuration;
 
 namespace POI.DiscordDotNet.Services.Implementations;
 
-public class DiscordChatCommandsService : IAddDiscordClientFunctionality, IDisposable
+public class DiscordChatCommandsService : IAddDiscordClientFunctionality
 {
 	private readonly IServiceProvider _serviceProvider;
 	private readonly ILogger<DiscordChatCommandsService> _logger;
@@ -23,7 +23,7 @@ public class DiscordChatCommandsService : IAddDiscordClientFunctionality, IDispo
 		_options = options;
 	}
 
-	public Task Setup(IDiscordClientProvider discordClientProvider)
+	public void Setup(IDiscordClientProvider discordClientProvider)
 	{
 		var client = discordClientProvider.Client!;
 
@@ -44,11 +44,9 @@ public class DiscordChatCommandsService : IAddDiscordClientFunctionality, IDispo
 		_commandsNext.CommandErrored += OnCommandsNextOnCommandErrored;
 
 		_commandsNext.RegisterCommands(typeof(DiscordChatCommandsService).Assembly);
-
-		return Task.CompletedTask;
 	}
 
-	public void Dispose()
+	public void Cleanup()
 	{
 		if (_commandsNext == null)
 		{

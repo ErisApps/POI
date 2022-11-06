@@ -25,7 +25,7 @@ public class DiscordHostedService : IHostedService
 		await _discordClientProvider.Initialize().ConfigureAwait(false);
 		foreach (var clientFunctionalityEnricher in _discordClientFunctionalityEnrichers)
 		{
-			await clientFunctionalityEnricher.Setup(_discordClientProvider).ConfigureAwait(false);
+			clientFunctionalityEnricher.Setup(_discordClientProvider);
 		}
 
 		_logger.LogInformation("Starting Discord client");
@@ -39,6 +39,11 @@ public class DiscordHostedService : IHostedService
 		{
 			_logger.LogWarning("Discord client is not initialized, can't be stopped");
 			return;
+		}
+
+		foreach (var clientFunctionalityEnricher in _discordClientFunctionalityEnrichers)
+		{
+			clientFunctionalityEnricher.Cleanup();
 		}
 
 		_logger.LogInformation("Stopping Discord client");
