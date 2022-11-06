@@ -7,12 +7,12 @@ namespace POI.DiscordDotNet.Services.Implementations;
 public class DiscordHostedService : IHostedService
 {
 	private readonly ILogger<DiscordHostedService> _logger;
-	private readonly IInitializableDiscordClientProvider _discordClientProvider;
+	private readonly IManageDiscordClientProvider _discordClientProvider;
 	private readonly IAddDiscordClientFunctionality[] _discordClientFunctionalityEnrichers;
 
 	public DiscordHostedService(
 		ILogger<DiscordHostedService> logger,
-		IInitializableDiscordClientProvider discordClientProvider,
+		IManageDiscordClientProvider discordClientProvider,
 		IEnumerable<IAddDiscordClientFunctionality> discordClientFunctionalityEnrichers)
 	{
 		_logger = logger;
@@ -22,7 +22,8 @@ public class DiscordHostedService : IHostedService
 
 	public async Task StartAsync(CancellationToken cancellationToken)
 	{
-		await _discordClientProvider.Initialize().ConfigureAwait(false);
+		_discordClientProvider.Initialize();
+
 		foreach (var clientFunctionalityEnricher in _discordClientFunctionalityEnrichers)
 		{
 			clientFunctionalityEnricher.Setup(_discordClientProvider);
@@ -43,11 +44,13 @@ public class DiscordHostedService : IHostedService
 
 		foreach (var clientFunctionalityEnricher in _discordClientFunctionalityEnrichers)
 		{
-			clientFunctionalityEnricher.Cleanup();
+			clientFunctionalityEnricher.Cleanup(_discordClientProvider);
 		}
 
 		_logger.LogInformation("Stopping Discord client");
 		await _discordClientProvider.Client.DisconnectAsync().ConfigureAwait(false);
 		_logger.LogInformation("Discord client stopped");
+
+		_discordClientProvider.Cleanup();
 	}
 }

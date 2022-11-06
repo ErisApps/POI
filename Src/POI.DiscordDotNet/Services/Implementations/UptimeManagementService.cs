@@ -25,8 +25,10 @@ namespace POI.DiscordDotNet.Services.Implementations
 			client.Ready += ClientOnReady;
 		}
 
-		public void Cleanup()
+		public void Cleanup(IDiscordClientProvider discordClientProvider)
 		{
+			discordClientProvider.Client!.Ready -= ClientOnReady;
+
 			UpSince = null;
 		}
 

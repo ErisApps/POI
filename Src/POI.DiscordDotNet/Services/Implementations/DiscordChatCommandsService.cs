@@ -25,8 +25,9 @@ public class DiscordChatCommandsService : IAddDiscordClientFunctionality
 
 	public void Setup(IDiscordClientProvider discordClientProvider)
 	{
-		var client = discordClientProvider.Client!;
+		_logger.LogDebug("Setting up DiscordChatCommandsService");
 
+		var client = discordClientProvider.Client!;
 		_commandsNext = client.UseCommandsNext(new CommandsNextConfiguration
 		{
 			EnableMentionPrefix = false,
@@ -46,13 +47,14 @@ public class DiscordChatCommandsService : IAddDiscordClientFunctionality
 		_commandsNext.RegisterCommands(typeof(DiscordChatCommandsService).Assembly);
 	}
 
-	public void Cleanup()
+	public void Cleanup(IDiscordClientProvider discordClientProvider)
 	{
 		if (_commandsNext == null)
 		{
 			return;
 		}
 
+		_logger.LogDebug("Cleaning up DiscordChatCommandsService");
 		_commandsNext.CommandExecuted -= OnCommandsNextOnCommandExecuted;
 		_commandsNext.CommandErrored -= OnCommandsNextOnCommandErrored;
 		_commandsNext.Dispose();

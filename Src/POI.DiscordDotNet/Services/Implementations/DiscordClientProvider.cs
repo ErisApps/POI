@@ -5,7 +5,7 @@ using POI.DiscordDotNet.Configuration;
 
 namespace POI.DiscordDotNet.Services.Implementations;
 
-internal class DiscordClientProvider : IInitializableDiscordClientProvider
+internal class DiscordClientProvider : IManageDiscordClientProvider
 {
 	private readonly IOptions<DiscordConfigurationOptions> _options;
 	private readonly ILoggerFactory _loggerFactory;
@@ -23,7 +23,7 @@ internal class DiscordClientProvider : IInitializableDiscordClientProvider
 
 	public DiscordClient? Client { get; private set; }
 
-	public Task Initialize()
+	public void Initialize()
 	{
 		_logger.LogInformation("Initializing Discord client");
 		Client = new DiscordClient(new DiscordConfiguration
@@ -36,7 +36,15 @@ internal class DiscordClientProvider : IInitializableDiscordClientProvider
 			// This is apparently a bad idea according to the documentation... but I'm going to enable it regardless...
 			ReconnectIndefinitely = true
 		});
+	}
 
-		return Task.CompletedTask;
+	public void Cleanup()
+	{
+		_logger.LogInformation("Cleaning up Discord client");
+		if (Client != null)
+		{
+			Client.Dispose();
+			Client = null;
+		}
 	}
 }
