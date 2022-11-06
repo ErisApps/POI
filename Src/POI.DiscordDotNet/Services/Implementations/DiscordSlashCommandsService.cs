@@ -23,6 +23,8 @@ public class DiscordSlashCommandsService : IAddDiscordClientFunctionality
 
 	public void Setup(IDiscordClientProvider discordClientProvider)
 	{
+		_logger.LogDebug("Setting up DiscordSlashCommandsService");
+
 		var client = discordClientProvider.Client!;
 		_slashCommands = client.GetSlashCommands() ?? client.UseSlashCommands(new SlashCommandsConfiguration { Services = _serviceProvider });
 
@@ -38,13 +40,14 @@ public class DiscordSlashCommandsService : IAddDiscordClientFunctionality
 		_slashCommands.RegisterCommands<ProfileSlashCommandsModule>();
 	}
 
-	public void Cleanup()
+	public void Cleanup(IDiscordClientProvider discordClientProvider)
 	{
 		if (_slashCommands == null)
 		{
 			return;
 		}
 
+		_logger.LogDebug("Cleaning up DiscordSlashCommandsService");
 		_slashCommands.SlashCommandErrored -= OnSlashCommandErrored;
 		_slashCommands.SlashCommandExecuted -= OnSlashCommandsExecuted;
 		_slashCommands = null;

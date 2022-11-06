@@ -80,7 +80,7 @@ var host = Host.CreateDefaultBuilder()
 			.AddScoped<IAddDiscordClientFunctionality, DiscordInteractivityService>()
 			.AddScoped<IAddDiscordClientFunctionality, DiscordSlashCommandsService>()
 			.AddScoped<IAddDiscordClientFunctionality, UptimeManagementService>()
-			.AddSingleton<IInitializableDiscordClientProvider, DiscordClientProvider>()
+			.AddSingleton<IManageDiscordClientProvider, DiscordClientProvider>()
 			.AddSingleton<IDiscordClientProvider, DiscordClientProvider>(provider =>
 				(DiscordClientProvider) provider.GetRequiredService<IDiscordClientProvider>())
 			.AddHostedService<DiscordHostedService>();
