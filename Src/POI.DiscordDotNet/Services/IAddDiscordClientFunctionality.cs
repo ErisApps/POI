@@ -1,7 +1,6 @@
-namespace POI.DiscordDotNet.Services
+namespace POI.DiscordDotNet.Services;
+
+public interface IAddDiscordClientFunctionality
 {
-    public interface IAddDiscordClientFunctionality
-    {
-        Task Setup(IDiscordClientProvider discordClientProvider);
-    }
+	Task Setup(IDiscordClientProvider discordClientProvider);
 }

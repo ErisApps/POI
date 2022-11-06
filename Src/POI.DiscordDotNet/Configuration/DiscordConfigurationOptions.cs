@@ -1,10 +1,9 @@
-namespace POI.DiscordDotNet.Configuration
-{
-	public class DiscordConfigurationOptions
-	{
-		public const string SECTION_NAME = "Discord";
+namespace POI.DiscordDotNet.Configuration;
 
-		public string Token { get; init; }
-		public string Prefix { get; init; }
-	}
+public class DiscordConfigurationOptions
+{
+	public const string SECTION_NAME = "Discord";
+
+	public string Token { get; init; }
+	public string Prefix { get; init; }
 }
