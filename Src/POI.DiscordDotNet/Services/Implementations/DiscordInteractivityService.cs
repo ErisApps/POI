@@ -12,11 +12,14 @@ public class DiscordInteractivityService : IAddDiscordClientFunctionality
 		_logger = logger;
 	}
 
-	public Task Setup(IDiscordClientProvider discordClientProvider)
+	public void Setup(IDiscordClientProvider discordClientProvider)
 	{
 		var client = discordClientProvider.Client!;
 		client.UseInteractivity();
+	}
 
-		return Task.CompletedTask;
+	public void Cleanup()
+	{
+		// NOP
 	}
 }

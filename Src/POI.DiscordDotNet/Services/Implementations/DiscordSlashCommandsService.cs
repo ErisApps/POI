@@ -6,7 +6,7 @@ using POI.DiscordDotNet.Commands.Utils;
 
 namespace POI.DiscordDotNet.Services.Implementations;
 
-public class DiscordSlashCommandsService : IAddDiscordClientFunctionality, IDisposable
+public class DiscordSlashCommandsService : IAddDiscordClientFunctionality
 {
 	private readonly IServiceProvider _serviceProvider;
 	private readonly ILogger<DiscordSlashCommandsService> _logger;
@@ -21,7 +21,7 @@ public class DiscordSlashCommandsService : IAddDiscordClientFunctionality, IDisp
 		_logger = logger;
 	}
 
-	public Task Setup(IDiscordClientProvider discordClientProvider)
+	public void Setup(IDiscordClientProvider discordClientProvider)
 	{
 		var client = discordClientProvider.Client!;
 		_slashCommands = client.GetSlashCommands() ?? client.UseSlashCommands(new SlashCommandsConfiguration { Services = _serviceProvider });
@@ -36,11 +36,9 @@ public class DiscordSlashCommandsService : IAddDiscordClientFunctionality, IDisp
 		_slashCommands.RegisterCommands<UptimeCommand>();
 
 		_slashCommands.RegisterCommands<ProfileSlashCommandsModule>();
-
-		return Task.CompletedTask;
 	}
 
-	public void Dispose()
+	public void Cleanup()
 	{
 		if (_slashCommands == null)
 		{

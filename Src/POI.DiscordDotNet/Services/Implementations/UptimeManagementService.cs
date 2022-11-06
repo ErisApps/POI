@@ -17,14 +17,17 @@ namespace POI.DiscordDotNet.Services.Implementations
 			_logger = logger;
 		}
 
-		public Task Setup(IDiscordClientProvider discordClientProvider)
+		public void Setup(IDiscordClientProvider discordClientProvider)
 		{
 			var client = discordClientProvider.Client!;
 
 			client.Ready -= ClientOnReady;
 			client.Ready += ClientOnReady;
+		}
 
-			return Task.CompletedTask;
+		public void Cleanup()
+		{
+			UpSince = null;
 		}
 
 		private Task ClientOnReady(DiscordClient sender, ReadyEventArgs e)
