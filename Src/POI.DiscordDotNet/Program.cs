@@ -77,6 +77,7 @@ var host = Host.CreateDefaultBuilder()
 
 		services
 			.AddScoped<IAddDiscordClientFunctionality, DiscordChatCommandsService>()
+			.AddScoped<IAddDiscordClientFunctionality, DiscordInteractivityService>()
 			.AddScoped<IAddDiscordClientFunctionality, DiscordSlashCommandsService>()
 			.AddScoped<IAddDiscordClientFunctionality, UptimeManagementService>()
 			.AddSingleton<IInitializableDiscordClientProvider, DiscordClientProvider>()
