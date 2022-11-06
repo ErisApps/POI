@@ -4,7 +4,6 @@ using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
 using DSharpPlus.Interactivity.Extensions;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -67,15 +66,6 @@ namespace POI.DiscordDotNet
 
 			var hostBuilder = Host.CreateDefaultBuilder(args)
 				.UseSerilog(logger)
-				.ConfigureWebHostDefaults(webBuilder =>
-				{
-					if (!dockerized)
-					{
-						webBuilder.UseUrls("http://0.0.0.0:5000");
-					}
-
-					webBuilder.UseStartup<ApiStartup>();
-				})
 				.ConfigureServices(sc =>
 				{
 					sc.AddSingleton<Constants>()
