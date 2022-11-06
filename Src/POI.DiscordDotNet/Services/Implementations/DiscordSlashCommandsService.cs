@@ -6,15 +6,16 @@ using POI.DiscordDotNet.Commands.Utils;
 
 namespace POI.DiscordDotNet.Services.Implementations
 {
-	public class SlashCommandsManagementService : IAddDiscordClientFunctionality, IDisposable
+	public class DiscordSlashCommandsService : IAddDiscordClientFunctionality, IDisposable
 	{
 		private readonly IServiceProvider _serviceProvider;
-		private readonly ILogger<SlashCommandsManagementService> _logger;
+		private readonly ILogger<DiscordSlashCommandsService> _logger;
 
 		private SlashCommandsExtension? _slashCommands;
 
-		public SlashCommandsManagementService(IServiceProvider serviceProvider,
-			ILogger<SlashCommandsManagementService> logger)
+		public DiscordSlashCommandsService(
+			IServiceProvider serviceProvider,
+			ILogger<DiscordSlashCommandsService> logger)
 		{
 			_serviceProvider = serviceProvider;
 			_logger = logger;
