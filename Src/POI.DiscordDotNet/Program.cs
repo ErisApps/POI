@@ -18,7 +18,7 @@ using Quartz;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
 
-Console.WriteLine("Hello to POI.HostingTest, World!");
+Console.WriteLine("Hello from POI, World!");
 
 var host = Host.CreateDefaultBuilder()
 	.ConfigureAppConfiguration(builder =>
@@ -110,8 +110,7 @@ var host = Host.CreateDefaultBuilder()
 					.WithIdentity("Birthday Girl trigger")
 					.WithCronSchedule(CronScheduleBuilder.DailyAtHourAndMinute(0, 0)));
 			})
-			.AddQuartzHostedService()
-			;
+			.AddQuartzHostedService();
 	});
 
 await host.RunConsoleAsync().ConfigureAwait(false);
