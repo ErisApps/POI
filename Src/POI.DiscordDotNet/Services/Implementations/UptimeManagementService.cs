@@ -17,9 +17,9 @@ namespace POI.DiscordDotNet.Services.Implementations
 			_logger = logger;
 		}
 
-		public Task Setup(IDiscordClientProvider clientProvider)
+		public Task Setup(IDiscordClientProvider discordClientProvider)
 		{
-			var client = clientProvider.Client!;
+			var client = discordClientProvider.Client!;
 
 			client.Ready -= ClientOnReady;
 			client.Ready += ClientOnReady;

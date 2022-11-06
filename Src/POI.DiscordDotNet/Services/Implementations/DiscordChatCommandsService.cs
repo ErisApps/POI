@@ -5,17 +5,17 @@ using POI.DiscordDotNet.Configuration;
 
 namespace POI.DiscordDotNet.Services.Implementations;
 
-public class ChatCommandsService : IAddDiscordClientFunctionality, IDisposable
+public class DiscordChatCommandsService : IAddDiscordClientFunctionality, IDisposable
 {
 	private readonly IServiceProvider _serviceProvider;
-	private readonly ILogger<ChatCommandsService> _logger;
+	private readonly ILogger<DiscordChatCommandsService> _logger;
 	private readonly IOptions<DiscordConfigurationOptions> _options;
 
 	private CommandsNextExtension? _commandsNext;
 
-	public ChatCommandsService(
+	public DiscordChatCommandsService(
 		IServiceProvider serviceProvider,
-		ILogger<ChatCommandsService> logger,
+		ILogger<DiscordChatCommandsService> logger,
 		IOptions<DiscordConfigurationOptions> options)
 	{
 		_serviceProvider = serviceProvider;
@@ -43,7 +43,7 @@ public class ChatCommandsService : IAddDiscordClientFunctionality, IDisposable
 		_commandsNext.CommandErrored -= OnCommandsNextOnCommandErrored;
 		_commandsNext.CommandErrored += OnCommandsNextOnCommandErrored;
 
-		_commandsNext.RegisterCommands(typeof(ChatCommandsService).Assembly);
+		_commandsNext.RegisterCommands(typeof(DiscordChatCommandsService).Assembly);
 
 		return Task.CompletedTask;
 	}

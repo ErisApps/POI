@@ -81,7 +81,7 @@ namespace POI.DiscordDotNet
 						.AddSingleton(pathProvider)
 						.AddSingleton(_client)
 						.AddSingleton<UptimeManagementService>()
-						.AddSingleton<SlashCommandsManagementService>();
+						.AddSingleton<DiscordSlashCommandsService>();
 
 					sc.AddSingleton<RankUpFeedJob>();
 
@@ -114,7 +114,7 @@ namespace POI.DiscordDotNet
 
 			_client.UseInteractivity();
 
-			var slashCommandsManagementService = hostBuilder.Services.GetRequiredService<SlashCommandsManagementService>()!;
+			var slashCommandsManagementService = hostBuilder.Services.GetRequiredService<DiscordSlashCommandsService>()!;
 			// slashCommandsManagementService.Setup();
 
 			_ = hostBuilder.Services.GetRequiredService<UptimeManagementService>();
