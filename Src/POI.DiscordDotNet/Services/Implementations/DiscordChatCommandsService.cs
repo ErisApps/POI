@@ -57,7 +57,6 @@ public class DiscordChatCommandsService : IAddDiscordClientFunctionality
 		_logger.LogDebug("Cleaning up DiscordChatCommandsService");
 		_commandsNext.CommandExecuted -= OnCommandsNextOnCommandExecuted;
 		_commandsNext.CommandErrored -= OnCommandsNextOnCommandErrored;
-		_commandsNext.Dispose();
 		_commandsNext = null;
 	}
 
