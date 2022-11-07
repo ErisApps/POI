@@ -23,7 +23,7 @@ public static class ServiceCollectionExtensions
 		services.TryAddScoped<IGlobalUserSettingsRepository, GlobalUserSettingsRepository>();
 		services.TryAddScoped<ILeaderboardEntriesRepository, LeaderboardEntriesRepository>();
 		services.TryAddScoped<IServerDependentUserSettingsRepository, ServerDependentUserSettingsRepository>();
-		services.TryAddScoped<ServerSettingsRepository, ServerSettingsRepository>();
+		services.TryAddScoped<IServerSettingsRepository, ServerSettingsRepository>();
 
 		return services;
 	}
