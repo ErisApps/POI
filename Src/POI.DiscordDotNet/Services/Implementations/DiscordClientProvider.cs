@@ -23,7 +23,7 @@ internal class DiscordClientProvider : IManageDiscordClientProvider
 
 	public DiscordClient? Client { get; private set; }
 
-	public void Initialize()
+	public Task Initialize()
 	{
 		_logger.LogInformation("Initializing Discord client");
 		Client = new DiscordClient(new DiscordConfiguration
@@ -36,6 +36,8 @@ internal class DiscordClientProvider : IManageDiscordClientProvider
 			// This is apparently a bad idea according to the documentation... but I'm going to enable it regardless...
 			ReconnectIndefinitely = true
 		});
+
+		return Client.InitializeAsync();
 	}
 
 	public void Cleanup()
