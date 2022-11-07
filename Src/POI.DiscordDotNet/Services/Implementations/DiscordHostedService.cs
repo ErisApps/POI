@@ -22,7 +22,7 @@ public class DiscordHostedService : IHostedService
 
 	public async Task StartAsync(CancellationToken cancellationToken)
 	{
-		_discordClientProvider.Initialize();
+		await _discordClientProvider.Initialize().ConfigureAwait(false);
 
 		foreach (var clientFunctionalityEnricher in _discordClientFunctionalityEnrichers)
 		{

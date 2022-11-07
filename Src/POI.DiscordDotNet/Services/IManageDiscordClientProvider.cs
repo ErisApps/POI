@@ -2,6 +2,6 @@ namespace POI.DiscordDotNet.Services;
 
 public interface IManageDiscordClientProvider : IDiscordClientProvider
 {
-	void Initialize();
+	Task Initialize();
 	void Cleanup();
 }
