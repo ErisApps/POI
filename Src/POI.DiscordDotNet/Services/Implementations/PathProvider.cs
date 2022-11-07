@@ -9,7 +9,7 @@ namespace POI.DiscordDotNet.Services.Implementations
 		{
 			var baseDataPath = options.Value.DataFolderPath;
 			AssetsPath = options.Value.AssetsFolderPath ?? Path.Combine(baseDataPath, "Assets");
-			LogsPath = options.Value.LogsFolderPath ?? Path.Combine(baseDataPath, "Logs", "logs.txt");
+			LogsPath = options.Value.LogsFolderPath ?? Path.Combine(baseDataPath, "Logs");
 		}
 
 		public string AssetsPath { get; }

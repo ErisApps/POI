@@ -44,7 +44,7 @@ var host = Host.CreateDefaultBuilder()
 			.Enrich.FromLogContext()
 			.WriteTo.Console(theme: SystemConsoleTheme.Colored, outputTemplate: logOutputTemplate)
 			.WriteTo.Async(writeToInternal => writeToInternal.File(
-				pathProvider.LogsPath,
+				Path.Combine(pathProvider.LogsPath, "logs.txt"),
 				rollingInterval: RollingInterval.Day,
 				retainedFileCountLimit: 60,
 				buffered: true,
