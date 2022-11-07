@@ -110,7 +110,11 @@ var host = Host.CreateDefaultBuilder()
 					.WithIdentity("Birthday Girl trigger")
 					.WithCronSchedule(CronScheduleBuilder.DailyAtHourAndMinute(0, 0)));
 			})
-			.AddQuartzHostedService();
+			.AddQuartzHostedService(options =>
+			{
+				// delay start of Quartz.NET to ensure that the DiscordHostedService is started first
+				options.StartDelay = TimeSpan.FromSeconds(5);
+			});
 	});
 
 await host.RunConsoleAsync().ConfigureAwait(false);
