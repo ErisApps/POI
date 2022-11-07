@@ -82,7 +82,7 @@ var host = Host.CreateDefaultBuilder()
 			.AddScoped<IAddDiscordClientFunctionality, UptimeManagementService>()
 			.AddSingleton<IManageDiscordClientProvider, DiscordClientProvider>()
 			.AddSingleton<IDiscordClientProvider, DiscordClientProvider>(provider =>
-				(DiscordClientProvider) provider.GetRequiredService<IDiscordClientProvider>())
+				(DiscordClientProvider) provider.GetRequiredService<IManageDiscordClientProvider>())
 			.AddHostedService<DiscordHostedService>();
 
 		// Add and configure Quartz.NET
