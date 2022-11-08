@@ -1,8 +1,8 @@
 ﻿using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using Microsoft.Extensions.DependencyInjection;
-using POI.DiscordDotNet.Persistence.Domain;
-using POI.DiscordDotNet.Persistence.Repositories;
+using POI.Persistence.Domain;
+using POI.Persistence.Repositories;
 
 namespace POI.DiscordDotNet.Commands.Helpers
 {

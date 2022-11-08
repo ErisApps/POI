@@ -7,10 +7,10 @@ using DSharpPlus.Interactivity.Extensions;
 using Microsoft.Extensions.Logging;
 using POI.DiscordDotNet.Commands.Modules.ChatCommands;
 using POI.DiscordDotNet.Extensions;
-using POI.DiscordDotNet.Persistence.Repositories;
+using POI.Persistence.Repositories;
 using POI.ThirdParty.ScoreSaber.Models.Profile;
 using POI.ThirdParty.ScoreSaber.Services;
-using Permissions = POI.DiscordDotNet.Persistence.Domain.Permissions;
+using Permissions = POI.Persistence.Domain.Permissions;
 
 namespace POI.DiscordDotNet.Commands.BeatSaber
 {

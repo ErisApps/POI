@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 using NodaTime;
 using POI.DiscordDotNet.Commands.Modules.ChatCommands;
 using POI.DiscordDotNet.Extensions;
-using POI.DiscordDotNet.Persistence.Repositories;
+using POI.Persistence.Repositories;
 using POI.DiscordDotNet.Services.Implementations;
 using POI.ThirdParty.ScoreSaber.Services;
 
