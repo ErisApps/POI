@@ -25,6 +25,8 @@ internal class AppDbContext : DbContext
 
 		var globalUserSettingsModelBuilder = modelBuilder.Entity<GlobalUserSettings>();
 		globalUserSettingsModelBuilder.HasKey(x => x.DiscordUserId);
+		globalUserSettingsModelBuilder.Property(x => x.ScoreSaberId).IsRequired(false).HasMaxLength(20);
+		globalUserSettingsModelBuilder.HasIndex(x => x.ScoreSaberId).IsUnique();;
 
 		var serverDependentUserSettingsModelBuilder = modelBuilder.Entity<ServerDependentUserSettings>();
 		serverDependentUserSettingsModelBuilder.HasKey(x => new { UserId = x.DiscordUserId, x.ServerId});
