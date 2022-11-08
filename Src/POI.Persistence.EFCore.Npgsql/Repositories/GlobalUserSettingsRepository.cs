@@ -57,7 +57,7 @@ internal class GlobalUserSettingsRepository : IGlobalUserSettingsRepository
 
 		if (globalUserSettings == null)
 		{
-			globalUserSettings = new GlobalUserSettings(discordId, scoreSaberId);
+			globalUserSettings = new GlobalUserSettings(discordId, scoreSaberId: scoreSaberId);
 			await context.GlobalUserSettings.AddAsync(globalUserSettings, cts).ConfigureAwait(false);
 		}
 		else
@@ -88,7 +88,7 @@ internal class GlobalUserSettingsRepository : IGlobalUserSettingsRepository
 
 		if (globalUserSettings == null)
 		{
-			globalUserSettings = new GlobalUserSettings(discordId, birthday);
+			globalUserSettings = new GlobalUserSettings(discordId, birthday: birthday);
 			await context.GlobalUserSettings.AddAsync(globalUserSettings, cts).ConfigureAwait(false);
 		}
 		else

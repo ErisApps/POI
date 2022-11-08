@@ -6,15 +6,13 @@
 
         public ulong ServerId { get; init; }
 
-        public Permissions Permissions { get; set; } = Permissions.None;
+        public Permissions Permissions { get; set; }
 
-        public static ServerDependentUserSettings CreateDefault(ulong userId, ulong serverId)
+        public ServerDependentUserSettings(ulong userId, ulong serverId, Permissions permissions = Permissions.None)
         {
-            return new ServerDependentUserSettings
-            {
-                UserId = userId,
-                ServerId = serverId
-            };
+	        UserId = userId;
+	        ServerId = serverId;
+	        Permissions = permissions;
         }
     }
 }
