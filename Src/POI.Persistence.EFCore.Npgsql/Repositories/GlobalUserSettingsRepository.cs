@@ -16,13 +16,13 @@ internal class GlobalUserSettingsRepository : IGlobalUserSettingsRepository
 		_appDbContextFactory = appDbContextFactory;
 	}
 
-	public async Task<GlobalUserSettings?> LookupSettingsByDiscordId(ulong discordId, CancellationToken cts)
+	public async Task<GlobalUserSettings?> LookupSettingsByDiscordId(ulong discordUserId, CancellationToken cts)
 	{
 		await using var context = await _appDbContextFactory.CreateDbContextAsync(cts).ConfigureAwait(false);
 		return await context.GlobalUserSettings
 			.AsNoTracking()
 			.AsQueryable()
-			.FirstOrDefaultAsync(x => x.UserId == discordId, cts)
+			.FirstOrDefaultAsync(x => x.DiscordUserId == discordUserId, cts)
 			.ConfigureAwait(false);
 	}
 
@@ -43,21 +43,21 @@ internal class GlobalUserSettingsRepository : IGlobalUserSettingsRepository
 			.AsNoTracking()
 			.AsQueryable()
 			.Where(x => x.ScoreSaberId != null)
-			.Select(x => new ScoreSaberAccountLink(x.UserId, x.ScoreSaberId!))
+			.Select(x => new ScoreSaberAccountLink(x.DiscordUserId, x.ScoreSaberId!))
 			.ToListAsync(cts)
 			.ConfigureAwait(false);
 	}
 
-	public async Task CreateOrUpdateScoreSaberLink(ulong discordId, string scoreSaberId, CancellationToken cts = default)
+	public async Task CreateOrUpdateScoreSaberLink(ulong discordUserId, string scoreSaberId, CancellationToken cts = default)
 	{
 		await using var context = await _appDbContextFactory.CreateDbContextAsync(cts).ConfigureAwait(false);
 		var globalUserSettings = await context.GlobalUserSettings
-			.FirstOrDefaultAsync(x => x.UserId == discordId, cts)
+			.FirstOrDefaultAsync(x => x.DiscordUserId == discordUserId, cts)
 			.ConfigureAwait(false);
 
 		if (globalUserSettings == null)
 		{
-			globalUserSettings = new GlobalUserSettings(discordId, scoreSaberId: scoreSaberId);
+			globalUserSettings = new GlobalUserSettings(discordUserId, scoreSaberId: scoreSaberId);
 			await context.GlobalUserSettings.AddAsync(globalUserSettings, cts).ConfigureAwait(false);
 		}
 		else
@@ -78,17 +78,17 @@ internal class GlobalUserSettingsRepository : IGlobalUserSettingsRepository
 			.ConfigureAwait(false);
 	}
 
-	public async Task UpdateBirthday(ulong discordId, LocalDate? birthday, CancellationToken cts)
+	public async Task UpdateBirthday(ulong discordUserId, LocalDate? birthday, CancellationToken cts)
 	{
 		await using var context = await _appDbContextFactory.CreateDbContextAsync(cts).ConfigureAwait(false);
 		var globalUserSettings = await context.GlobalUserSettings
-			.FirstOrDefaultAsync(x => x.UserId == discordId, cts)
+			.FirstOrDefaultAsync(x => x.DiscordUserId == discordUserId, cts)
 			.ConfigureAwait(false);
 
 
 		if (globalUserSettings == null)
 		{
-			globalUserSettings = new GlobalUserSettings(discordId, birthday: birthday);
+			globalUserSettings = new GlobalUserSettings(discordUserId, birthday: birthday);
 			await context.GlobalUserSettings.AddAsync(globalUserSettings, cts).ConfigureAwait(false);
 		}
 		else

@@ -2,15 +2,15 @@
 {
     public class ServerDependentUserSettings
     {
-        public ulong UserId { get; init; }
+        public ulong DiscordUserId { get; init; }
 
         public ulong ServerId { get; init; }
 
         public Permissions Permissions { get; set; }
 
-        public ServerDependentUserSettings(ulong userId, ulong serverId, Permissions permissions = Permissions.None)
+        public ServerDependentUserSettings(ulong discordUserId, ulong serverId, Permissions permissions = Permissions.None)
         {
-	        UserId = userId;
+	        DiscordUserId = discordUserId;
 	        ServerId = serverId;
 	        Permissions = permissions;
         }

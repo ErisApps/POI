@@ -14,12 +14,12 @@ internal class ServerDependentUserSettingsRepository : IServerDependentUserSetti
 		_appDbContextFactory = appDbContextFactory;
 	}
 
-	public async Task<ServerDependentUserSettings?> FindOneById(ulong userId, ulong serverId, CancellationToken cts)
+	public async Task<ServerDependentUserSettings?> FindOneById(ulong discordUserId, ulong serverId, CancellationToken cts)
 	{
 		await using var context = await _appDbContextFactory.CreateDbContextAsync(cts);
 		return await context.ServerDependentUserSettings
 			.AsQueryable()
-			.FirstOrDefaultAsync(x => x.UserId == userId && x.ServerId == serverId, cts)
+			.FirstOrDefaultAsync(x => x.DiscordUserId == discordUserId && x.ServerId == serverId, cts)
 			.ConfigureAwait(false);
 	}
 }
