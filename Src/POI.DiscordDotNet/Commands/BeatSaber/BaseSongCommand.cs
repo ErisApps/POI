@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using NodaTime;
 using POI.DiscordDotNet.Commands.Modules.ChatCommands;
 using POI.DiscordDotNet.Extensions;
-using POI.DiscordDotNet.Persistence.Repositories;
+using POI.Persistence.Repositories;
 using POI.ThirdParty.BeatSaver.Extensions;
 using POI.ThirdParty.BeatSaver.Services;
 using POI.ThirdParty.BeatSavior.Models;

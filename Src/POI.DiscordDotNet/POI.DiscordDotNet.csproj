@@ -32,7 +32,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\POI.DiscordDotNet.Persistence.EFCore.Npgsql\POI.DiscordDotNet.Persistence.EFCore.Npgsql.csproj" />
+      <ProjectReference Include="..\POI.Persistence.EFCore.Npgsql\POI.Persistence.EFCore.Npgsql.csproj" />
       <ProjectReference Include="..\POI.ThirdParty.BeatSaver\POI.ThirdParty.BeatSaver.csproj" />
       <ProjectReference Include="..\POI.ThirdParty.BeatSavior\POI.ThirdParty.BeatSavior.csproj" />
       <ProjectReference Include="..\POI.ThirdParty.ScoreSaber\POI.ThirdParty.ScoreSaber.csproj" />

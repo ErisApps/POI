@@ -1,7 +1,7 @@
 ﻿using DSharpPlus.SlashCommands;
 using JetBrains.Annotations;
 using NodaTime.Text;
-using POI.DiscordDotNet.Persistence.Repositories;
+using POI.Persistence.Repositories;
 
 namespace POI.DiscordDotNet.Commands.Profile
 {

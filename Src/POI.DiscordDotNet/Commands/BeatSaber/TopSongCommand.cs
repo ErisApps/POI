@@ -2,7 +2,7 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
-using POI.DiscordDotNet.Persistence.Repositories;
+using POI.Persistence.Repositories;
 using POI.DiscordDotNet.Services.Implementations;
 using POI.ThirdParty.BeatSaver.Services;
 using POI.ThirdParty.BeatSavior.Services;

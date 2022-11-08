@@ -1,6 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using POI.Core.Services;
+using POI.ThirdParty.Core.Services;
 using POI.ThirdParty.ScoreSaber.Extensions;
 
 namespace POI.Azure
@@ -13,8 +13,7 @@ namespace POI.Azure
 				.ConfigureFunctionsWorkerDefaults()
 				.ConfigureServices(sc =>
 				{
-					sc.AddSingleton<Constants>();
-					sc.AddSingleton<IConstants>(provider => provider.GetRequiredService<Constants>());
+					sc.AddSingleton<IConstants, Constants>();
 					sc.AddScoreSaber();
 				})
 				.Build();

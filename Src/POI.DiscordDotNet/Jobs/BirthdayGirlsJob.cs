@@ -2,8 +2,8 @@
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using NodaTime;
-using POI.DiscordDotNet.Persistence.Domain;
-using POI.DiscordDotNet.Persistence.Repositories;
+using POI.Persistence.Domain;
+using POI.Persistence.Repositories;
 using POI.DiscordDotNet.Services;
 using Quartz;
 

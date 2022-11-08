@@ -2,7 +2,7 @@
 using DSharpPlus.CommandsNext.Attributes;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
-using POI.DiscordDotNet.Persistence.Repositories;
+using POI.Persistence.Repositories;
 using POI.ThirdParty.ScoreSaber.Services;
 
 namespace POI.DiscordDotNet.Commands.BeatSaber
