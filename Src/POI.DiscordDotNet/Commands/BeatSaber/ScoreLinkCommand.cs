@@ -62,7 +62,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 		{
 			// Check discordId conflict
 			var userSettings = await GlobalUserSettingsRepository.LookupSettingsByDiscordId(discordId);
-			if (userSettings != null)
+			if (userSettings?.ScoreSaberId != null)
 			{
 				if (userSettings.ScoreSaberId == scoreSaberId)
 				{
