@@ -24,10 +24,10 @@ internal class AppDbContext : DbContext
 		serverSettingsModelBuilder.HasKey(x => x.ServerId);
 
 		var globalUserSettingsModelBuilder = modelBuilder.Entity<GlobalUserSettings>();
-		globalUserSettingsModelBuilder.HasKey(x => x.UserId);
+		globalUserSettingsModelBuilder.HasKey(x => x.DiscordUserId);
 
 		var serverDependentUserSettingsModelBuilder = modelBuilder.Entity<ServerDependentUserSettings>();
-		serverDependentUserSettingsModelBuilder.HasKey(x => new {x.UserId, x.ServerId});
+		serverDependentUserSettingsModelBuilder.HasKey(x => new { UserId = x.DiscordUserId, x.ServerId});
 
 		var leaderboardEntryModelBuilder = modelBuilder.Entity<LeaderboardEntry>();
 		leaderboardEntryModelBuilder.HasKey(x => x.ScoreSaberId);

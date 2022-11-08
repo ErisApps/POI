@@ -4,5 +4,5 @@ namespace POI.Persistence.Repositories;
 
 public interface IServerDependentUserSettingsRepository
 {
-	Task<ServerDependentUserSettings?> FindOneById(ulong userId, ulong serverId, CancellationToken cts = default);
+	Task<ServerDependentUserSettings?> FindOneById(ulong discordUserId, ulong serverId, CancellationToken cts = default);
 }

@@ -652,7 +652,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 				}
 				catch (Exception)
 				{
-					_logger.LogWarning("Couldn't find userSettings for user with discord id {DiscordId}", discordId);
+					_logger.LogWarning("Couldn't find userSettings for user with discord id {DiscordUserId}", discordId);
 					scoreSaberId = null;
 				}
 			}

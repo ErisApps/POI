@@ -77,7 +77,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 			userSettings = await GlobalUserSettingsRepository.LookupSettingsByScoreSaberId(scoreSaberId);
 			if (userSettings != null)
 			{
-				await ctx.Message.RespondAsync($"ScoreSaber account is already linked to <@!{userSettings.UserId}>! O.o").ConfigureAwait(false);
+				await ctx.Message.RespondAsync($"ScoreSaber account is already linked to <@!{userSettings.DiscordUserId}>! O.o").ConfigureAwait(false);
 				return true;
 			}
 

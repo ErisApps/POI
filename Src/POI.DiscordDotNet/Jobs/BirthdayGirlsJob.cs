@@ -64,7 +64,7 @@ namespace POI.DiscordDotNet.Jobs
 			var allMembers = await server.GetAllMembersAsync().ConfigureAwait(false);
 			foreach (var member in allMembers)
 			{
-				var isBirthdayPartyPeep = currentBirthdayPartyPeople.Any(x => x.UserId == member.Id);
+				var isBirthdayPartyPeep = currentBirthdayPartyPeople.Any(x => x.DiscordUserId == member.Id);
 				var hasBirthdayRole = member.Roles.Any(x => x.Id == birthdayRole.Id);
 
 				if (isBirthdayPartyPeep && !hasBirthdayRole)
