@@ -55,7 +55,6 @@ var host = Host.CreateDefaultBuilder()
 		// Add constants and third party services
 		services
 			.AddSingleton<IConstants, Constants>()
-			.AddSingleton<IConstantsCore>(provider => provider.GetRequiredService<IConstants>())
 			.AddBeatSaver()
 			.AddBeatSavior()
 			.AddScoreSaber();

@@ -1,4 +1,5 @@
 ﻿using ImageMagick;
+using POI.Core.Services;
 
 namespace POI.DiscordDotNet.Services.Implementations
 {

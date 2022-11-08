@@ -14,7 +14,7 @@ namespace POI.Azure
 				.ConfigureServices(sc =>
 				{
 					sc.AddSingleton<Constants>();
-					sc.AddSingleton<IConstantsCore>(provider => provider.GetRequiredService<Constants>());
+					sc.AddSingleton<IConstants>(provider => provider.GetRequiredService<Constants>());
 					sc.AddScoreSaber();
 				})
 				.Build();

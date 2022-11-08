@@ -12,7 +12,7 @@ public static class ServiceCollectionExtensions
 	///  </summary>
 	///  <param name="serviceCollection">The container in which the services of the project have to be registered</param>
 	///  <remark>
-	///		Make sure that the <see cref="POI.Core.Services.IConstantsCore">IConstants</see> interface has been registered before calling this method
+	///		Make sure that the <see cref="POI.Core.Services.IConstants">IConstants</see> interface has been registered before calling this method
 	///  </remark>
 	public static IServiceCollection AddBeatSaver(this IServiceCollection serviceCollection)
 	{

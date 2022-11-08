@@ -7,7 +7,7 @@ internal class BeatSaverClientProvider : IBeatSaverClientProvider
 {
 	private readonly BeatSaverSharp.BeatSaver _beatSaverClient;
 
-	public BeatSaverClientProvider(IConstantsCore constants)
+	public BeatSaverClientProvider(IConstants constants)
 	{
 		var beatSaverClientOptions = new BeatSaverOptions(constants.Name, constants.Version)
 		{

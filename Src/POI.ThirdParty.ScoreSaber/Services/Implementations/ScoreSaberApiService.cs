@@ -38,7 +38,7 @@ internal class ScoreSaberApiService : IScoreSaberApiService
 	private readonly JsonSerializerOptions _jsonSerializerOptions;
 	private readonly ScoreSaberSerializerContext _scoreSaberSerializerContext;
 
-	public ScoreSaberApiService(ILogger<ScoreSaberApiService> logger, IConstantsCore constants)
+	public ScoreSaberApiService(ILogger<ScoreSaberApiService> logger, IConstants constants)
 	{
 		_logger = logger;
 		_scoreSaberApiClient = new HttpClient
