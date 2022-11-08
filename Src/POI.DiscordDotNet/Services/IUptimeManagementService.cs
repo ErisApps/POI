@@ -1,6 +1,6 @@
 using NodaTime;
 
-namespace POI.DiscordDotNet.Services.Implementations;
+namespace POI.DiscordDotNet.Services;
 
 public interface IUptimeManagementService
 {
