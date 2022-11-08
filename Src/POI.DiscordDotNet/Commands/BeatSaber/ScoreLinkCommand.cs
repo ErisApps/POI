@@ -64,13 +64,13 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 			var userSettings = await GlobalUserSettingsRepository.LookupSettingsByDiscordId(discordId);
 			if (userSettings != null)
 			{
-				if (userSettings.AccountLinks.ScoreSaberId == scoreSaberId)
+				if (userSettings.ScoreSaberId == scoreSaberId)
 				{
 					await ctx.Message.RespondAsync("Your account is already linked to this ScoreSaber account! O.o").ConfigureAwait(false);
 					return true;
 				}
 
-				await ctx.Message.RespondAsync($"⚠️Warning: Your account is currently linked to https://scoresaber.com/u/{userSettings.AccountLinks.ScoreSaberId} ! Are you sure you want to relink? O.o").ConfigureAwait(false);
+				await ctx.Message.RespondAsync($"⚠️Warning: Your account is currently linked to https://scoresaber.com/u/{userSettings.ScoreSaberId} ! Are you sure you want to relink? O.o").ConfigureAwait(false);
 			}
 
 			// Check scoreSaberId conflict

@@ -648,7 +648,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 					var userSettings = await _globalUserSettingsRepository
 						.LookupSettingsByDiscordId(discordId)
 						.ConfigureAwait(false);
-					scoreSaberId = userSettings?.AccountLinks.ScoreSaberId;
+					scoreSaberId = userSettings?.ScoreSaberId;
 				}
 				catch (Exception)
 				{
