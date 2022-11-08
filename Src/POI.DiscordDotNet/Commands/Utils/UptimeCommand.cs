@@ -9,9 +9,9 @@ namespace POI.DiscordDotNet.Commands.Utils
 	[UsedImplicitly]
     public class UptimeCommand : UtilSlashCommandsModule
     {
-	    private readonly UptimeManagementService _uptimeManagementService;
+	    private readonly IUptimeManagementService _uptimeManagementService;
 
-        public UptimeCommand(UptimeManagementService uptimeManagementService)
+        public UptimeCommand(IUptimeManagementService uptimeManagementService)
         {
 	        _uptimeManagementService = uptimeManagementService;
         }
