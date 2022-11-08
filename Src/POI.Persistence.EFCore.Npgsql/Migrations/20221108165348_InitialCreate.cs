@@ -12,15 +12,16 @@ namespace POI.Persistence.EFCore.Npgsql.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "AccountLinks",
+                name: "GlobalUserSettings",
                 columns: table => new
                 {
-                    DiscordId = table.Column<decimal>(type: "numeric(20,0)", nullable: false),
+                    DiscordUserId = table.Column<decimal>(type: "numeric(20,0)", nullable: false),
+                    Birthday = table.Column<LocalDate>(type: "date", nullable: true),
                     ScoreSaberId = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AccountLinks", x => x.DiscordId);
+                    table.PrimaryKey("PK_GlobalUserSettings", x => x.DiscordUserId);
                 });
 
             migrationBuilder.CreateTable(
@@ -41,13 +42,13 @@ namespace POI.Persistence.EFCore.Npgsql.Migrations
                 name: "ServerDependentUserSettings",
                 columns: table => new
                 {
-                    UserId = table.Column<decimal>(type: "numeric(20,0)", nullable: false),
+                    DiscordUserId = table.Column<decimal>(type: "numeric(20,0)", nullable: false),
                     ServerId = table.Column<decimal>(type: "numeric(20,0)", nullable: false),
                     Permissions = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ServerDependentUserSettings", x => new { x.UserId, x.ServerId });
+                    table.PrimaryKey("PK_ServerDependentUserSettings", x => new { x.DiscordUserId, x.ServerId });
                 });
 
             migrationBuilder.CreateTable(
@@ -63,35 +64,11 @@ namespace POI.Persistence.EFCore.Npgsql.Migrations
                     table.PrimaryKey("PK_ServerSettings", x => x.ServerId);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "GlobalUserSettings",
-                columns: table => new
-                {
-                    UserId = table.Column<decimal>(type: "numeric(20,0)", nullable: false),
-                    Birthday = table.Column<LocalDate>(type: "date", nullable: true),
-                    AccountLinksDiscordId = table.Column<decimal>(type: "numeric(20,0)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_GlobalUserSettings", x => x.UserId);
-                    table.ForeignKey(
-                        name: "FK_GlobalUserSettings_AccountLinks_AccountLinksDiscordId",
-                        column: x => x.AccountLinksDiscordId,
-                        principalTable: "AccountLinks",
-                        principalColumn: "DiscordId",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
             migrationBuilder.CreateIndex(
-                name: "IX_AccountLinks_ScoreSaberId",
-                table: "AccountLinks",
+                name: "IX_GlobalUserSettings_ScoreSaberId",
+                table: "GlobalUserSettings",
                 column: "ScoreSaberId",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_GlobalUserSettings_AccountLinksDiscordId",
-                table: "GlobalUserSettings",
-                column: "AccountLinksDiscordId");
         }
 
         /// <inheritdoc />
@@ -108,9 +85,6 @@ namespace POI.Persistence.EFCore.Npgsql.Migrations
 
             migrationBuilder.DropTable(
                 name: "ServerSettings");
-
-            migrationBuilder.DropTable(
-                name: "AccountLinks");
         }
     }
 }
