@@ -1,5 +1,5 @@
 ﻿using System.Text.Json.Serialization;
-using POI.Core.Models.Shared;
+using POI.ThirdParty.Core.Models.Shared;
 
 namespace POI.ThirdParty.ScoreSaber.Models.Scores;
 

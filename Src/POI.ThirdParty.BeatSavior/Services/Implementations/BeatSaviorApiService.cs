@@ -5,7 +5,7 @@ using System.Text.Json.Serialization.Metadata;
 using Microsoft.Extensions.Logging;
 using NodaTime;
 using NodaTime.Serialization.SystemTextJson;
-using POI.Core.Services;
+using POI.ThirdParty.Core.Services;
 using POI.ThirdParty.BeatSavior.Helpers.JSON;
 using POI.ThirdParty.BeatSavior.Models;
 using Polly;
