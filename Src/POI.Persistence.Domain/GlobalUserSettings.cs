@@ -8,15 +8,25 @@ namespace POI.Persistence.Domain
 
 		public LocalDate? Birthday { get; set; }
 
-		public AccountLinks AccountLinks { get; set; }
+		public string? ScoreSaberId { get; set; }
 
-		public static GlobalUserSettings CreateDefault(ulong discordId)
+		public GlobalUserSettings(ulong userId, LocalDate? birthday, string? scoreSaberId)
 		{
-			return new GlobalUserSettings
-			{
-				UserId = discordId,
-				AccountLinks = AccountLinks.CreateDefault(discordId)
-			};
+			UserId = userId;
+			Birthday = birthday;
+			ScoreSaberId = scoreSaberId;
+		}
+
+		public GlobalUserSettings(ulong userId, LocalDate? birthday)
+		{
+			UserId = userId;
+			Birthday = birthday;
+		}
+
+		public GlobalUserSettings(ulong userId, string? scoreSaberId)
+		{
+			UserId = userId;
+			ScoreSaberId = scoreSaberId;
 		}
 	}
 }

@@ -21,8 +21,6 @@ internal class GlobalUserSettingsRepository : IGlobalUserSettingsRepository
 		await using var context = await _appDbContextFactory.CreateDbContextAsync(cts).ConfigureAwait(false);
 		return await context.GlobalUserSettings
 			.AsNoTracking()
-			.Include(x => x.AccountLinks)
-			.AsNoTracking()
 			.AsQueryable()
 			.FirstOrDefaultAsync(x => x.UserId == discordId, cts)
 			.ConfigureAwait(false);
@@ -33,21 +31,19 @@ internal class GlobalUserSettingsRepository : IGlobalUserSettingsRepository
 		await using var context = await _appDbContextFactory.CreateDbContextAsync(cts).ConfigureAwait(false);
 		return await context.GlobalUserSettings
 			.AsNoTracking()
-			.Include(x => x.AccountLinks)
-			.AsNoTracking()
 			.AsQueryable()
-			.FirstOrDefaultAsync(x => x.AccountLinks.ScoreSaberId == scoreSaberId, cts)
+			.FirstOrDefaultAsync(x => x.ScoreSaberId == scoreSaberId, cts)
 			.ConfigureAwait(false);
 	}
 
 	public async Task<List<ScoreSaberAccountLink>> GetAllScoreSaberAccountLinks(CancellationToken cts)
 	{
 		await using var context = await _appDbContextFactory.CreateDbContextAsync(cts).ConfigureAwait(false);
-		return await context.AccountLinks
+		return await context.GlobalUserSettings
 			.AsNoTracking()
 			.AsQueryable()
 			.Where(x => x.ScoreSaberId != null)
-			.Select(x => new ScoreSaberAccountLink(x.DiscordId, x.ScoreSaberId!))
+			.Select(x => new ScoreSaberAccountLink(x.UserId, x.ScoreSaberId!))
 			.ToListAsync(cts)
 			.ConfigureAwait(false);
 	}
@@ -61,11 +57,13 @@ internal class GlobalUserSettingsRepository : IGlobalUserSettingsRepository
 
 		if (globalUserSettings == null)
 		{
-			globalUserSettings = GlobalUserSettings.CreateDefault(discordId);
+			globalUserSettings = new GlobalUserSettings(discordId, scoreSaberId);
 			await context.GlobalUserSettings.AddAsync(globalUserSettings, cts).ConfigureAwait(false);
 		}
-
-		globalUserSettings.AccountLinks.ScoreSaberId = scoreSaberId;
+		else
+		{
+			globalUserSettings.ScoreSaberId = scoreSaberId;
+		}
 
 		await context.SaveChangesAsync(cts).ConfigureAwait(false);
 	}
@@ -90,11 +88,13 @@ internal class GlobalUserSettingsRepository : IGlobalUserSettingsRepository
 
 		if (globalUserSettings == null)
 		{
-			globalUserSettings = GlobalUserSettings.CreateDefault(discordId);
+			globalUserSettings = new GlobalUserSettings(discordId, birthday);
 			await context.GlobalUserSettings.AddAsync(globalUserSettings, cts).ConfigureAwait(false);
 		}
-
-		globalUserSettings.Birthday = birthday;
+		else
+		{
+			globalUserSettings.Birthday = birthday;
+		}
 
 		await context.SaveChangesAsync(cts).ConfigureAwait(false);
 	}

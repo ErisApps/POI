@@ -246,7 +246,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 					var userScoreLinks = await _globalUserSettingsRepository
 						.LookupSettingsByDiscordId(discordId)
 						.ConfigureAwait(false);
-					return userScoreLinks?.AccountLinks.ScoreSaberId;
+					return userScoreLinks?.ScoreSaberId;
 				}
 				catch (Exception)
 				{
