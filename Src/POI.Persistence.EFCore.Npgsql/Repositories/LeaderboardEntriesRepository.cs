@@ -34,5 +34,6 @@ internal class LeaderboardEntriesRepository : ILeaderboardEntriesRepository
 	{
 		await using var context = await _appDbContextFactory.CreateDbContextAsync(cts).ConfigureAwait(false);
 		await context.AddRangeAsync(entries, cts).ConfigureAwait(false);
+		await context.SaveChangesAsync(cts).ConfigureAwait(false);
 	}
 }
