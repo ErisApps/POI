@@ -1,4 +1,4 @@
-﻿namespace POI.Core.Models.Shared
+﻿namespace POI.ThirdParty.Core.Models.Shared
 {
 	public enum Difficulty
 	{

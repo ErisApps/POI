@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
 using NodaTime;
-using POI.Core.Models.Shared;
+using POI.ThirdParty.Core.Models.Shared;
 using POI.ThirdParty.BeatSavior.Models.Trackers;
 
 namespace POI.ThirdParty.BeatSavior.Models;

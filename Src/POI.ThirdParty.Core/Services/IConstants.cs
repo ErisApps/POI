@@ -1,6 +1,6 @@
 using System;
 
-namespace POI.Core.Services
+namespace POI.ThirdParty.Core.Services
 {
 	public interface IConstants
 	{

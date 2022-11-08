@@ -1,5 +1,5 @@
 using BeatSaverSharp;
-using POI.Core.Services;
+using POI.ThirdParty.Core.Services;
 
 namespace POI.ThirdParty.BeatSaver.Services.Implementations;
 

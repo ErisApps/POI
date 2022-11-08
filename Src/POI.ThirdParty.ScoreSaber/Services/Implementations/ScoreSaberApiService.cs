@@ -7,7 +7,7 @@ using System.Text.Json.Serialization.Metadata;
 using Microsoft.Extensions.Logging;
 using NodaTime;
 using NodaTime.Serialization.SystemTextJson;
-using POI.Core.Services;
+using POI.ThirdParty.Core.Services;
 using POI.ThirdParty.ScoreSaber.Exceptions;
 using POI.ThirdParty.ScoreSaber.Helpers.JSON;
 using POI.ThirdParty.ScoreSaber.Models.Profile;
