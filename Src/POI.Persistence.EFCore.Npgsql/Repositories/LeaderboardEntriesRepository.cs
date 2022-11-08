@@ -27,7 +27,7 @@ internal class LeaderboardEntriesRepository : ILeaderboardEntriesRepository
 	public async Task DeleteAll(CancellationToken cts = default)
 	{
 		await using var context = await _appDbContextFactory.CreateDbContextAsync(cts).ConfigureAwait(false);
-		await context.Database.ExecuteSqlAsync($"DELETE FROM LeaderboardEntries", cts).ConfigureAwait(false);
+		await context.Database.ExecuteSqlRawAsync(@"DELETE FROM ""LeaderboardEntries""", cts).ConfigureAwait(false);
 	}
 
 	public async Task Insert(IEnumerable<LeaderboardEntry> entries, CancellationToken cts = default)
