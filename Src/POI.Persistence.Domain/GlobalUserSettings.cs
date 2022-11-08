@@ -10,22 +10,10 @@ namespace POI.Persistence.Domain
 
 		public string? ScoreSaberId { get; set; }
 
-		public GlobalUserSettings(ulong userId, LocalDate? birthday, string? scoreSaberId)
+		public GlobalUserSettings(ulong userId, LocalDate? birthday = null, string? scoreSaberId = null)
 		{
 			UserId = userId;
 			Birthday = birthday;
-			ScoreSaberId = scoreSaberId;
-		}
-
-		public GlobalUserSettings(ulong userId, LocalDate? birthday)
-		{
-			UserId = userId;
-			Birthday = birthday;
-		}
-
-		public GlobalUserSettings(ulong userId, string? scoreSaberId)
-		{
-			UserId = userId;
 			ScoreSaberId = scoreSaberId;
 		}
 	}

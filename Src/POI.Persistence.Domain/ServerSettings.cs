@@ -8,12 +8,11 @@
 
 		public ulong? BirthdayRoleId { get; set; }
 
-		public static ServerSettings CreateDefault(ulong serverId)
+		public ServerSettings(ulong serverId, ulong? rankUpFeedChannelId = null, ulong? birthdayRoleId = null)
 		{
-			return new ServerSettings
-			{
-				ServerId = serverId
-			};
+			ServerId = serverId;
+			RankUpFeedChannelId = rankUpFeedChannelId;
+			BirthdayRoleId = birthdayRoleId;
 		}
 	}
 }
