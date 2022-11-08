@@ -3,7 +3,7 @@ using POI.Core.Services;
 
 namespace POI.Azure
 {
-	internal class Constants : IConstantsCore
+	internal class Constants : IConstants
 	{
 		public string Name { get; }
 		public Version Version { get; }

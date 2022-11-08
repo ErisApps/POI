@@ -32,7 +32,7 @@ internal class BeatSaviorApiService : IBeatSaviorApiService
 	private readonly JsonSerializerOptions _jsonSerializerOptions;
 	private readonly BeatSaviorSerializerContext _beatSaviorSerializerContext;
 
-	public BeatSaviorApiService(ILogger<BeatSaviorApiService> logger, IConstantsCore constants)
+	public BeatSaviorApiService(ILogger<BeatSaviorApiService> logger, IConstants constants)
 	{
 		_logger = logger;
 		_beatSaviorApiClient = new HttpClient
