@@ -13,7 +13,7 @@ using POI.Persistence.EFCore.Npgsql.Infrastructure;
 namespace POI.Persistence.EFCore.Npgsql.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20221031023949_InitialCreate")]
+    [Migration("20221108165348_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -21,44 +21,28 @@ namespace POI.Persistence.EFCore.Npgsql.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.0-rc.2.22472.11")
+                .HasAnnotation("ProductVersion", "7.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("POI.Persistence.Domain.AccountLinks", b =>
-                {
-                    b.Property<decimal>("DiscordId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("numeric(20,0)");
-
-                    b.Property<string>("ScoreSaberId")
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
-
-                    b.HasKey("DiscordId");
-
-                    b.HasIndex("ScoreSaberId")
-                        .IsUnique();
-
-                    b.ToTable("AccountLinks");
-                });
-
             modelBuilder.Entity("POI.Persistence.Domain.GlobalUserSettings", b =>
                 {
-                    b.Property<decimal>("UserId")
+                    b.Property<decimal>("DiscordUserId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("numeric(20,0)");
-
-                    b.Property<decimal>("AccountLinksDiscordId")
                         .HasColumnType("numeric(20,0)");
 
                     b.Property<LocalDate?>("Birthday")
                         .HasColumnType("date");
 
-                    b.HasKey("UserId");
+                    b.Property<string>("ScoreSaberId")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
 
-                    b.HasIndex("AccountLinksDiscordId");
+                    b.HasKey("DiscordUserId");
+
+                    b.HasIndex("ScoreSaberId")
+                        .IsUnique();
 
                     b.ToTable("GlobalUserSettings");
                 });
@@ -86,7 +70,7 @@ namespace POI.Persistence.EFCore.Npgsql.Migrations
 
             modelBuilder.Entity("POI.Persistence.Domain.ServerDependentUserSettings", b =>
                 {
-                    b.Property<decimal>("UserId")
+                    b.Property<decimal>("DiscordUserId")
                         .HasColumnType("numeric(20,0)");
 
                     b.Property<decimal>("ServerId")
@@ -95,7 +79,7 @@ namespace POI.Persistence.EFCore.Npgsql.Migrations
                     b.Property<int>("Permissions")
                         .HasColumnType("integer");
 
-                    b.HasKey("UserId", "ServerId");
+                    b.HasKey("DiscordUserId", "ServerId");
 
                     b.ToTable("ServerDependentUserSettings");
                 });
@@ -115,17 +99,6 @@ namespace POI.Persistence.EFCore.Npgsql.Migrations
                     b.HasKey("ServerId");
 
                     b.ToTable("ServerSettings");
-                });
-
-            modelBuilder.Entity("POI.Persistence.Domain.GlobalUserSettings", b =>
-                {
-                    b.HasOne("POI.Persistence.Domain.AccountLinks", "AccountLinks")
-                        .WithMany()
-                        .HasForeignKey("AccountLinksDiscordId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AccountLinks");
                 });
 #pragma warning restore 612, 618
         }
