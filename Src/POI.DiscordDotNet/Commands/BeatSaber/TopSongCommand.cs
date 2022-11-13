@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using JetBrains.Annotations;
@@ -14,10 +15,12 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 	[UsedImplicitly]
 	public class TopSongCommand : BaseSongCommand
 	{
+		private static readonly ActivitySource ActivitySource = new("POI.DiscordDotNet");
+
 		public TopSongCommand(ILogger<TopSongCommand> logger, PathProvider pathProvider, IScoreSaberApiService scoreSaberApiService, IGlobalUserSettingsRepository globalUserSettingsRepository,
 			IBeatSaverClientProvider beatSaverClientProvider, IBeatSaviorApiService beatSaviorApiService)
 			: base(logger, scoreSaberApiService, globalUserSettingsRepository, beatSaverClientProvider, Path.Combine(pathProvider.AssetsPath, "poinext1.png"),
-				Path.Combine(pathProvider.AssetsPath, "Signature-Eris.png"), beatSaviorApiService)
+				Path.Combine(pathProvider.AssetsPath, "Signature-Eris.png"), beatSaviorApiService, ActivitySource)
 		{
 		}
 
@@ -25,6 +28,9 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 		[Aliases("topscore", "ts")]
 		public async Task Handle(CommandContext ctx, [RemainingText] string _)
 		{
+			using var activity = ActivitySource.StartActivity(nameof(TopSongCommand), kind: ActivityKind.Client);
+			activity?.AddTag("discord.user.id", ctx.User.Id.ToString());
+			activity?.AddTag("discord.user.name", ctx.User.Username);
 			await GenerateScoreImageAndSendInternal(ctx).ConfigureAwait(false);
 		}
 

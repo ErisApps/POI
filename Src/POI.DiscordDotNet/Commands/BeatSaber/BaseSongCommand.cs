@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.Entities;
 using ImageMagick;
@@ -30,16 +31,19 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 		protected readonly IScoreSaberApiService ScoreSaberApiService;
 		protected readonly IBeatSaviorApiService BeatSaviorApiService;
 
+		protected readonly ActivitySource ActivitySource;
+
 		private const int WIDTH = 1024;
 		private const int MARGIN = 35;
 
 		protected BaseSongCommand(ILogger<BaseSongCommand> logger, IScoreSaberApiService scoreSaberApiService, IGlobalUserSettingsRepository globalUserSettingsRepository,
-			IBeatSaverClientProvider beatSaverClientProvider, string backgroundImagePath, string erisSignaturePath, IBeatSaviorApiService beatSaviorApiService)
+			IBeatSaverClientProvider beatSaverClientProvider, string backgroundImagePath, string erisSignaturePath, IBeatSaviorApiService beatSaviorApiService, ActivitySource activitySource)
 		{
 			_logger = logger;
 
 			ScoreSaberApiService = scoreSaberApiService;
 			BeatSaviorApiService = beatSaviorApiService;
+			ActivitySource = activitySource;
 
 			_globalUserSettingsRepository = globalUserSettingsRepository;
 			_beatSaverClientProvider = beatSaverClientProvider;
@@ -115,8 +119,10 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 			var playerImageBytes = await ScoreSaberApiService.FetchImageFromCdn(profile.ProfilePicture).ConfigureAwait(false);
 
 			await using var memoryStream = new MemoryStream();
-			using (var background = new MagickImage(_backgroundImagePath))
+			using var scoreSaberImageGenerationActivity = ActivitySource.StartActivity("GenerateScoreImage");
 			{
+				using var background = new MagickImage(_backgroundImagePath);
+
 				// Cover image
 				if (coverImageBytes != null)
 				{
@@ -355,7 +361,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 
 
 			// Getting data for the second image
-			var beatSaviorProfileData = await BeatSaviorApiService.FetchBeatSaviorPlayerData(scoreSaberId).ConfigureAwait(false);
+			List<SongDataDto>? beatSaviorProfileData = null; // await BeatSaviorApiService.FetchBeatSaviorPlayerData(scoreSaberId).ConfigureAwait(false);
 
 			//BeatSavior data found! (Making the second image)
 			if (beatSaviorProfileData != null)

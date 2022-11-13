@@ -18,6 +18,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POI.Persistence", "Src\POI.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POI.Persistence.EFCore.Npgsql", "Src\POI.Persistence.EFCore.Npgsql\POI.Persistence.EFCore.Npgsql.csproj", "{D1AD714E-416E-4993-9380-49F9F4FD81F9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POI.ThirdParty.ScoreSaber.OpenTelemetry.Instrumentation", "Src\POI.ThirdParty.ScoreSaber.OpenTelemetry.Instrumentation\POI.ThirdParty.ScoreSaber.OpenTelemetry.Instrumentation.csproj", "{75FD5457-36B6-4B62-A8F9-FD76B9F0E469}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,5 +62,9 @@ Global
 		{D1AD714E-416E-4993-9380-49F9F4FD81F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D1AD714E-416E-4993-9380-49F9F4FD81F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D1AD714E-416E-4993-9380-49F9F4FD81F9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75FD5457-36B6-4B62-A8F9-FD76B9F0E469}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75FD5457-36B6-4B62-A8F9-FD76B9F0E469}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75FD5457-36B6-4B62-A8F9-FD76B9F0E469}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75FD5457-36B6-4B62-A8F9-FD76B9F0E469}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

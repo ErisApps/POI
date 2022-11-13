@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\POI.ThirdParty.ScoreSaber\POI.ThirdParty.ScoreSaber.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="OpenTelemetry.Api" Version="1.4.0-beta.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Implementation" />
+    </ItemGroup>
+
+</Project>

@@ -5,6 +5,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+using OpenTelemetry.Exporter;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using POI.DiscordDotNet.Configuration;
 using POI.DiscordDotNet.Jobs;
 using POI.Persistence.EFCore.Npgsql.Extensions;
@@ -14,6 +18,7 @@ using POI.ThirdParty.BeatSaver.Extensions;
 using POI.ThirdParty.BeatSavior.Extensions;
 using POI.ThirdParty.Core.Services;
 using POI.ThirdParty.ScoreSaber.Extensions;
+using POI.ThirdParty.ScoreSaber.OpenTelemetry.Instrumentation;
 using Quartz;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
@@ -52,6 +57,30 @@ var host = Host.CreateDefaultBuilder()
 	})
 	.ConfigureServices((context, services) =>
 	{
+		// Configure OpenTelemetry
+
+		var tempOtlpEndpointUri = new Uri("");
+		services
+			.AddOpenTelemetryMetrics(builder => builder
+				.AddOtlpExporter(options =>
+				{
+					options.Protocol = OtlpExportProtocol.Grpc;
+					options.Endpoint = tempOtlpEndpointUri;
+				}))
+			.AddOpenTelemetryTracing(builder => builder
+				.AddOtlpExporter(options =>
+				{
+					options.Protocol = OtlpExportProtocol.Grpc;
+					options.Endpoint = tempOtlpEndpointUri;
+				})
+				.AddConsoleExporter()
+				.ConfigureResource(resourceBuilder => resourceBuilder.AddService("POI.DiscordDotNet"))
+				.AddSource("POI.DiscordDotNet")
+				.AddEntityFrameworkCoreInstrumentation()
+				.AddHttpClientInstrumentation()
+				.AddScoreSaberInstrumentation()
+				.AddQuartzInstrumentation());
+
 		// Add constants and third party services
 		services
 			.AddSingleton<IConstants, Constants>()
@@ -111,11 +140,12 @@ var host = Host.CreateDefaultBuilder()
 					.WithIdentity("Birthday Girl trigger")
 					.WithCronSchedule(CronScheduleBuilder.DailyAtHourAndMinute(0, 0)));
 			})
-			.AddQuartzHostedService(options =>
+			/*.AddQuartzHostedService(options =>
 			{
 				// delay start of Quartz.NET to ensure that the DiscordHostedService is started first
 				options.StartDelay = TimeSpan.FromSeconds(5);
-			});
+			})*/
+			;
 	});
 
 await host.RunConsoleAsync().ConfigureAwait(false);

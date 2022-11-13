@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Net;
 using System.Net.Http.Json;
 using System.Runtime.CompilerServices;
@@ -25,6 +26,8 @@ internal class ScoreSaberApiService : IScoreSaberApiService
 	private const string SCORESABER_BASEURL = "https://scoresaber.com";
 	private const string SCORESABER_API_BASEURL = SCORESABER_BASEURL + "/api/";
 	private const int MAX_BULKHEAD_QUEUE_SIZE = 1000;
+
+	private static readonly ActivitySource ActivitySource = new("POI.ThirdParty.ScoreSaber.OpenTelemetry.Instrumentation");
 
 	private readonly ILogger<ScoreSaberApiService> _logger;
 	private readonly HttpClient _scoreSaberApiClient;
@@ -99,19 +102,27 @@ internal class ScoreSaberApiService : IScoreSaberApiService
 			.WaitAndRetryAsync(3, _ => TimeSpan.FromSeconds(10));
 	}
 
-	public Task<BasicProfileDto?> FetchBasicPlayerProfile(string scoreSaberId, CancellationToken cancellationToken = default)
+	public async Task<BasicProfileDto?> FetchBasicPlayerProfile(string scoreSaberId, CancellationToken cancellationToken)
 	{
-		return FetchDataClass($"{SCORESABER_API_BASEURL}player/{scoreSaberId}/basic", _scoreSaberSerializerContext.BasicProfileDto, cancellationToken);
+		using var activity = ActivitySource.StartActivity();
+		activity?.AddTag("scoreSaberId", scoreSaberId);
+		return await FetchDataClass($"{SCORESABER_API_BASEURL}player/{scoreSaberId}/basic", _scoreSaberSerializerContext.BasicProfileDto, cancellationToken).ConfigureAwait(false);
 	}
 
-	public Task<FullProfileDto?> FetchFullPlayerProfile(string scoreSaberId, CancellationToken cancellationToken = default)
+	public async Task<FullProfileDto?> FetchFullPlayerProfile(string scoreSaberId, CancellationToken cancellationToken)
 	{
-		return FetchDataClass($"{SCORESABER_API_BASEURL}player/{scoreSaberId}/full", _scoreSaberSerializerContext.FullProfileDto, cancellationToken);
+		using var activity = ActivitySource.StartActivity();
+		activity?.AddTag("scoreSaberId", scoreSaberId);
+		return await FetchDataClass($"{SCORESABER_API_BASEURL}player/{scoreSaberId}/full", _scoreSaberSerializerContext.FullProfileDto, cancellationToken).ConfigureAwait(false);
 	}
 
-	public Task<PlayerScoresWrapperDto?> FetchRecentSongsScorePage(string scoreSaberId, uint page, uint? limit = null, CancellationToken cancellationToken = default)
+	public async Task<PlayerScoresWrapperDto?> FetchRecentSongsScorePage(string scoreSaberId, uint page, uint? limit = null, CancellationToken cancellationToken = default)
 	{
-		return FetchPlayerScores(scoreSaberId, page, SortType.Recent, limit, cancellationToken);
+		using var activity = ActivitySource.StartActivity();
+		activity?.AddTag("scoreSaberId", scoreSaberId);
+		activity?.AddTag("page", page);
+		activity?.AddTag("limit", limit);
+		return await FetchPlayerScores(scoreSaberId, page, SortType.Recent, limit, cancellationToken).ConfigureAwait(false);
 	}
 
 	public IAsyncEnumerable<PlayerScoreDto> FetchPlayerRecentScoresPaged(string scoreSaberId, uint? itemsPerPage = null, CancellationToken cancellationToken = default)
