@@ -2,6 +2,7 @@
 using DSharpPlus.SlashCommands.EventArgs;
 using Microsoft.Extensions.Logging;
 using POI.DiscordDotNet.Commands.Profile;
+using POI.DiscordDotNet.Commands.Test;
 using POI.DiscordDotNet.Commands.Utils;
 
 namespace POI.DiscordDotNet.Services.Implementations;
@@ -38,6 +39,8 @@ public class DiscordSlashCommandsService : IAddDiscordClientFunctionality
 		_slashCommands.RegisterCommands<UptimeCommand>();
 
 		_slashCommands.RegisterCommands<ProfileSlashCommandsModule>();
+
+		_slashCommands.RegisterCommands<PacmanCommand>();
 	}
 
 	public void Cleanup(IDiscordClientProvider discordClientProvider)
