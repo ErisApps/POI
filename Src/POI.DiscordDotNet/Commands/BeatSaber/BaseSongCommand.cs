@@ -348,7 +348,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 
 			var messageBuilder = new DiscordMessageBuilder()
 				.WithContent($"Woah, {profile.Name} played:")
-				.WithFile($"{profile.Name}_{SystemClock.Instance.GetCurrentInstant().ToDateTimeUtc().ToLongDateString()}.jpeg", memoryStream);
+				.AddFile($"{profile.Name}_{SystemClock.Instance.GetCurrentInstant().ToDateTimeUtc().ToLongDateString()}.jpeg", memoryStream);
 			await ctx.Message
 				.RespondAsync(messageBuilder)
 				.ConfigureAwait(false);
@@ -630,7 +630,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 			}
 
 			var messageBuilder = new DiscordMessageBuilder()
-				.WithFile($"{profile.Name}_BeatSavior_{SystemClock.Instance.GetCurrentInstant().ToDateTimeUtc().ToLongDateString()}.jpeg", memoryStream);
+				.AddFile($"{profile.Name}_BeatSavior_{SystemClock.Instance.GetCurrentInstant().ToDateTimeUtc().ToLongDateString()}.jpeg", memoryStream);
 
 			await ctx.Message
 				.Channel.SendMessageAsync(messageBuilder)

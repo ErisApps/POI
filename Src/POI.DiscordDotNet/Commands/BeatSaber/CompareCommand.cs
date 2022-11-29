@@ -227,7 +227,7 @@ namespace POI.DiscordDotNet.Commands.BeatSaber
 
 			var messageBuilder = new DiscordMessageBuilder()
 				.WithContent($"Comparing {profile1.Name} & {profile2.Name}")
-				.WithFile($"{SystemClock.Instance.GetCurrentInstant().ToDateTimeUtc().ToLongDateString()}.jpeg", memoryStream);
+				.AddFile($"{SystemClock.Instance.GetCurrentInstant().ToDateTimeUtc().ToLongDateString()}.jpeg", memoryStream);
 			await ctx.Message
 				.RespondAsync(messageBuilder)
 				.ConfigureAwait(false);
