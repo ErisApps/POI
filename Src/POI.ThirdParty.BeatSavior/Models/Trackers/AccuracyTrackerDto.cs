@@ -65,6 +65,7 @@ public readonly struct AccuracyTrackerDto
 	public List<double>? AverageCut { get; }
 
 	[JsonPropertyName("gridAcc")]
+	[JsonNumberHandling(JsonNumberHandling.AllowNamedFloatingPointLiterals)]
 	public List<double>? GridAcc { get; }
 
 	[JsonPropertyName("gridCut")]

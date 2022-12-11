@@ -29,7 +29,6 @@ internal class BeatSaviorApiService : IBeatSaviorApiService
 	private readonly AsyncRetryPolicy<HttpResponseMessage> _beatSaviorApiRateLimitPolicy;
 	private readonly AsyncRetryPolicy<HttpResponseMessage> _beatSaviorApiInternalServerErrorRetryPolicy;
 
-	private readonly JsonSerializerOptions _jsonSerializerOptions;
 	private readonly BeatSaviorSerializerContext _beatSaviorSerializerContext;
 
 	public BeatSaviorApiService(ILogger<BeatSaviorApiService> logger, IConstants constants)
@@ -43,8 +42,8 @@ internal class BeatSaviorApiService : IBeatSaviorApiService
 			DefaultRequestHeaders = { { "User-Agent", $"{constants.Name}/{constants.Version.ToString(3)}" } }
 		};
 
-		_jsonSerializerOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web) { PropertyNameCaseInsensitive = false }.ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
-		_beatSaviorSerializerContext = new BeatSaviorSerializerContext(_jsonSerializerOptions);
+		var jsonSerializerOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web).ConfigureForNodaTime(DateTimeZoneProviders.Tzdb);
+		_beatSaviorSerializerContext = new BeatSaviorSerializerContext(jsonSerializerOptions);
 
 		_beatSaviorApiInternalServerErrorRetryPolicy = Policy
 			.HandleResult<HttpResponseMessage>(resp => resp.StatusCode == HttpStatusCode.InternalServerError)
