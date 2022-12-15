@@ -13,7 +13,7 @@
         <PackageReference Include="DSharpPlus.CommandsNext" Version="4.3.0-nightly-01215" />
         <PackageReference Include="DSharpPlus.Interactivity" Version="4.3.0-nightly-01215" />
         <PackageReference Include="DSharpPlus.Rest" Version="4.3.0-nightly-01215" />
-        <PackageReference Include="DSharpPlus.SlashCommands" Version="4.3.0-nightly-01195" />
+        <PackageReference Include="DSharpPlus.SlashCommands" Version="4.3.0-nightly-01215" />
         <PackageReference Include="JetBrains.Annotations" Version="2022.3.1" />
         <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="12.2.1" />
         <PackageReference Include="Magick.NET.Core" Version="12.2.1" />
