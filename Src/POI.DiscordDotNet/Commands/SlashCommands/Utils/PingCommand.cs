@@ -1,8 +1,7 @@
 ﻿using DSharpPlus.SlashCommands;
 using JetBrains.Annotations;
-using POI.DiscordDotNet.Commands.Modules.SlashCommands;
 
-namespace POI.DiscordDotNet.Commands.Utils
+namespace POI.DiscordDotNet.Commands.SlashCommands.Utils
 {
 	[UsedImplicitly]
 	public class PingCommand : UtilSlashCommandsModule

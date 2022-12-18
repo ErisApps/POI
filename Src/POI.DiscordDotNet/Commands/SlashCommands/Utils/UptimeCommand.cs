@@ -1,10 +1,9 @@
 using DSharpPlus.SlashCommands;
 using JetBrains.Annotations;
 using NodaTime.Extensions;
-using POI.DiscordDotNet.Commands.Modules.SlashCommands;
 using POI.DiscordDotNet.Services;
 
-namespace POI.DiscordDotNet.Commands.Utils
+namespace POI.DiscordDotNet.Commands.SlashCommands.Utils
 {
 	[UsedImplicitly]
     public class UptimeCommand : UtilSlashCommandsModule

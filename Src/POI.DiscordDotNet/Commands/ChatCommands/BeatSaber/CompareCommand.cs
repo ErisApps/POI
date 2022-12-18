@@ -5,13 +5,13 @@ using ImageMagick;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using NodaTime;
-using POI.DiscordDotNet.Commands.Modules.ChatCommands;
+using POI.DiscordDotNet.Commands.ChatCommands.Modules;
 using POI.DiscordDotNet.Extensions;
-using POI.Persistence.Repositories;
 using POI.DiscordDotNet.Services.Implementations;
+using POI.Persistence.Repositories;
 using POI.ThirdParty.ScoreSaber.Services;
 
-namespace POI.DiscordDotNet.Commands.BeatSaber
+namespace POI.DiscordDotNet.Commands.ChatCommands.BeatSaber
 {
 	[UsedImplicitly]
 	public class CompareCommand : BeatSaberCommandsModule

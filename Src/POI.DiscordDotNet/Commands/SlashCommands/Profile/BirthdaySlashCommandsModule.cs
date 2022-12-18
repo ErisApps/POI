@@ -3,7 +3,7 @@ using JetBrains.Annotations;
 using NodaTime.Text;
 using POI.Persistence.Repositories;
 
-namespace POI.DiscordDotNet.Commands.Profile
+namespace POI.DiscordDotNet.Commands.SlashCommands.Profile
 {
 	public partial class ProfileSlashCommandsModule
 	{

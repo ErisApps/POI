@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 using POI.Persistence.Repositories;
 using POI.ThirdParty.ScoreSaber.Services;
 
-namespace POI.DiscordDotNet.Commands.BeatSaber
+namespace POI.DiscordDotNet.Commands.ChatCommands.BeatSaber
 {
 	[UsedImplicitly]
 	public class ScoreLinkCommand : BaseLinkCommand
