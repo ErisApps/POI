@@ -1,28 +1,15 @@
 # Set up runtime environment
-FROM mcr.microsoft.com/dotnet/aspnet:6.0.10 AS runtime-env
+FROM mcr.microsoft.com/dotnet/runtime:7.0.1 AS runtime-env
 RUN sed -i'.bak' 's/$/ contrib/' /etc/apt/sources.list
 RUN apt-get update; apt-get install -y ttf-mscorefonts-installer fontconfig
 
 # Set up build environment
-FROM mcr.microsoft.com/dotnet/sdk:6.0.402 AS build-env
-WORKDIR /src
+# NOP
 
-COPY ["POI.Core/POI.Core.csproj", "POI.Core/"]
-RUN dotnet restore "POI.Core/POI.Core.csproj"
-COPY ["POI.DiscordDotNet/POI.DiscordDotNet.csproj", "POI.DiscordDotNet/"]
-RUN dotnet restore "POI.DiscordDotNet/POI.DiscordDotNet.csproj"
-
-COPY ["POI.Core/.", "POI.Core/"]
-COPY ["POI.DiscordDotNet/.", "POI.DiscordDotNet/"]
-
-WORKDIR ./POI.DiscordDotNet
-RUN dotnet build "POI.DiscordDotNet.csproj" -c Release -o /app/build
-RUN dotnet publish "POI.DiscordDotNet.csproj" -c Release -o /app/publish
-
+# Combine runtime and build environments
 FROM runtime-env as final
-WORKDIR /app
-COPY --from=build-env /app/publish .
+WORKDIR /App
 VOLUME /Data
-EXPOSE 80
+WORKDIR /App
 
 ENTRYPOINT ["dotnet", "POI.DiscordDotNet.dll"]
