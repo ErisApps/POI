@@ -4,6 +4,6 @@ public class DiscordConfigurationOptions
 {
 	public const string SECTION_NAME = "Discord";
 
-	public string Token { get; init; }
-	public string Prefix { get; init; }
+	public required string Token { get; init; }
+	public required string Prefix { get; init; }
 }
