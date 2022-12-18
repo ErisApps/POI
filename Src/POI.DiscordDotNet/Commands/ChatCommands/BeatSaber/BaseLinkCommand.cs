@@ -5,14 +5,14 @@ using DSharpPlus.EventArgs;
 using DSharpPlus.Interactivity;
 using DSharpPlus.Interactivity.Extensions;
 using Microsoft.Extensions.Logging;
-using POI.DiscordDotNet.Commands.Modules.ChatCommands;
+using POI.DiscordDotNet.Commands.ChatCommands.Modules;
 using POI.DiscordDotNet.Extensions;
 using POI.Persistence.Repositories;
 using POI.ThirdParty.ScoreSaber.Models.Profile;
 using POI.ThirdParty.ScoreSaber.Services;
 using Permissions = POI.Persistence.Domain.Permissions;
 
-namespace POI.DiscordDotNet.Commands.BeatSaber
+namespace POI.DiscordDotNet.Commands.ChatCommands.BeatSaber
 {
 	public abstract class BaseLinkCommand : BeatSaberCommandsModule
 	{

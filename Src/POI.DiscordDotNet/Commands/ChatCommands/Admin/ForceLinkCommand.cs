@@ -3,13 +3,13 @@ using DSharpPlus.CommandsNext.Attributes;
 using DSharpPlus.Entities;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
-using POI.DiscordDotNet.Commands.BeatSaber;
-using POI.DiscordDotNet.Commands.Helpers;
+using POI.DiscordDotNet.Commands.ChatCommands.BeatSaber;
+using POI.DiscordDotNet.Commands.ChatCommands.Helpers;
 using POI.Persistence.Domain;
 using POI.Persistence.Repositories;
 using POI.ThirdParty.ScoreSaber.Services;
 
-namespace POI.DiscordDotNet.Commands.Admin
+namespace POI.DiscordDotNet.Commands.ChatCommands.Admin
 {
 	[UsedImplicitly]
 	[RequiresUserSettingsPermission(Permissions.ForceLink)]

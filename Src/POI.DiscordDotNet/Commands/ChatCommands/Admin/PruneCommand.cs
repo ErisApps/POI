@@ -2,9 +2,9 @@ using DSharpPlus;
 using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using JetBrains.Annotations;
-using POI.DiscordDotNet.Commands.Modules.ChatCommands;
+using POI.DiscordDotNet.Commands.ChatCommands.Modules;
 
-namespace POI.DiscordDotNet.Commands.Admin
+namespace POI.DiscordDotNet.Commands.ChatCommands.Admin
 {
 	[UsedImplicitly]
 	[RequireUserPermissions(Permissions.Administrator)]

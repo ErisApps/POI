@@ -2,14 +2,14 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.CommandsNext.Attributes;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
-using POI.Persistence.Repositories;
 using POI.DiscordDotNet.Services.Implementations;
+using POI.Persistence.Repositories;
 using POI.ThirdParty.BeatSaver.Services;
 using POI.ThirdParty.BeatSavior.Services;
 using POI.ThirdParty.ScoreSaber.Models.Wrappers;
 using POI.ThirdParty.ScoreSaber.Services;
 
-namespace POI.DiscordDotNet.Commands.BeatSaber
+namespace POI.DiscordDotNet.Commands.ChatCommands.BeatSaber
 {
 	[UsedImplicitly]
 	public class TopSongCommand : BaseSongCommand

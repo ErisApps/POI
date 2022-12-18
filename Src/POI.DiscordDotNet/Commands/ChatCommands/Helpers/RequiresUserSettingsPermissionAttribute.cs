@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using POI.Persistence.Domain;
 using POI.Persistence.Repositories;
 
-namespace POI.DiscordDotNet.Commands.Helpers
+namespace POI.DiscordDotNet.Commands.ChatCommands.Helpers
 {
 	/// <remark>
 	///		Stopgap command check until we fully move over to slash commands

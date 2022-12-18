@@ -7,7 +7,7 @@ using SixLabors.ImageSharp.Drawing.Processing;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 
-namespace POI.DiscordDotNet.Commands.Test
+namespace POI.DiscordDotNet.Commands.SlashCommands.Test
 {
 	public class PacmanCommand : TestSlashCommandsModule
 	{

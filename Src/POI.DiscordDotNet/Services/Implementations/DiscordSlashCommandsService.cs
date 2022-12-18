@@ -1,9 +1,9 @@
 ﻿using DSharpPlus.SlashCommands;
 using DSharpPlus.SlashCommands.EventArgs;
 using Microsoft.Extensions.Logging;
-using POI.DiscordDotNet.Commands.Profile;
-using POI.DiscordDotNet.Commands.Test;
-using POI.DiscordDotNet.Commands.Utils;
+using POI.DiscordDotNet.Commands.SlashCommands.Profile;
+using POI.DiscordDotNet.Commands.SlashCommands.Test;
+using POI.DiscordDotNet.Commands.SlashCommands.Utils;
 
 namespace POI.DiscordDotNet.Services.Implementations;
 
