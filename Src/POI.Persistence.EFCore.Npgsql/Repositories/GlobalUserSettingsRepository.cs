@@ -68,12 +68,12 @@ internal class GlobalUserSettingsRepository : IGlobalUserSettingsRepository
 		await context.SaveChangesAsync(cts).ConfigureAwait(false);
 	}
 
-	public async Task<List<GlobalUserSettings>> GetAllBirthdayGirls(LocalDate birthdayDate, CancellationToken cts)
+	public async Task<List<GlobalUserSettings>> GetAllBirthdayGirls(int dayOfMonth, int month, CancellationToken cts)
 	{
 		await using var context = await _appDbContextFactory.CreateDbContextAsync(cts).ConfigureAwait(false);
 		return await context.GlobalUserSettings
 			.AsQueryable()
-			.Where(x => x.Birthday.HasValue && x.Birthday.Value.Month == birthdayDate.Month && x.Birthday.Value.Day == birthdayDate.Day)
+			.Where(x => x.Birthday.HasValue && x.Birthday.Value.Month == month && x.Birthday.Value.Day == dayOfMonth)
 			.ToListAsync(cts)
 			.ConfigureAwait(false);
 	}
@@ -84,7 +84,6 @@ internal class GlobalUserSettingsRepository : IGlobalUserSettingsRepository
 		var globalUserSettings = await context.GlobalUserSettings
 			.FirstOrDefaultAsync(x => x.DiscordUserId == discordUserId, cts)
 			.ConfigureAwait(false);
-
 
 		if (globalUserSettings == null)
 		{

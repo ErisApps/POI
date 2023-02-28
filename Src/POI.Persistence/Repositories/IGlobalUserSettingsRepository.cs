@@ -11,6 +11,6 @@ public interface IGlobalUserSettingsRepository
 	Task<List<ScoreSaberAccountLink>> GetAllScoreSaberAccountLinks(CancellationToken cts = default);
 	Task CreateOrUpdateScoreSaberLink(ulong discordUserId, string scoreSaberId, CancellationToken cts = default);
 
-	Task<List<GlobalUserSettings>> GetAllBirthdayGirls(LocalDate birthdayDate, CancellationToken cts = default);
+	Task<List<GlobalUserSettings>> GetAllBirthdayGirls(int dayOfMonth, int month, CancellationToken cts = default);
 	Task UpdateBirthday(ulong discordUserId, LocalDate? birthday, CancellationToken cts = default);
 }

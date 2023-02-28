@@ -36,7 +36,13 @@ namespace POI.DiscordDotNet.Jobs
 
 			var localDate = LocalDate.FromDateTime(context.ScheduledFireTimeUtc?.LocalDateTime ?? DateTime.Today);
 			_logger.LogInformation("Looking up birthday party people using date: {Date}", localDate.ToString());
-			var currentBirthdayPartyPeople = await _globalUserSettingsRepository.GetAllBirthdayGirls(localDate);
+			var currentBirthdayPartyPeople = await _globalUserSettingsRepository.GetAllBirthdayGirls(localDate.Day, localDate.Month);
+
+			if (!CalendarSystem.Iso.IsLeapYear(localDate.Year) && localDate is { Month: 3, Day: 1 })
+			{
+				_logger.LogInformation("Not a leap year, celebrating the 29th of February peeps on the 1st of March");
+				currentBirthdayPartyPeople.AddRange(await _globalUserSettingsRepository.GetAllBirthdayGirls(29, 2));
+			}
 
 			foreach (var (serverId, server) in _discordClientProvider.Client.Guilds)
 			{
