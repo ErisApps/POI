@@ -16,6 +16,8 @@ internal class AppDbContext : DbContext
 
 	public DbSet<LeaderboardEntry> LeaderboardEntries { get; set; }
 
+	public DbSet<StarboardMessages> StarboardMessages { get; set; }
+
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
 		base.OnModelCreating(modelBuilder);
@@ -37,5 +39,8 @@ internal class AppDbContext : DbContext
 		leaderboardEntryModelBuilder.Property(x => x.CountryRank).IsRequired();
 		leaderboardEntryModelBuilder.Property(x => x.Name).IsRequired();
 		leaderboardEntryModelBuilder.Property(x => x.Pp).IsRequired();
+
+		var starboardMessagesModelBuilder = modelBuilder.Entity<StarboardMessages>();
+		starboardMessagesModelBuilder.HasKey(x => new { x.ServerId, x.ChannelId, x.MessageId });
 	}
 }

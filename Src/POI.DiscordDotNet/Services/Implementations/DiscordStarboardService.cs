@@ -2,21 +2,24 @@
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
 using Microsoft.Extensions.Logging;
+using POI.Persistence.Domain;
+using POI.Persistence.Repositories;
 
 namespace POI.DiscordDotNet.Services.Implementations;
 
-public class DiscordStarboardService: IAddDiscordClientFunctionality
+public class DiscordStarboardService : IAddDiscordClientFunctionality
 {
-	private readonly IServiceProvider _serviceProvider;
 	private readonly ILogger<DiscordChatCommandsService> _logger;
-
+	private readonly IStarboardMessagesRepository _starboardMessagesRepository;
+	private readonly IServerSettingsRepository _serverSettingsRepository;
 
 	public DiscordStarboardService(
-		IServiceProvider serviceProvider,
-		ILogger<DiscordChatCommandsService> logger)
+		ILogger<DiscordChatCommandsService> logger,
+		IStarboardMessagesRepository starboardMessagesRepository, IServerSettingsRepository serverSettingsRepository)
 	{
-		_serviceProvider = serviceProvider;
 		_logger = logger;
+		_starboardMessagesRepository = starboardMessagesRepository;
+		_serverSettingsRepository = serverSettingsRepository;
 	}
 
 	public void Setup(IDiscordClientProvider discordClientProvider)
@@ -37,40 +40,89 @@ public class DiscordStarboardService: IAddDiscordClientFunctionality
 
 	private async Task OnReactionAdded(DiscordClient sender, MessageReactionAddEventArgs args)
 	{
-		//TODO: replace with env variables
-		const int starCount = 2;
-		const long starBoardChannelId = 1014160450813968384;
+		//TODO: Check if message was not cached
+		//TODO: Check on emoji ID, not name
+		//TODO: Figure out a way to get the display name of the user outside the guild...
 
+		var serverSettings = await _serverSettingsRepository.FindOneById(args.Channel.Guild.Id);
+		if (serverSettings?.StarboardChannelId == null)
+		{
+			_logger.LogError("Server settings or starboard channel id not found!");
+			return;
+		}
 
-		// Check if the message reactions contains the star emote
-		if (args.Message.Reactions.All(x => x.Emoji.Name != "⭐") || args.Message.Reactions.First(x => x.Emoji.Name == "⭐").Count < starCount)
+		// Skip event if the message is in the starboard channel (To prevent people staring the bot messages)
+		if(args.Channel.Id == serverSettings.StarboardChannelId)
 		{
 			return;
 		}
 
-		// Send message in starboard channel
-		var starboardChannel = await sender.GetChannelAsync(starBoardChannelId);
+		// Check if the message reactions contains the star emote
+		if (args.Message.Reactions.All(x => x.Emoji.Name != "⭐"))
+		{
+			return;
+		}
+
+		var messageStarCount = args.Message.Reactions.First(x => x.Emoji.Name == "⭐").Count;
+		// Check if the message has enough stars
+		if (messageStarCount < serverSettings.StarboardEmojiCount)
+		{
+			return;
+		}
+
+		// Get the starboard channel by the server settings id
+		var starboardChannel = await sender.GetChannelAsync(serverSettings.StarboardChannelId.Value);
 		if (starboardChannel == null)
 		{
 			_logger.LogError("Starboard channel not found!");
 			return;
 		}
 
-		var title = args.Message.Content.Length > 50 ? args.Message.Content[..50] + "..." : args.Message.Content;
-		var description = $"[Jump to message]({args.Message.JumpLink})";
-		var footer = $"#{args.Message.Channel.Name}";
-		var timestamp = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(args.Message.Timestamp, "Europe/Brussels");
+		// Get DiscordMember from DiscordUser to get the display name
+		var author = await args.Guild.GetMemberAsync(args.Message.Author.Id);
+		if (author == null)
+		{
+			_logger.LogError("Author not found!");
+			return;
+		}
 
-		var embed = new DiscordEmbedBuilder()
-			.WithTitle(title)
-			.WithDescription(description)
-			.WithColor(DiscordColor.Gold)
-			.WithFooter(footer)
-			.WithTimestamp(timestamp)
-			.Build();
+		// Get the starboard message from the database
+		var foundMessage = await _starboardMessagesRepository.FindOneByServerIdAndChannelIdAndMessageId(args.Guild.Id, args.Channel.Id, args.Message.Id);
+		// If the message is already in the database, update the star count
+		// (This will also update the message contents)
+		if(foundMessage != null)
+		{
+			var starboardMessage = await starboardChannel.GetMessageAsync(foundMessage.StarboardMessageId);
+			await starboardMessage.ModifyAsync(msg => msg.Embed = GetStarboardEmbed(author.DisplayName, args.Channel.Name, args.Message.Content, args.Message.JumpLink, args.Message.Timestamp, (uint)messageStarCount, args.Message.Attachments.FirstOrDefault()?.Url));
+			_logger.LogInformation("Updated message {JumpLink} with {stars} stars!", args.Message.JumpLink, messageStarCount);
+			return;
+		}
 
-		await starboardChannel.SendMessageAsync(embed);
+		// If the message is not in the database, create a new starboard message
+		var embed = GetStarboardEmbed(author.DisplayName, args.Message.Channel.Name, args.Message.Content, args.Message.JumpLink, args.Message.Timestamp, (uint)messageStarCount, args.Message.Attachments.FirstOrDefault()?.Url);
+		var embedMessage = await starboardChannel.SendMessageAsync(embed);
+		// And add to the database.
+		await _starboardMessagesRepository.Insert(new StarboardMessages(args.Guild.Id, args.Channel.Id, args.Message.Id, embedMessage.Id));
 
 		_logger.LogInformation("Message {JumpLink} sent to starboard channel!", args.Message.JumpLink);
+	}
+
+	private static DiscordEmbed GetStarboardEmbed(string userName, string channelName, string content, Uri jumpLink, DateTimeOffset timestamp, uint messageStarCount, string? attachmentUrl = null)
+	{
+		var builder = new DiscordEmbedBuilder()
+			.WithTitle($"{userName} in #{channelName}")
+			.WithDescription(content)
+			// .WithDescription(content.Length > 50 ? content[..50] + "..." : content)
+			.WithColor(new DiscordColor(0x6CCAF1))
+			.WithUrl(jumpLink)
+			.WithFooter($"⭐{messageStarCount}")
+			.WithTimestamp(TimeZoneInfo.ConvertTimeBySystemTimeZoneId(timestamp, "Europe/Brussels"));
+
+		if (!string.IsNullOrWhiteSpace(attachmentUrl))
+		{
+			builder.WithImageUrl(attachmentUrl);
+		}
+
+		return builder.Build();
 	}
 }
