@@ -24,6 +24,7 @@ public static class ServiceCollectionExtensions
 		services.TryAddScoped<ILeaderboardEntriesRepository, LeaderboardEntriesRepository>();
 		services.TryAddScoped<IServerDependentUserSettingsRepository, ServerDependentUserSettingsRepository>();
 		services.TryAddScoped<IServerSettingsRepository, ServerSettingsRepository>();
+		services.TryAddScoped<IStarboardMessagesRepository, StarboardMessagesRepository>();
 
 		return services;
 	}
