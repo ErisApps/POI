@@ -90,20 +90,20 @@ public class DiscordStarboardService : IAddDiscordClientFunctionality
 		var foundMessage = await _starboardMessagesRepository.FindOneByServerIdAndChannelIdAndMessageId(args.Guild.Id, args.Channel.Id, args.Message.Id);
 		// If the message is already in the database, update the star count
 		// (This will also update the message contents)
+		var embed = GetStarboardEmbed(author.DisplayName, args.Message.Channel.Name, args.Message.Content, args.Message.JumpLink, args.Message.Timestamp, (uint)messageStarCount, args.Message.Attachments.FirstOrDefault()?.Url);
+
 		if(foundMessage != null)
 		{
 			var starboardMessage = await starboardChannel.GetMessageAsync(foundMessage.StarboardMessageId);
-			await starboardMessage.ModifyAsync(msg => msg.Embed = GetStarboardEmbed(author.DisplayName, args.Channel.Name, args.Message.Content, args.Message.JumpLink, args.Message.Timestamp, (uint)messageStarCount, args.Message.Attachments.FirstOrDefault()?.Url));
+			await starboardMessage.ModifyAsync(msg => msg.Embed = embed);
 			_logger.LogInformation("Updated message {JumpLink} with {stars} stars!", args.Message.JumpLink, messageStarCount);
 			return;
 		}
 
 		// If the message is not in the database, create a new starboard message
-		var embed = GetStarboardEmbed(author.DisplayName, args.Message.Channel.Name, args.Message.Content, args.Message.JumpLink, args.Message.Timestamp, (uint)messageStarCount, args.Message.Attachments.FirstOrDefault()?.Url);
 		var embedMessage = await starboardChannel.SendMessageAsync(embed);
 		// And add to the database.
 		await _starboardMessagesRepository.Insert(new StarboardMessages(args.Guild.Id, args.Channel.Id, args.Message.Id, embedMessage.Id));
-
 		_logger.LogInformation("Message {JumpLink} sent to starboard channel!", args.Message.JumpLink);
 	}
 
