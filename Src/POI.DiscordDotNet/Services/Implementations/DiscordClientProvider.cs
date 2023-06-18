@@ -29,7 +29,8 @@ internal class DiscordClientProvider : IManageDiscordClientProvider
 		Client = new DiscordClient(new DiscordConfiguration
 		{
 			Intents = DiscordIntents.DirectMessages | DiscordIntents.Guilds | DiscordIntents.GuildMessages |
-			          DiscordIntents.GuildVoiceStates | DiscordIntents.MessageContents | DiscordIntents.GuildMessageReactions,
+			          DiscordIntents.GuildVoiceStates | DiscordIntents.MessageContents | DiscordIntents.GuildMessageReactions |
+			          DiscordIntents.MessageContents,
 			LoggerFactory = _loggerFactory,
 			Token = _options.Value.Token,
 			TokenType = TokenType.Bot,

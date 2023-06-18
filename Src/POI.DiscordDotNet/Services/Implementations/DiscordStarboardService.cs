@@ -78,20 +78,19 @@ public class DiscordStarboardService : IAddDiscordClientFunctionality
 			return;
 		}
 
-		// Get DiscordMember from DiscordUser to get the display name
-		var author = await args.Guild.GetMemberAsync(args.Message.Author.Id);
-		if (author == null)
+		// Check if the message is cached and get contents if true.
+		var message = args.Message;
+		if (args.Message.Author == null)
 		{
-			_logger.LogError("Author not found!");
-			return;
+			message = await args.Channel.GetMessageAsync(args.Message.Id, true);
 		}
+
+		var embed = GetStarboardEmbed(message.Author.Username, args.Message.Channel.Name, message.Content, message.JumpLink, message.Timestamp, (uint)messageStarCount, message.Attachments.FirstOrDefault()?.Url);
 
 		// Get the starboard message from the database
 		var foundMessage = await _starboardMessagesRepository.FindOneByServerIdAndChannelIdAndMessageId(args.Guild.Id, args.Channel.Id, args.Message.Id);
 		// If the message is already in the database, update the star count
 		// (This will also update the message contents)
-		var embed = GetStarboardEmbed(author.DisplayName, args.Message.Channel.Name, args.Message.Content, args.Message.JumpLink, args.Message.Timestamp, (uint)messageStarCount, args.Message.Attachments.FirstOrDefault()?.Url);
-
 		if(foundMessage != null)
 		{
 			var starboardMessage = await starboardChannel.GetMessageAsync(foundMessage.StarboardMessageId);
