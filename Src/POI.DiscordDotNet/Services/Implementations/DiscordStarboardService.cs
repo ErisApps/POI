@@ -44,21 +44,23 @@ public class DiscordStarboardService : IAddDiscordClientFunctionality
 		//TODO: Figure out a way to get the display name of the user outside the guild...
 
 		var guild = args.Guild;
-		var message = args.Message;
-		var channel = args.Channel;
-
 		var serverSettings = await _serverSettingsRepository.FindOneById(guild.Id);
+
 		if (serverSettings?.StarboardChannelId == null)
 		{
 			_logger.LogWarning("Server settings or starboard channel id not found for guild id {GuildId}!", guild.Id);
 			return;
 		}
 
+		var channel = args.Channel;
+
 		// Skip event if the message is in the starboard channel (To prevent people staring the bot messages)
 		if (channel.Id == serverSettings.StarboardChannelId)
 		{
 			return;
 		}
+
+		var message = args.Message;
 
 		// Check if the message reactions contains the star emote
 		if (message.Reactions.All(x => x.Emoji.Name != "⭐"))
@@ -67,6 +69,7 @@ public class DiscordStarboardService : IAddDiscordClientFunctionality
 		}
 
 		var messageStarCount = message.Reactions.First(x => x.Emoji.Name == "⭐").Count;
+
 		// Check if the message has enough stars
 		if (messageStarCount < serverSettings.StarboardEmojiCount)
 		{
@@ -75,6 +78,7 @@ public class DiscordStarboardService : IAddDiscordClientFunctionality
 
 		// Get the starboard channel by the server settings id
 		var starboardChannel = await sender.GetChannelAsync(serverSettings.StarboardChannelId.Value);
+
 		if (starboardChannel == null)
 		{
 			_logger.LogError("Starboard channel not found!");
