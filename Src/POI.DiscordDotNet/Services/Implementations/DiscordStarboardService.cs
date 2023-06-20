@@ -10,15 +10,15 @@ namespace POI.DiscordDotNet.Services.Implementations;
 public class DiscordStarboardService : IAddDiscordClientFunctionality
 {
 	private readonly ILogger<DiscordStarboardService> _logger;
-	private readonly IStarboardMessagesRepository _starboardMessagesRepository;
+	private readonly IStarboardMessageRepository _starboardMessageRepository;
 	private readonly IServerSettingsRepository _serverSettingsRepository;
 
 	public DiscordStarboardService(
 		ILogger<DiscordStarboardService> logger,
-		IStarboardMessagesRepository starboardMessagesRepository, IServerSettingsRepository serverSettingsRepository)
+		IStarboardMessageRepository starboardMessageRepository, IServerSettingsRepository serverSettingsRepository)
 	{
 		_logger = logger;
-		_starboardMessagesRepository = starboardMessagesRepository;
+		_starboardMessageRepository = starboardMessageRepository;
 		_serverSettingsRepository = serverSettingsRepository;
 	}
 
@@ -95,14 +95,14 @@ public class DiscordStarboardService : IAddDiscordClientFunctionality
 			message.Attachments.FirstOrDefault()?.Url);
 
 		// Get the starboard message from the database
-		var foundMessage = await _starboardMessagesRepository.FindOneByServerIdAndChannelIdAndMessageId(guild.Id, channel.Id, message.Id);
+		var foundMessage = await _starboardMessageRepository.FindOneByServerIdAndChannelIdAndMessageId(guild.Id, channel.Id, message.Id);
 
 		// If the message is not in the database, create a new starboard message
 		if (foundMessage == null)
 		{
 			var embedMessage = await starboardChannel.SendMessageAsync(embed);
 			// And add to the database.
-			await _starboardMessagesRepository.Insert(new StarboardMessages(guild.Id, channel.Id, message.Id, embedMessage.Id));
+			await _starboardMessageRepository.Insert(new StarboardMessages(guild.Id, channel.Id, message.Id, embedMessage.Id));
 			_logger.LogInformation("Message {JumpLink} sent to starboard channel!", message.JumpLink);
 		}
 		else

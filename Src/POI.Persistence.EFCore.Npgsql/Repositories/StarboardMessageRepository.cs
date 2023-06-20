@@ -5,11 +5,11 @@ using POI.Persistence.Repositories;
 
 namespace POI.Persistence.EFCore.Npgsql.Repositories;
 
-internal class StarboardMessagesRepository : IStarboardMessagesRepository
+internal class StarboardMessageRepository : IStarboardMessageRepository
 {
 	private readonly IDbContextFactory<AppDbContext> _appDbContextFactory;
 
-	public StarboardMessagesRepository(IDbContextFactory<AppDbContext> appDbContextFactory)
+	public StarboardMessageRepository(IDbContextFactory<AppDbContext> appDbContextFactory)
 	{
 		_appDbContextFactory = appDbContextFactory;
 	}
