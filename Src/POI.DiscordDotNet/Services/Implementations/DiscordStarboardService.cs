@@ -45,43 +45,25 @@ public class DiscordStarboardService : IAddDiscordClientFunctionality
 
 		var guild = args.Guild;
 		var serverSettings = await _serverSettingsRepository.FindOneById(guild.Id);
-
 		if (serverSettings?.StarboardChannelId == null)
 		{
 			_logger.LogWarning("Server settings or starboard channel id not found for guild id {GuildId}!", guild.Id);
 			return;
 		}
 
-		var channel = args.Channel;
 
 		// Skip event if the message is in the starboard channel (To prevent people staring the bot messages)
+		var channel = args.Channel;
 		if (channel.Id == serverSettings.StarboardChannelId)
 		{
 			return;
 		}
 
-		var message = args.Message;
 
 		// Check if the message reactions contains the star emote
+		var message = args.Message;
 		if (message.Reactions.All(x => x.Emoji.Name != "⭐"))
 		{
-			return;
-		}
-
-		var messageStarCount = message.Reactions.First(x => x.Emoji.Name == "⭐").Count;
-
-		// Check if the message has enough stars
-		if (messageStarCount < serverSettings.StarboardEmojiCount)
-		{
-			return;
-		}
-
-		// Get the starboard channel by the server settings id
-		var starboardChannel = await sender.GetChannelAsync(serverSettings.StarboardChannelId.Value);
-
-		if (starboardChannel == null)
-		{
-			_logger.LogError("Starboard channel not found!");
 			return;
 		}
 
@@ -89,6 +71,21 @@ public class DiscordStarboardService : IAddDiscordClientFunctionality
 		if (message.Author == null)
 		{
 			message = await channel.GetMessageAsync(message.Id, true);
+		}
+
+		// Check if the message has enough stars
+		var messageStarCount = message.Reactions.First(x => x.Emoji.Name == "⭐").Count;
+		if (messageStarCount < serverSettings.StarboardEmojiCount)
+		{
+			return;
+		}
+
+		// Get the starboard channel by the server settings id
+		var starboardChannel = await sender.GetChannelAsync(serverSettings.StarboardChannelId.Value);
+		if (starboardChannel == null)
+		{
+			_logger.LogError("Starboard channel not found!");
+			return;
 		}
 
 		var embed = GetStarboardEmbed(message.Author.Username, message.Channel.Name, message.Content, message.JumpLink, message.Timestamp, (uint) messageStarCount,
