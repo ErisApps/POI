@@ -1,6 +1,7 @@
 ﻿using DSharpPlus;
 using DSharpPlus.Entities;
 using DSharpPlus.EventArgs;
+using DSharpPlus.Exceptions;
 using Microsoft.Extensions.Logging;
 using POI.Persistence.Domain;
 using POI.Persistence.Repositories;
@@ -67,8 +68,9 @@ public class DiscordStarboardService : IAddDiscordClientFunctionality
 			return;
 		}
 
+		var author = message.Author;
 		// Check if the message is cached and get contents if true.
-		if (message.Author == null)
+		if (author == null)
 		{
 			message = await channel.GetMessageAsync(message.Id, true);
 		}
@@ -94,7 +96,7 @@ public class DiscordStarboardService : IAddDiscordClientFunctionality
 		// If the message is not in the database, create a new starboard message
 		if (foundMessage == null)
 		{
-			var embed = GetStarboardEmbed(message.Author.Username, message.Channel.Name, message.Content, message.JumpLink, message.Timestamp, (uint) messageStarCount,
+			var embed = GetStarboardEmbed(author!.Username, message.Channel.Name, message.Content, message.JumpLink, message.Timestamp, (uint) messageStarCount,
 				message.Attachments.FirstOrDefault()?.Url);
 			var embedMessage = await starboardChannel.SendMessageAsync(embed);
 
@@ -102,18 +104,25 @@ public class DiscordStarboardService : IAddDiscordClientFunctionality
 			await _starboardMessageRepository.Insert(new StarboardMessages(guild.Id, channel.Id, message.Id, embedMessage.Id));
 			_logger.LogInformation("Message {JumpLink} sent to starboard channel!", message.JumpLink);
 		}
+		// Else the message is already in the database
 		else
 		{
-			// Else the message is already in the database, update the star count
-			// (This will also update the message contents)
-			var starboardMessage = await starboardChannel.GetMessageAsync(foundMessage.StarboardMessageId);
+			try
+			{
+				var starboardMessage = await starboardChannel.GetMessageAsync(foundMessage.StarboardMessageId);
 
-			var embedUpdate = new DiscordEmbedBuilder(starboardMessage.Embeds[0])
-				.WithFooter($"⭐{messageStarCount}")
-				.Build();
+				// Update the star count
+				var embedUpdate = new DiscordEmbedBuilder(starboardMessage.Embeds[0])
+					.WithFooter($"⭐{messageStarCount}")
+					.Build();
 
-			await starboardMessage.ModifyAsync(msg => msg.Embed = embedUpdate);
-			_logger.LogInformation("Updated message {JumpLink} with {Stars} stars!", message.JumpLink, messageStarCount);
+				await starboardMessage.ModifyAsync(msg => msg.Embed = embedUpdate);
+				_logger.LogInformation("Updated message {JumpLink} with {Stars} stars!", message.JumpLink, messageStarCount);
+			}
+			catch (NotFoundException)
+			{
+				_logger.LogWarning("{Username} starred a message that was not found in starboard channel in guild with id {GuildId}!", args.User.Username, guild.Id);
+			}
 		}
 	}
 
