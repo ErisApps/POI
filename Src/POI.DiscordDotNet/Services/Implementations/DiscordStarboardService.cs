@@ -68,9 +68,8 @@ public class DiscordStarboardService : IAddDiscordClientFunctionality
 			return;
 		}
 
-		var author = message.Author;
 		// Check if the message is cached and get contents if true.
-		if (author == null)
+		if (message.Author == null)
 		{
 			message = await channel.GetMessageAsync(message.Id, true);
 		}
@@ -96,7 +95,7 @@ public class DiscordStarboardService : IAddDiscordClientFunctionality
 		// If the message is not in the database, create a new starboard message
 		if (foundMessage == null)
 		{
-			var embed = GetStarboardEmbed(author!.Username, message.Channel.Name, message.Content, message.JumpLink, message.Timestamp, (uint) messageStarCount,
+			var embed = GetStarboardEmbed(message.Author.Username, message.Channel.Name, message.Content, message.JumpLink, message.Timestamp, (uint) messageStarCount,
 				message.Attachments.FirstOrDefault()?.Url);
 			var embedMessage = await starboardChannel.SendMessageAsync(embed);
 
