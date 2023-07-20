@@ -4,8 +4,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POI.DiscordDotNet", "Src\PO
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POI.ThirdParty.Core", "Src\POI.ThirdParty.Core\POI.ThirdParty.Core.csproj", "{76EFEFFE-C892-4E1C-A232-25EBF41738AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POI.Azure", "Src\POI.Azure\POI.Azure.csproj", "{3CA6BF2A-2028-407E-9D0A-2F98713A5DE7}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POI.ThirdParty.ScoreSaber", "Src\POI.ThirdParty.ScoreSaber\POI.ThirdParty.ScoreSaber.csproj", "{AB442925-7799-440C-811A-DEE65599DAA2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POI.ThirdParty.BeatSavior", "Src\POI.ThirdParty.BeatSavior\POI.ThirdParty.BeatSavior.csproj", "{01A1A98D-4657-4068-9715-7EDD1804BFDF}"
@@ -32,10 +30,6 @@ Global
 		{76EFEFFE-C892-4E1C-A232-25EBF41738AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{76EFEFFE-C892-4E1C-A232-25EBF41738AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{76EFEFFE-C892-4E1C-A232-25EBF41738AA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3CA6BF2A-2028-407E-9D0A-2F98713A5DE7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3CA6BF2A-2028-407E-9D0A-2F98713A5DE7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3CA6BF2A-2028-407E-9D0A-2F98713A5DE7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3CA6BF2A-2028-407E-9D0A-2F98713A5DE7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AB442925-7799-440C-811A-DEE65599DAA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AB442925-7799-440C-811A-DEE65599DAA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB442925-7799-440C-811A-DEE65599DAA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
