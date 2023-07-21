@@ -262,11 +262,11 @@ __pycache__/
 
 # Project-specific
 # Exclude everything in the Data folder
-Data/*
+data/*
 
 # Okay... maybe not everything....
-!Data/Assets
-!Data/Assets/**
+!data/Assets
+!data/Assets/**
 
 # Visual Studio Code
 **/launchSettings.json*
