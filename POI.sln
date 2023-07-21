@@ -1,20 +1,20 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POI.DiscordDotNet", "Src\POI.DiscordDotNet\POI.DiscordDotNet.csproj", "{A1496200-88C5-463B-979F-A4703FB3327F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POI.DiscordDotNet", "source\POI.DiscordDotNet\POI.DiscordDotNet.csproj", "{A1496200-88C5-463B-979F-A4703FB3327F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POI.ThirdParty.Core", "Src\POI.ThirdParty.Core\POI.ThirdParty.Core.csproj", "{76EFEFFE-C892-4E1C-A232-25EBF41738AA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POI.ThirdParty.Core", "source\POI.ThirdParty.Core\POI.ThirdParty.Core.csproj", "{76EFEFFE-C892-4E1C-A232-25EBF41738AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POI.ThirdParty.ScoreSaber", "Src\POI.ThirdParty.ScoreSaber\POI.ThirdParty.ScoreSaber.csproj", "{AB442925-7799-440C-811A-DEE65599DAA2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POI.ThirdParty.ScoreSaber", "source\POI.ThirdParty.ScoreSaber\POI.ThirdParty.ScoreSaber.csproj", "{AB442925-7799-440C-811A-DEE65599DAA2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POI.ThirdParty.BeatSavior", "Src\POI.ThirdParty.BeatSavior\POI.ThirdParty.BeatSavior.csproj", "{01A1A98D-4657-4068-9715-7EDD1804BFDF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POI.ThirdParty.BeatSavior", "source\POI.ThirdParty.BeatSavior\POI.ThirdParty.BeatSavior.csproj", "{01A1A98D-4657-4068-9715-7EDD1804BFDF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POI.ThirdParty.BeatSaver", "Src\POI.ThirdParty.BeatSaver\POI.ThirdParty.BeatSaver.csproj", "{E0FC4894-9376-446E-901C-4D8A225A26BA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POI.ThirdParty.BeatSaver", "source\POI.ThirdParty.BeatSaver\POI.ThirdParty.BeatSaver.csproj", "{E0FC4894-9376-446E-901C-4D8A225A26BA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POI.Persistence.Domain", "Src\POI.Persistence.Domain\POI.Persistence.Domain.csproj", "{C25DE066-96B0-4494-88DA-578CAA9EF26B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POI.Persistence.Domain", "source\POI.Persistence.Domain\POI.Persistence.Domain.csproj", "{C25DE066-96B0-4494-88DA-578CAA9EF26B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POI.Persistence", "Src\POI.Persistence\POI.Persistence.csproj", "{5B67861B-527C-432E-BE6B-249C9AE5238E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POI.Persistence", "source\POI.Persistence\POI.Persistence.csproj", "{5B67861B-527C-432E-BE6B-249C9AE5238E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POI.Persistence.EFCore.Npgsql", "Src\POI.Persistence.EFCore.Npgsql\POI.Persistence.EFCore.Npgsql.csproj", "{D1AD714E-416E-4993-9380-49F9F4FD81F9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POI.Persistence.EFCore.Npgsql", "source\POI.Persistence.EFCore.Npgsql\POI.Persistence.EFCore.Npgsql.csproj", "{D1AD714E-416E-4993-9380-49F9F4FD81F9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
