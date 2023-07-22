@@ -14,6 +14,10 @@ updates:
     assignees:
       - "ErisApps"
     open-pull-requests-limit: 10
+    groups:
+      dsharpplus:
+        patterns:
+         - "DSharpPlus*" # Update all DSharpPlus packages
 
   - package-ecosystem: "docker" # See documentation for possible values
     directory: "/Src" # Location of package manifests
