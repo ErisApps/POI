@@ -21,18 +21,18 @@ namespace POI.DiscordDotNet.Services.Implementations
 		{
 			var client = discordClientProvider.Client!;
 
-			client.Ready -= ClientOnReady;
-			client.Ready += ClientOnReady;
+			client.SessionCreated -= ClientOnReady;
+			client.SessionCreated += ClientOnReady;
 		}
 
 		public void Cleanup(IDiscordClientProvider discordClientProvider)
 		{
-			discordClientProvider.Client!.Ready -= ClientOnReady;
+			discordClientProvider.Client!.SessionCreated -= ClientOnReady;
 
 			UpSince = null;
 		}
 
-		private Task ClientOnReady(DiscordClient sender, ReadyEventArgs e)
+		private Task ClientOnReady(DiscordClient sender, SessionReadyEventArgs e)
 		{
 			_logger.LogDebug("Client OnReady event received. (Re)setting time since start");
 			UpSince = DateTimeOffset.Now.ToInstant();
