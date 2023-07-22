@@ -95,7 +95,14 @@ public class DiscordStarboardService : IAddDiscordClientFunctionality
 		// If the message is not in the database, create a new starboard message
 		if (foundMessage == null)
 		{
-			var embed = GetStarboardEmbed(message.Author.Username, message.Channel.Name, message.Content, message.JumpLink, message.Timestamp, (uint) messageStarCount,
+			var user = await guild.GetMemberAsync(message.Author.Id);
+			if (user == null)
+			{
+				_logger.LogError("User with id {UserId} not found in guild {GuildId}!", message.Author.Id, guild.Id);
+				return;
+			}
+
+			var embed = GetStarboardEmbed(user.DisplayName, message.Channel.Name, message.Content, message.JumpLink, message.Timestamp, (uint) messageStarCount,
 				message.Attachments.FirstOrDefault()?.Url);
 			var embedMessage = await starboardChannel.SendMessageAsync(embed);
 
