@@ -1,6 +1,5 @@
 using DSharpPlus.Entities;
 using DSharpPlus.SlashCommands;
-using JetBrains.Annotations;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Drawing;
 using SixLabors.ImageSharp.Drawing.Processing;
@@ -9,17 +8,9 @@ using SixLabors.ImageSharp.Processing;
 
 namespace POI.DiscordDotNet.Commands.SlashCommands.Test
 {
-	public class PacmanCommand : TestSlashCommandsModule
+	public sealed class PacmanCommand
 	{
-		[UsedImplicitly]
-		[SlashCommand("pacman", "Just a generic command that can be used for testing ImageSharp stoofs 😅")]
-		public async Task Handle(InteractionContext ctx,
-			[Option("bgColor", "Color of the background (hex)")]
-			string bgColorRaw,
-			[Option("pacmanColor", "Color of the pacman body (hex)")]
-			string pacmanColorRaw,
-			[Option("pacmanEyeColor", "Color of the eye gif (hex)")]
-			string pacmanEyeColorRaw)
+		public async Task Handle(InteractionContext ctx,string bgColorRaw,string pacmanColorRaw,string pacmanEyeColorRaw)
 		{
 			if (!Color.TryParseHex(bgColorRaw, out var bgColor))
 			{

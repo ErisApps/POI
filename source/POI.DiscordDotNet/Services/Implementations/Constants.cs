@@ -5,14 +5,8 @@ namespace POI.DiscordDotNet.Services.Implementations
 {
 	public class Constants : IConstants
 	{
-		public string Name { get; }
-		public Version Version { get; }
-
-		public Constants()
-		{
-			Name = "POINext";
-			Version = typeof(Constants).Assembly.GetName().Version!;
-		}
+		public string Name => "POINext";
+		public Version Version { get; } = typeof(Constants).Assembly.GetName().Version!;
 
 		public static class DifficultyColors
 		{

@@ -5,6 +5,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+using POI.DiscordDotNet.Commands.SlashCommands.Profile;
+using POI.DiscordDotNet.Commands.SlashCommands.Test;
+using POI.DiscordDotNet.Commands.SlashCommands.Utils;
 using POI.DiscordDotNet.Configuration;
 using POI.DiscordDotNet.Jobs;
 using POI.Persistence.EFCore.Npgsql.Extensions;
@@ -86,6 +89,11 @@ var host = Host.CreateDefaultBuilder()
 			.AddSingleton<IDiscordClientProvider, DiscordClientProvider>(provider =>
 				(DiscordClientProvider) provider.GetRequiredService<IManageDiscordClientProvider>())
 			.AddHostedService<DiscordHostedService>();
+
+		services
+			.AddProfileSlashCommands()
+			.AddTestSlashCommands()
+			.AddUtilitySlashCommands();
 
 		// Add and configure Quartz.NET
 		services

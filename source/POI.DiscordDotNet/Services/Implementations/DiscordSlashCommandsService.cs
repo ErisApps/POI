@@ -1,9 +1,7 @@
 ﻿using DSharpPlus.SlashCommands;
 using DSharpPlus.SlashCommands.EventArgs;
 using Microsoft.Extensions.Logging;
-using POI.DiscordDotNet.Commands.SlashCommands.Profile;
-using POI.DiscordDotNet.Commands.SlashCommands.Test;
-using POI.DiscordDotNet.Commands.SlashCommands.Utils;
+using POI.DiscordDotNet.Commands.SlashCommands.Modules;
 
 namespace POI.DiscordDotNet.Services.Implementations;
 
@@ -35,12 +33,9 @@ public class DiscordSlashCommandsService : IAddDiscordClientFunctionality
 		_slashCommands.SlashCommandExecuted += OnSlashCommandsExecuted;
 
 		// TODO: Register slash commands below
-		_slashCommands.RegisterCommands<PingCommand>();
-		_slashCommands.RegisterCommands<UptimeCommand>();
-
 		_slashCommands.RegisterCommands<ProfileSlashCommandsModule>();
-
-		_slashCommands.RegisterCommands<PacmanCommand>();
+		_slashCommands.RegisterCommands<TestSlashCommandsModule>();
+		_slashCommands.RegisterCommands<UtilSlashCommandsModule>();
 	}
 
 	public void Cleanup(IDiscordClientProvider discordClientProvider)
@@ -67,7 +62,8 @@ public class DiscordSlashCommandsService : IAddDiscordClientFunctionality
 
 	private Task OnSlashCommandsExecuted(SlashCommandsExtension _, SlashCommandExecutedEventArgs eventArgs)
 	{
-		_logger.LogDebug("{Username} executed slashcommand /{CommandName}", eventArgs.Context.User.Username,
+		_logger.LogDebug("{Username} executed slashcommand /{CommandName}",
+			eventArgs.Context.User.Username,
 			eventArgs.Context.CommandName);
 
 		return Task.CompletedTask;
