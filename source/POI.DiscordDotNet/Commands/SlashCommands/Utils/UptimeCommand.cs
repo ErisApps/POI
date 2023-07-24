@@ -1,6 +1,7 @@
 using DSharpPlus.SlashCommands;
 using JetBrains.Annotations;
 using NodaTime.Extensions;
+using POI.DiscordDotNet.Commands.SlashCommands.Modules;
 using POI.DiscordDotNet.Services;
 
 namespace POI.DiscordDotNet.Commands.SlashCommands.Utils
