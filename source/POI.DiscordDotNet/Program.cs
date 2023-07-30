@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using POI.DiscordDotNet.Commands.SlashCommands.Profile;
+using POI.DiscordDotNet.Commands.SlashCommands.ScoreSaber;
 using POI.DiscordDotNet.Commands.SlashCommands.Test;
 using POI.DiscordDotNet.Commands.SlashCommands.Utils;
 using POI.DiscordDotNet.Configuration;
@@ -92,6 +93,7 @@ var host = Host.CreateDefaultBuilder()
 
 		services
 			.AddProfileSlashCommands()
+			.AddScoreSaberSlashCommands()
 			.AddTestSlashCommands()
 			.AddUtilitySlashCommands();
 

@@ -34,6 +34,7 @@ public class DiscordSlashCommandsService : IAddDiscordClientFunctionality
 
 		// TODO: Register slash commands below
 		_slashCommands.RegisterCommands<ProfileSlashCommandsModule>();
+		_slashCommands.RegisterCommands<ScoreSaberSlashCommandsModule>();
 		_slashCommands.RegisterCommands<TestSlashCommandsModule>();
 		_slashCommands.RegisterCommands<UtilSlashCommandsModule>();
 	}
