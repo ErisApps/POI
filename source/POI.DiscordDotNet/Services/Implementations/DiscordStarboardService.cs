@@ -43,6 +43,7 @@ public class DiscordStarboardService : IAddDiscordClientFunctionality
 	{
 		//TODO: Check on emoji ID, not name
 		//TODO: Figure out a way to get the display name of the user outside the guild...
+		//TODO: Add self-starred LAMEEEEEEEEEEEE
 
 		var guild = args.Guild;
 		var serverSettings = await _serverSettingsRepository.FindOneById(guild.Id);
