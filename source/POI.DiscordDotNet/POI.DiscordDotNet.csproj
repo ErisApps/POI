@@ -28,7 +28,7 @@
         <PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
         <PackageReference Include="Serilog.Sinks.Console" Version="4.1.1-dev-00917" />
         <PackageReference Include="Serilog.Sinks.File" Version="5.0.1-dev-00947" />
-        <PackageReference Include="SixLabors.ImageSharp" Version="2.1.3" />
+        <PackageReference Include="SixLabors.ImageSharp" Version="2.1.5" />
         <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta15" />
     </ItemGroup>
 
