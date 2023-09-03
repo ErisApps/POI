@@ -1,4 +1,5 @@
 ﻿using DSharpPlus.SlashCommands;
+using DSharpPlus.SlashCommands.Attributes;
 using DSharpPlus.SlashCommands.EventArgs;
 using Microsoft.Extensions.Logging;
 using POI.DiscordDotNet.Commands.SlashCommands.Modules;
@@ -51,13 +52,29 @@ public class DiscordSlashCommandsService : IAddDiscordClientFunctionality
 		_slashCommands = null;
 	}
 
-	private Task OnSlashCommandErrored(SlashCommandsExtension _, SlashCommandErrorEventArgs eventArgs)
+	private async Task OnSlashCommandErrored(SlashCommandsExtension _, SlashCommandErrorEventArgs eventArgs)
 	{
+		if (eventArgs.Exception is SlashExecutionChecksFailedException castedException)
+		{
+			var timeLeft = string.Empty;
+			foreach (var error in castedException.FailedChecks)
+			{
+				var cooldown = (SlashCooldownAttribute) error;
+				var rawTime = cooldown.GetRemainingCooldown(eventArgs.Context);
+
+				if (rawTime.Days != 0) timeLeft += $"{rawTime.Days} days, ";
+				if (rawTime.Hours != 0) timeLeft += $"{rawTime.Hours} hours, ";
+				if (rawTime.Minutes != 0) timeLeft += $"{rawTime.Minutes} minutes, ";
+				if (rawTime.Seconds != 0) timeLeft += $"{rawTime.Seconds} seconds";
+			}
+
+			await eventArgs.Context.CreateResponseAsync($"To use that command you need to wait {timeLeft}", true).ConfigureAwait(false);
+			return;
+		}
+
 		_logger.LogError(eventArgs.Exception,
 			"{Username} tried to execute slashcommand /{CommandName}, but it errored",
 			eventArgs.Context.User.Username, eventArgs.Context.CommandName);
-
-		return Task.CompletedTask;
 	}
 
 	private Task OnSlashCommandsExecuted(SlashCommandsExtension _, SlashCommandExecutedEventArgs eventArgs)
