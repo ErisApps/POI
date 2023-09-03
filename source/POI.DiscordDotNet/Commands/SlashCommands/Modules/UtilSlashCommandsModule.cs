@@ -20,5 +20,9 @@ namespace POI.DiscordDotNet.Commands.SlashCommands.Modules
 		[SlashCommand("uppy", "Shows how long I've been online already 😅"), UsedImplicitly]
 		public Task HandleUptimeCommand(InteractionContext ctx)
 			=> ctx.Services.GetRequiredService<UptimeCommand>().Handle(ctx);
+		
+		[SlashCommand("silent message", "send silent message into channel"), UsedImplicitly]
+		public Task HandleSilentMessageCommand(InteractionContext ctx)
+			=> ctx.Services.GetRequiredService<SilentMessageSlashCommands>().Handle(ctx);
 	}
 }
