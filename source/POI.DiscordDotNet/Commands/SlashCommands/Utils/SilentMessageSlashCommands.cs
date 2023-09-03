@@ -1,25 +1,24 @@
 using DSharpPlus.SlashCommands;
-using JetBrains.Annotations;
-using NodaTime.Text;
+using POI.DiscordDotNet.Commands.SlashCommands.Modules;
 
-namespace POI.DiscordDotNet.Commands.SlashCommands.Utils
+namespace POI.DiscordDotNet.Commands.SlashCommands.Utils;
+
+public enum AnonymousMessages
 {
-	public enum AnonymousMessages
-	{
-    	[ChoiceName("Stay on Topic reminder")]
-    	StayOnTopicReminder = "Beep boop, stay on topic please!",
-   	}
+	[ChoiceName("Stay on Topic reminder")] StayOnTopicReminder
+}
 
-	public class SilentMessageSlashCommands
+public class SilentMessageSlashCommands: UtilSlashCommandsModule
+{
+	private readonly Dictionary<AnonymousMessages, string> _anonymousMessages = new()
 	{
-		[SlashCommand("Send", "Send anonymous message to channel via POI"), UsedImplicitly]
-		public async Task Set(InteractionContext ctx,  
-			[ChannelTypes("text")] 
-			[Option("Channel", "The channel where you want to send the message to")] DiscordChannel channel,
-			[Option("Type", "What message do you want to send")] AnonymousMessages messageType = AnonymousMessages.StayOnTopicReminder)
-		{
-			await ctx.CreateResponseAsync("Message has been sent", new { IsEphemeral: true }).ConfigureAwait(false);
-			var embedMessage = await channel.SendMessageAsync(messageType);
-		}
+		{ AnonymousMessages.StayOnTopicReminder, "\u26a0\ufe0f Beep boop, please stay on topic! \ud83d\ude4f" }
+	};
+
+	public async Task Handle(InteractionContext ctx,
+		AnonymousMessages messageType = AnonymousMessages.StayOnTopicReminder)
+	{
+		await ctx.CreateResponseAsync("Message has been sent.", true).ConfigureAwait(false);
+		await ctx.Channel.SendMessageAsync(_anonymousMessages[messageType]).ConfigureAwait(false);
 	}
 }
