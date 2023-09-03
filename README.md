@@ -15,6 +15,8 @@ Apply all generated migrations on your database:
 dotnet ef database update --project POI.Persistence.EFCore.Npgsql --verbose -- "[Connection String]"
 ```
 
+Find all migrations in the `POI.Persistence.EFCore.Npgsql/Migrations` folder.
+
 ### Environment Variables
 
 | Variable                       | Description                                                                                                                                        | Example                                                                             |
