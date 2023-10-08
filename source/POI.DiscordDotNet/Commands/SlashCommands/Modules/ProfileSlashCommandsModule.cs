@@ -19,5 +19,21 @@ namespace POI.DiscordDotNet.Commands.SlashCommands.Modules
 			public Task Clear(InteractionContext ctx)
 				=> ctx.Services.GetRequiredService<BirthdaySlashCommands>().Clear(ctx);
 		}
+
+		[SlashCommandGroup("link", "Link community Beat Saber services to your profile."), UsedImplicitly]
+		public class LinkSlashCommandsModule : ApplicationCommandModule
+		{
+			[SlashCommand("scoresaber", "ScoreSaber is a score tracking site for Beat Saber."), UsedImplicitly]
+			public Task ScoreSaber(InteractionContext ctx)
+				=> ctx.Services.GetRequiredService<LinkSlashCommands>().ScoreSaber(ctx);
+
+			[SlashCommand("beatleader", "BeatLeader is a score tracking site for Beat Saber."), UsedImplicitly]
+			public Task BeatLeader(InteractionContext ctx)
+				=> ctx.Services.GetRequiredService<LinkSlashCommands>().BeatLeader(ctx);
+
+			[SlashCommand("beatsaver", "BeatSaver is a beat map distribution site."), UsedImplicitly]
+			public Task BeatSaver(InteractionContext ctx)
+				=> ctx.Services.GetRequiredService<LinkSlashCommands>().BeatSaver(ctx);
+		}
 	}
 }

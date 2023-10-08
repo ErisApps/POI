@@ -25,6 +25,7 @@ public static class ServiceCollectionExtensions
 		services.TryAddScoped<IServerDependentUserSettingsRepository, ServerDependentUserSettingsRepository>();
 		services.TryAddScoped<IServerSettingsRepository, ServerSettingsRepository>();
 		services.TryAddScoped<IStarboardMessageRepository, StarboardMessageRepository>();
+		services.TryAddScoped<ILinkRequestTokensRepository, LinkRequestTokensRepository>();
 
 		return services;
 	}

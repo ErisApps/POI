@@ -68,6 +68,46 @@ internal class GlobalUserSettingsRepository : IGlobalUserSettingsRepository
 		await context.SaveChangesAsync(cts).ConfigureAwait(false);
 	}
 
+	public async Task CreateOrUpdateBeatLeaderLink(ulong discordUserId, string beatLeaderId, CancellationToken cts = default)
+	{
+		await using var context = await _appDbContextFactory.CreateDbContextAsync(cts).ConfigureAwait(false);
+		var globalUserSettings = await context.GlobalUserSettings
+			.FirstOrDefaultAsync(x => x.DiscordUserId == discordUserId, cts)
+			.ConfigureAwait(false);
+
+		if (globalUserSettings == null)
+		{
+			globalUserSettings = new GlobalUserSettings(discordUserId, beatLeaderId: beatLeaderId);
+			await context.GlobalUserSettings.AddAsync(globalUserSettings, cts).ConfigureAwait(false);
+		}
+		else
+		{
+			globalUserSettings.BeatLeaderId = beatLeaderId;
+		}
+
+		await context.SaveChangesAsync(cts).ConfigureAwait(false);
+	}
+
+	public async Task CreateOrUpdateBeatSaverLink(ulong discordUserId, string beatSaverId, CancellationToken cts = default)
+	{
+		await using var context = await _appDbContextFactory.CreateDbContextAsync(cts).ConfigureAwait(false);
+		var globalUserSettings = await context.GlobalUserSettings
+			.FirstOrDefaultAsync(x => x.DiscordUserId == discordUserId, cts)
+			.ConfigureAwait(false);
+
+		if (globalUserSettings == null)
+		{
+			globalUserSettings = new GlobalUserSettings(discordUserId, beatSaverId: beatSaverId);
+			await context.GlobalUserSettings.AddAsync(globalUserSettings, cts).ConfigureAwait(false);
+		}
+		else
+		{
+			globalUserSettings.BeatSaverId = beatSaverId;
+		}
+
+		await context.SaveChangesAsync(cts).ConfigureAwait(false);
+	}
+
 	public async Task<List<GlobalUserSettings>> GetAllBirthdayGirls(int dayOfMonth, int month, CancellationToken cts)
 	{
 		await using var context = await _appDbContextFactory.CreateDbContextAsync(cts).ConfigureAwait(false);
@@ -81,7 +121,8 @@ internal class GlobalUserSettingsRepository : IGlobalUserSettingsRepository
 	public async Task UpdateBirthday(ulong discordUserId, LocalDate? birthday, CancellationToken cts)
 	{
 		await using var context = await _appDbContextFactory.CreateDbContextAsync(cts).ConfigureAwait(false);
-		var globalUserSettings = await context.GlobalUserSettings
+		var
+			globalUserSettings = await context.GlobalUserSettings
 			.FirstOrDefaultAsync(x => x.DiscordUserId == discordUserId, cts)
 			.ConfigureAwait(false);
 
