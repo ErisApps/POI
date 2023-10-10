@@ -1,6 +1,10 @@
-﻿using DSharpPlus.Entities;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using DSharpPlus.Entities;
 using DSharpPlus.SlashCommands;
 using JetBrains.Annotations;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using POI.Persistence.Repositories;
 
 namespace POI.DiscordDotNet.Commands.SlashCommands.Profile;
@@ -8,17 +12,17 @@ namespace POI.DiscordDotNet.Commands.SlashCommands.Profile;
 [UsedImplicitly]
 public class LinkSlashCommands
 {
-	private readonly ILinkRequestTokensRepository _linkRequestTokenRepository;
+	private readonly IConfiguration _configuration;
 
-	public LinkSlashCommands(ILinkRequestTokensRepository linkRequestTokenRepository)
+	public LinkSlashCommands(IConfiguration configuration)
 	{
-		_linkRequestTokenRepository = linkRequestTokenRepository;
+		_configuration = configuration;
 	}
 
 	[SlashCommand("scoresaber", "ScoreSaber is a score tracking site for Beat Saber."), UsedImplicitly]
 	public async Task ScoreSaber(InteractionContext ctx)
 	{
-		var token = await _linkRequestTokenRepository.CreateToken(ctx.User.Id);
+		var token = GetJwtToken(ctx.User.Id.ToString());
 		var redirectUrl = $"http://localhost:5224/link/scoresaber?loginToken={token}";
 
 		var embed = new DiscordEmbedBuilder
@@ -35,7 +39,7 @@ public class LinkSlashCommands
 	[SlashCommand("beatleader", "BeatLeader is a score tracking site for Beat Saber."), UsedImplicitly]
 	public async Task BeatLeader(InteractionContext ctx)
 	{
-		var token = await _linkRequestTokenRepository.CreateToken(ctx.User.Id);
+		var token = GetJwtToken(ctx.User.Id.ToString());
 		var redirectUrl = $"http://localhost:5224/link/beatleader?loginToken={token}";
 
 		var embed = new DiscordEmbedBuilder
@@ -52,7 +56,7 @@ public class LinkSlashCommands
 	[SlashCommand("beatsaver", "BeatSaver is a beat map distribution site."), UsedImplicitly]
 	public async Task BeatSaver(InteractionContext ctx)
 	{
-		var token = await _linkRequestTokenRepository.CreateToken(ctx.User.Id);
+		var token = GetJwtToken(ctx.User.Id.ToString());
 		var redirectUrl = $"http://localhost:5224/link/beatsaver?loginToken={token}";
 
 		var embed = new DiscordEmbedBuilder
@@ -64,5 +68,22 @@ public class LinkSlashCommands
 		};
 
 		await ctx.CreateResponseAsync(embed, true).ConfigureAwait(false);
+	}
+
+	private string GetJwtToken(string user)
+	{
+		var secret = _configuration["Secret"];
+		var key = new SymmetricSecurityKey(Convert.FromBase64String(secret!));
+		var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+		var token = new JwtSecurityToken(
+			claims: new List<Claim> {new("discordId", user)},
+			expires: DateTime.UtcNow.AddMinutes(15),
+			signingCredentials: creds
+
+		);
+
+		var tokenHandler = new JwtSecurityTokenHandler();
+		return tokenHandler.WriteToken(token);
 	}
 }

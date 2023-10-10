@@ -18,8 +18,6 @@ internal class AppDbContext : DbContext
 
 	public DbSet<StarboardMessages> StarboardMessages { get; set; }
 
-	public DbSet<LinkRequestToken> LinkRequestTokens { get; set; }
-
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
 		base.OnModelCreating(modelBuilder);
@@ -44,10 +42,5 @@ internal class AppDbContext : DbContext
 
 		var starboardMessagesModelBuilder = modelBuilder.Entity<StarboardMessages>();
 		starboardMessagesModelBuilder.HasKey(x => new { x.ServerId, x.ChannelId, x.MessageId });
-
-		var linkRequestTokenModelBuilder = modelBuilder.Entity<LinkRequestToken>();
-		linkRequestTokenModelBuilder.HasKey(x => x.LoginToken);
-		linkRequestTokenModelBuilder.Property(x => x.DiscordId).IsRequired();
-		linkRequestTokenModelBuilder.HasIndex(x => x.CreatedAt).IsUnique();
 	}
 }

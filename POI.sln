@@ -18,8 +18,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POI.Persistence.EFCore.Npgs
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POI.ThirdParty.BeatLeader", "POI.ThirdParty.BeatLeader\POI.ThirdParty.BeatLeader.csproj", "{070B2427-BCA9-4F87-9E0C-6D3927E89BDF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "POI.Web.API", "POI.Web.API\POI.Web.API.csproj", "{ED03958A-C3C5-4384-A885-ECE2B205D766}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -62,9 +60,5 @@ Global
 		{070B2427-BCA9-4F87-9E0C-6D3927E89BDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{070B2427-BCA9-4F87-9E0C-6D3927E89BDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{070B2427-BCA9-4F87-9E0C-6D3927E89BDF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{ED03958A-C3C5-4384-A885-ECE2B205D766}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ED03958A-C3C5-4384-A885-ECE2B205D766}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ED03958A-C3C5-4384-A885-ECE2B205D766}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ED03958A-C3C5-4384-A885-ECE2B205D766}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -1,8 +1,8 @@
 ﻿using System.Web;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-
-namespace POI.Web.API.Controllers;
+namespace POI.DiscordDotNet.Controllers;
 
 [ApiController]
 [Route("[controller]")]
