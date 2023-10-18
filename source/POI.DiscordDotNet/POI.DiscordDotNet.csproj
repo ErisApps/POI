@@ -14,7 +14,7 @@
         <PackageReference Include="DSharpPlus.Interactivity" Version="5.0.0-nightly-01709" />
         <PackageReference Include="DSharpPlus.SlashCommands" Version="5.0.0-nightly-01709" />
         <PackageReference Include="JetBrains.Annotations" Version="2023.2.0" />
-        <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="13.2.0" />
+        <PackageReference Include="Magick.NET-Q16-AnyCPU" Version="13.3.0" />
         <PackageReference Include="Magick.NET.Core" Version="13.2.0" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
