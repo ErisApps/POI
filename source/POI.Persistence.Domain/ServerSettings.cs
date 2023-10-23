@@ -14,7 +14,10 @@
 
 		public uint? StarboardEmojiCount { get; set; }
 
-		public ServerSettings(ulong serverId, ulong? rankUpFeedChannelId = null, ulong? birthdayRoleId = null, ulong? starboardChannelId = null, ulong? eventsChannelId = null, uint? starboardEmojiCount = null)
+		public ulong? ModMailChannelId { get; set; }
+
+		public ServerSettings(ulong serverId, ulong? rankUpFeedChannelId = null, ulong? birthdayRoleId = null, ulong? starboardChannelId = null, ulong? eventsChannelId = null,
+			uint? starboardEmojiCount = null, ulong? modMailChannelId = null)
 		{
 			ServerId = serverId;
 			RankUpFeedChannelId = rankUpFeedChannelId;
@@ -22,6 +25,7 @@
 			StarboardChannelId = starboardChannelId;
 			EventsChannelId = eventsChannelId;
 			StarboardEmojiCount = starboardEmojiCount;
+			ModMailChannelId = modMailChannelId;
 		}
 	}
 }
