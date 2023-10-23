@@ -22,7 +22,7 @@ namespace POI.DiscordDotNet.Commands.SlashCommands.Modules
 			=> ctx.Services.GetRequiredService<UptimeCommand>().Handle(ctx);
 
 		[SlashCommand("modmail", "Send a message to the mods."), UsedImplicitly]
-		public Task HandleSilentMessageCommand(InteractionContext ctx, [Option("Message", "Your message for the moderators.", true)] string message)
-			=> ctx.Services.GetRequiredService<ModMailSlashCommands>().Handle(ctx, message);
+		public Task HandleSilentMessageCommand(InteractionContext ctx, [Option("Message", "Your message for the moderators.", true)] string message, [Option("Anonymously", "Whether you want to remain anonymously.")] bool anonymously = false)
+			=> ctx.Services.GetRequiredService<ModMailSlashCommands>().Handle(ctx, message, anonymously);
 	}
 }

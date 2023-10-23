@@ -18,7 +18,7 @@ public class ModMailSlashCommands : UtilSlashCommandsModule
 		_logger = logger;
 	}
 
-	public async Task Handle(InteractionContext ctx, string message)
+	public async Task Handle(InteractionContext ctx, string message, bool anonymously)
 	{
 		await ctx.CreateResponseAsync("Message has been sent.", true).ConfigureAwait(false);
 		var serverId = ctx.Guild.Id;
@@ -39,12 +39,13 @@ public class ModMailSlashCommands : UtilSlashCommandsModule
 			_logger.LogWarning(e, "Channel {ChannelId} not found for server {ServerId}",channelId, serverId);
 			return;
 		}
-
+		var name = anonymously ? "Anonymous" : ctx.User.Username;
 		var embed = new DiscordEmbedBuilder()
-			.WithTitle($"New mod mail from {ctx.User.Username}")
+			.WithTitle($"New mod mail from {name}")
 			.WithDescription(message)
 			.WithTimestamp(DateTimeOffset.UtcNow)
 			.Build();
 		await channel.SendMessageAsync(embed).ConfigureAwait(false);
+		_logger.LogInformation("Mod mail sent from {UserId} to {ChannelId} on {ServerId}", name, channelId, serverId);
 	}
 }
