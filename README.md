@@ -6,7 +6,7 @@
 Create a new migration to update the database schema with your new changes:
 
 ```bash
-dotnet ef migrations add "[New Migration Name]" --project POI.Persistence.EFCore.Npgsql --verbose -- "[Connection String]"
+dotnet ef migrations add "[New Migration Name]" --project POI.Persistence.EFCore.Npgsql --verbose
 ```
 
 Apply all generated migrations on your database:
